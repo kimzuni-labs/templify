@@ -38,6 +38,13 @@
       "require": "./dist/cjs/index.js"
     }
   },
+  "keywords": [
+    "template",
+    "string",
+    "render",
+    "placeholder",
+    "typescript"
+  ],
   "devDependencies": {
     "@eslint/js": "^9.38.0",
     "@stylistic/eslint-plugin": "^5.5.0",
