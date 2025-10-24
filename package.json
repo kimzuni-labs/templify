@@ -19,7 +19,22 @@
     "test": "bun test",
     "lint": "bun lint:markdown && bun lint:eslint",
     "lint:eslint": "eslint .",
-    "lint:markdown": "markdownlint-cli2"
+    "lint:markdown": "markdownlint-cli2",
+    "build": "bun scripts/build.ts"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.js"
+    }
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
