@@ -20,7 +20,9 @@
     "lint": "bun lint:markdown && bun lint:eslint",
     "lint:eslint": "eslint .",
     "lint:markdown": "markdownlint-cli2",
-    "build": "bun scripts/build.ts"
+    "build": "bun scripts/build.ts",
+    "publish": "npm publish --provenance --access=public",
+    "release": "bun run test && bun run lint && bun run build && standard-version"
   },
   "files": [
     "dist",
@@ -43,6 +45,7 @@
     "eslint": "^9.38.0",
     "jiti": "^2.6.1",
     "markdownlint-cli2": "^0.18.1",
+    "standard-version": "^9.5.0",
     "typescript-eslint": "^8.46.2"
   },
   "peerDependencies": {
