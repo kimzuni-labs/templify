@@ -9,7 +9,7 @@ import type { RenderData, CompileOptions } from "./types";
  * @example
  *
  * ```typescript
- * const c = compile("{key1} { key1 } { key2}", { open: "{", close: "}", spacing: -1 });
+ * const c = compile("{key1} { key1 } { key2}");
  * ```
  */
 export function compile(template: string, options: CompileOptions = {}) {
@@ -29,7 +29,7 @@ export function compile(template: string, options: CompileOptions = {}) {
 		 * @example
 		 *
 		 * ```typescript
-		 * const c = compile("{key1} { key1 } { key2}", { open: "{", close: "}", spacing: -1 });
+		 * const c = compile("{key1} { key1 } { key2}");
 		 * const result = c.groups();
 		 * console.log(result); // { key1: ["{key1}", "{ key1 }"], key2: ["{ key2}"] }
 		 * ```
@@ -44,7 +44,7 @@ export function compile(template: string, options: CompileOptions = {}) {
 		 * @example
 		 *
 		 * ```typescript
-		 * const c = compile("{key1} { key1 } { key2}", { open: "{", close: "}", spacing: -1 });
+		 * const c = compile("{key1} { key1 } { key2}");
 		 * const result = c.keys();
 		 * console.log(result); // ["key1", "key2"]
 		 * ```
@@ -59,7 +59,7 @@ export function compile(template: string, options: CompileOptions = {}) {
 		 * @example
 		 *
 		 * ```typescript
-		 * const c = compile("{key1} { key1 } { key2}", { open: "{", close: "}", spacing: -1 });
+		 * const c = compile("{key1} { key1 } { key2}");
 		 * const result = c.matches();
 		 * console.log(result); // ["{key1}", "{ key1 }", "{ key2}"]
 		 * ```
@@ -74,9 +74,9 @@ export function compile(template: string, options: CompileOptions = {}) {
 		 * @example
 		 *
 		 * ```typescript
-		 * const c = compile("{key1} {key1 } { key2}", { open: "{", close: "}", spacing: -1, fallback: "x" });
+		 * const c = compile("{key1} {key1 } { key2}");
 		 * const result = c.render({ key1: "value1", key3: "value3" });
-		 * console.log(result); // value1 value1 x
+		 * console.log(result); // value1 value1 { key2}
 		 * ```
 		 */
 		render(data: RenderData) {
