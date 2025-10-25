@@ -41,6 +41,17 @@ export interface SpacingOptions {
  */
 export interface CommonOptions {
 	/**
+	 * Regex pattern defining valid characters for placeholder keys.
+	 * This controls what is allowed between the opening and closing delimiters.
+	 * Any regex flags (e.g., `i`, `g`) are ignored if provided.
+	 *
+	 * By default, `/\w+/` allows only letters (A-Z, a-z), digits (0-9), and underscores (_).
+	 *
+	 * @default /\w+/
+	 */
+	key?: RegExp | string;
+
+	/**
 	 * Opening delimiter for placeholders.
 	 *
 	 * @default "{"
