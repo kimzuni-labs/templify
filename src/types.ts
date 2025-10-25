@@ -48,6 +48,15 @@ export interface CommonOptions {
 	 * By default, `/\w+/` allows only letters (A-Z, a-z), digits (0-9), and underscores (_).
 	 *
 	 * @default /\w+/
+	 *
+	 * @example
+	 *
+	 * ```typescript
+	 * const options = { key: /[a-z]+/ };
+	 * const result = keys("{ key } { key1 }", options);
+	 * console.log(result)
+	 * // ["key"]
+	 * ```
 	 */
 	key?: RegExp | string;
 
@@ -55,6 +64,15 @@ export interface CommonOptions {
 	 * Opening delimiter for placeholders.
 	 *
 	 * @default "{"
+	 *
+	 * @example
+	 *
+	 * ```typescript
+	 * const options = { open: "{{", close: "}}" };
+	 * const result = render("{{ key1 }} { key1 }", { key1: "value1" }, options);
+	 * console.log(result)
+	 * // "value1 { key1 }"
+	 * ```
 	 */
 	open?: string;
 
@@ -62,6 +80,15 @@ export interface CommonOptions {
 	 * Closing delimiter for placeholders.
 	 *
 	 * @default "}"
+	 *
+	 * @example
+	 *
+	 * ```typescript
+	 * const options = { open: "{{", close: "}}" };
+	 * const result = render("{{ key1 }} { key1 }", { key1: "value1" }, options);
+	 * console.log(result)
+	 * // "value1 { key1 }"
+	 * ```
 	 */
 	close?: string;
 
@@ -70,6 +97,22 @@ export interface CommonOptions {
 	 * Can be provided as a simple `count` value or as a full {@link SpacingOptions} object.
 	 *
 	 * @default -1
+	 *
+	 * @example
+	 *
+	 * ```typescript
+	 * function run(options) {
+	 *   return render(
+	 *     "{key1} { key1 } {  key1  } {   key1   } {   key1 }",
+	 *     { key1: "value1" },
+	 *     { spacing: options },
+	 *   );
+	 * };
+	 *
+	 * console.log( run(-1) ); // "value1 value1 value1 value1 value1"
+	 * console.log( run(1) ); // "{key1} value1 {  key1  } {   key1   } {   key1 }"
+	 * console.log( run({ count: [1, 3] }) ); // "{key1} value1 {  key1  } value1 value1"
+	 * console.log( run({ strict: true, count: [1, 3] }) ); // "{key1} value1 {  key1  } value1 {   key1 }"
 	 */
 	spacing?: SpacingOptions["count"] | SpacingOptions;
 }

@@ -32,7 +32,7 @@ bun add @kimzuni/templify
 const { compile, keys, matches, groups, render } = require("@kimzuni/templify");
 
 const template = "{key1} {key1 } { key2} {key1}";
-const options = { key: /\w+/, open: "{", close: "}", spacing: -1, fallback: "x" };
+const options = { key: /\w+/, open: "{", close: "}", spacing: -1, fallback: undefined };
 const data = { key1: "value1", key3: "value3" };
 
 const c = compile(template, options);
@@ -56,7 +56,7 @@ console.log( groups(template, options) );
 
 console.log( c.render(data) );
 console.log( render(template, data, options) );
-// "value1 value1 x value1"
+// "value1 value1 { key2} value1"
 ```
 
 
