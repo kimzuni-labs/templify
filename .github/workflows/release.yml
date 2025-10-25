@@ -22,18 +22,11 @@ jobs:
       - name: Determine publish tag
         id: env
         run: |
-          DEFAULT_BRANCH="${{ github.event.repository.default_branch }}"
-          CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-          CURRENT_TAG="${GITHUB_REF_NAME}"
           PUBLISH_TAG="dev"
-          if [ "$CURRENT_BRANCH" == "$DEFAULT_BRANCH" ] && [[ "$CURRENT_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          if [[ "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             PUBLISH_TAG="latest"
           fi
-          echo "Detected tag: $CURRENT_TAG"
-          echo "Detected branch: $CURRENT_BRANCH"
           echo "Publish tag: $PUBLISH_TAG"
-          echo "current_tag=$CURRENT_TAG" >> $GITHUB_OUTPUT
-          echo "current_branch=$CURRENT_BRANCH" >> $GITHUB_OUTPUT
           echo "publish_tag=$PUBLISH_TAG" >> $GITHUB_OUTPUT
 
       - name: Setup Bun
