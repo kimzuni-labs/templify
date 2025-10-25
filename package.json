@@ -1,7 +1,7 @@
 {
   "name": "@kimzuni/templify",
   "description": "Flexible template string processor for JavaScript and TypeScript.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "license": "MIT",
   "private": false,
   "author": {

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/kimzuni-labs/templify/compare/v1.0.0...v1.1.0) (2025-10-25)
+
+
+### ✨ Features
+
+* **options:** add custom key pattern option ([f1f1cf8](https://github.com/kimzuni-labs/templify/commit/f1f1cf8a3c377f632fa9d5731c52bd7a69e4a11d))
+
 ## 1.0.0 (2025-10-24)
 
 
