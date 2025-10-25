@@ -67,11 +67,11 @@ jobs:
           fi
 
       - name: Create GitHub release notes
-        if: ${{ steps.env.outputs.publish_tag == "latest" }}
+        if: ${{ steps.env.outputs.publish_tag == 'latest' }}
         uses: softprops/action-gh-release@v2
         with:
           body_path: release_notes.md
-          # make_latest: ${{ steps.env.outputs.publish_tag == "latest" }}
-          # prerelease: ${{ steps.env.outputs.publish_tag != "latest" }}
+          # make_latest: ${{ steps.env.outputs.publish_tag == 'latest' }}
+          # prerelease: ${{ steps.env.outputs.publish_tag != 'latest' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
