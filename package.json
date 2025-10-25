@@ -21,7 +21,6 @@
     "lint:eslint": "eslint .",
     "lint:markdown": "markdownlint-cli2",
     "build": "bun scripts/build.ts",
-    "publish": "npm publish --provenance --access=public",
     "release": "bun run test && bun run lint && bun run build && standard-version"
   },
   "files": [
