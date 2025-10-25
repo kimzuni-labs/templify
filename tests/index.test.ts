@@ -7,6 +7,7 @@ import type { RenderOptions } from "../src";
 
 const template = "{ key1 } | {    key2  } - {  key3  } / { key1 } | {    key3 }";
 const data = {
+	key : "value",
 	key1: "value1",
 	key3: "value3",
 };
@@ -32,6 +33,17 @@ const init = (label: string, callback: Callback) => {
 	};
 
 	describe(label, () => {
+		describe("key", () => {
+			run(
+				"/[a-z]+/",
+				"{ key } | { key2 } - { key3 } / { key } | { key3 }",
+				{ key: /[a-z]+/ },
+				["key"],
+				["{ key }"],
+				"value | { key2 } - { key3 } / value | { key3 }",
+			);
+		});
+
 		describe("open, close", () => {
 			run(
 				"{{ ... }}",

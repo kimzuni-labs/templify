@@ -6,10 +6,13 @@ export const keyIdx = 2;
 
 export function getPattern(options: CommonOptions = {}) {
 	const {
+		key = /\w+/,
 		open = "{",
 		close = "}",
 		spacing = {},
 	} = options;
+
+	const keyPattern = typeof key === "string" ? key : key.source;
 
 	const {
 		count: spacingCount = -1,
@@ -28,7 +31,7 @@ export function getPattern(options: CommonOptions = {}) {
 	}
 
 	const rightSpace = spacingStrict ? "\\1" : leftSpace;
-	return new RegExp(`${open}(?:(${leftSpace}))([\\w]+)(?:${rightSpace})${close}`, "g");
+	return new RegExp(`${open}(?:(${leftSpace}))(${keyPattern})(?:${rightSpace})${close}`, "g");
 }
 
 export function parseData(template: string, pattern: RegExp) {

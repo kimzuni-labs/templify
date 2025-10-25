@@ -32,7 +32,7 @@ bun add @kimzuni/templify
 const { compile, keys, matches, groups, render } = require("@kimzuni/templify");
 
 const template = "{key1} {key1 } { key2} {key1}";
-const options = { open: "{", close: "}", spacing: -1, fallback: "x" };
+const options = { key: /\w+/, open: "{", close: "}", spacing: -1, fallback: "x" };
 const data = { key1: "value1", key3: "value3" };
 
 const c = compile(template, options);
@@ -62,6 +62,21 @@ console.log( render(template, data, options) );
 
 
 ## Options
+
+### key
+
+Regex pattern defining valid characters for placeholder keys.
+This controls what is allowed between the opening and closing delimiters.
+
+| Type               | Default value |
+|--------------------|---------------|
+| `string`, `RegExp` | `/\w+/`       |
+
+```javascript
+const options = { key: /[a-z]+/ };
+const result = render("{ key } { key1 }", { key: "value", key1: "value1" }, options);
+console.log(result); // "value { key1 }"
+```
 
 ### open/close
 
