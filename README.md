@@ -63,6 +63,8 @@ console.log( render(template, data, options) );
 
 ## Options
 
+All options are optional.
+
 ### key
 
 Regex pattern defining valid characters for placeholder keys.
