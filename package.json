@@ -17,7 +17,7 @@
   "homepage": "https://github.com/kimzuni-labs/templify",
   "bugs": "https://github.com/kimzuni-labs/templify/issues",
   "scripts": {
-    "test": "bun test",
+    "test": "bun run build && bun test",
     "lint": "markdownlint-cli2 && eslint .",
     "lint:eslint": "eslint .",
     "lint:markdown": "markdownlint-cli2",
