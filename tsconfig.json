@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
-		"target": "es2020",
-		"lib": ["ES2020"],
+		"target": "esnext",
+		"lib": ["ESNext"],
 		"module": "esnext",
 		"moduleResolution": "bundler",
 		"esModuleInterop": true,
@@ -11,10 +11,6 @@
 		"noUnusedParameters": true,
 		"skipLibCheck": true,
 	},
-	"include": [
-		"**/*.ts",
-		"**/.*.ts",
-	],
 	"exclude": [
 		"node_modules",
 		"dist",
