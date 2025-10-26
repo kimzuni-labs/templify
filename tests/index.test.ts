@@ -1,7 +1,9 @@
-import { describe, test, expect } from "bun:test";
+/* eslint-disable @typescript-eslint/no-floating-promises */
 
-import { compile, keys, matches, render } from "../src";
-import type { RenderOptions } from "../src";
+import { describe, test, type TestContext } from "node:test";
+
+import { compile, keys, matches, render } from "../dist/index.js";
+import type { RenderOptions } from "../dist/index.js";
 
 
 
@@ -23,14 +25,12 @@ const init = (label: string, callback: Callback) => {
 		allKeys: string[],
 		allMatches: string[],
 		rendered: string,
-	) => {
-		test(label, () => {
-			const result = callback(template, options);
-			expect(result[0]).toContainAllValues(allKeys);
-			expect(result[1]).toContainAllValues(allMatches);
-			expect(result[2]).toBe(rendered);
-		});
-	};
+	) => test(label, (t: TestContext) => {
+		const result = callback(template, options);
+		t.assert.deepStrictEqual(result[0], allKeys);
+		t.assert.deepStrictEqual(result[1], allMatches);
+		t.assert.equal(result[2], rendered);
+	});
 
 	describe(label, () => {
 		describe("key", () => {
