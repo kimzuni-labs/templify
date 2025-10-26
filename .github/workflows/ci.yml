@@ -3,13 +3,16 @@ name: Test and Lint
 
 on:
   pull_request:
-    paths-ignore:
-      - "LICENSE"
-      - ".npmrc"
-      - ".gitignore"
-      - ".gitattributes"
-      - ".github/**"
-      - "tsconfig.dts.json"
+    paths:
+      - "**/*.ts"
+      - "**/*.md"
+      - "bun.lock"
+      - "package.json"
+      - "tsconfig.json"
+      - ".markdownlint-cli2.jsonc"
+      - "!dist/**"
+      - "!node_modules/**"
+      - "!CHANGELOG.md"
 
 jobs:
   test:
