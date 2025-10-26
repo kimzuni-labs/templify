@@ -21,7 +21,7 @@
     "lint": "markdownlint-cli2 && eslint .",
     "lint:eslint": "eslint .",
     "lint:markdown": "markdownlint-cli2",
-    "build": "bun scripts/build.ts",
+    "build": "tsdown",
     "release": "bun run test && bun run lint && bun run build && standard-version"
   },
   "files": [
@@ -33,9 +33,9 @@
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/types/index.d.ts",
-      "import": "./dist/esm/index.mjs",
-      "require": "./dist/cjs/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "keywords": [
@@ -53,6 +53,7 @@
     "jiti": "^2.6.1",
     "markdownlint-cli2": "^0.18.1",
     "standard-version": "^9.5.0",
+    "tsdown": "^0.15.10",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.2"
   }
