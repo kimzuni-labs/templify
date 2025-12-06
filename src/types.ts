@@ -118,7 +118,7 @@ export interface CommonOptions {
 }
 
 /**
- * Options used during the rendering phase.
+ * Options used for rendering.
  *
  * Extends {@link CommonOptions} with additional behavior.
  */
@@ -134,4 +134,9 @@ export interface RenderOptions extends CommonOptions {
 	fallback?: AllowValue;
 }
 
+/**
+ * Options used for compile.
+ *
+ * Extends {@link CommonOptions} with additional behavior.
+ */
 export interface CompileOptions extends RenderOptions {}

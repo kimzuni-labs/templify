@@ -43,7 +43,7 @@ export function parseData(template: string, pattern: RegExp) {
 		extract[key].add(target);
 	}
 
-	const groups: Record<string, string[]> = {};
+	const groups: Partial<Record<string, string[]>> = {};
 	const keys: string[] = [];
 	const matches: string[] = [];
 	for (const key in extract) {
