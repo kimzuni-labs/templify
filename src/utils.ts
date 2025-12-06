@@ -15,12 +15,16 @@ export function getPattern(options: CommonOptions = {}) {
 	const keyPattern = typeof key === "string" ? key : key.source;
 
 	const {
+		// eslint-disable-next-line @typescript-eslint/no-deprecated
 		count: spacingCount = -1,
+
+		size: spacingSize,
 		strict: spacingStrict = false,
-	} = typeof spacing === "number" || Array.isArray(spacing) ? { count: spacing } : spacing;
+	} = typeof spacing === "number" || Array.isArray(spacing) ? { size: spacing } : spacing;
+	const size = spacingSize ?? spacingCount;
 
 	let leftSpace = "";
-	const innerSpaceArray = Array.isArray(spacingCount) ? spacingCount : [spacingCount];
+	const innerSpaceArray = Array.isArray(size) ? size : [size];
 	for (const number of innerSpaceArray) {
 		if (number < 0) {
 			leftSpace = "\\s*";

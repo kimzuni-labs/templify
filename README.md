@@ -103,7 +103,7 @@ Controls how whitespace inside placeholders is handled.
 | key    | Type                 | Default value |
 |--------|----------------------|---------------|
 | strict | `boolean`            | `false`       |
-| count  | `number`, `number[]` | `-1`          |
+| size   | `number`, `number[]` | `-1`          |
 
 ```javascript
 function run(options) {
@@ -116,8 +116,8 @@ function run(options) {
 
 console.log( run(-1) ); // "value1 value1 value1 value1 value1"
 console.log( run(1) ); // "{key1} value1 {  key1  } {   key1   } {   key1 }"
-console.log( run({ count: [1, 3] }) ); // "{key1} value1 {  key1  } value1 value1"
-console.log( run({ strict: true, count: [1, 3] }) ); // "{key1} value1 {  key1  } value1 {   key1 }"
+console.log( run({ size: [1, 3] }) ); // "{key1} value1 {  key1  } value1 value1"
+console.log( run({ strict: true, size: [1, 3] }) ); // "{key1} value1 {  key1  } value1 {   key1 }"
 ```
 
 ### fallback
