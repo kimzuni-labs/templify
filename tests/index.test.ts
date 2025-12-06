@@ -81,33 +81,33 @@ const init = (label: string, callback: Callback) => {
 				"value1 | {    key2  } - value3 / value1 | {    key3 }",
 			);
 			run(
-				"count: -1",
+				"size: -1",
 				template,
-				{ spacing: { count: -1 } },
+				{ spacing: { size: -1 } },
 				["key1", "key2", "key3"],
 				["{ key1 }", "{    key2  }", "{  key3  }", "{    key3 }"],
 				"value1 | {    key2  } - value3 / value1 | value3",
 			);
 			run(
-				"count: [-1, 4]",
+				"size: [-1, 4]",
 				template,
-				{ spacing: { count: [-1, 4] } },
+				{ spacing: { size: [-1, 4] } },
 				["key1", "key2", "key3"],
 				["{ key1 }", "{    key2  }", "{  key3  }", "{    key3 }"],
 				"value1 | {    key2  } - value3 / value1 | value3",
 			);
 			run(
-				"count: [1, 4]",
+				"size: [1, 4]",
 				template,
-				{ spacing: { count: [1, 4] } },
+				{ spacing: { size: [1, 4] } },
 				["key1", "key3"],
 				["{ key1 }", "{    key3 }"],
 				"value1 | {    key2  } - {  key3  } / value1 | value3",
 			);
 			run(
-				"strict: true, count: [1, 4]",
+				"strict: true, size: [1, 4]",
 				template,
-				{ spacing: { strict: true, count: [1, 4] } },
+				{ spacing: { strict: true, size: [1, 4] } },
 				["key1"],
 				["{ key1 }"],
 				"value1 | {    key2  } - {  key3  } / value1 | {    key3 }",
