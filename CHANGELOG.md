@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/kimzuni-labs/templify/compare/v1.1.0...v1.2.0) (2025-12-06)
+
+
+### ✨ New Features
+
+* **options:** rename count to size ([bf1d860](https://github.com/kimzuni-labs/templify/commit/bf1d860b664637e1994117b74ce2e16981d01777))
+
 ## [1.1.0](https://github.com/kimzuni-labs/templify/compare/v1.0.0...v1.1.0) (2025-10-25)
 
 
