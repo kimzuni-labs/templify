@@ -34,11 +34,6 @@ export interface SpacingOptions {
 	 * @default -1
 	 */
 	size?: number | number[];
-
-	/**
-	 * @deprecated Use `size` instead
-	 */
-	count?: number | number[];
 }
 
 /**
