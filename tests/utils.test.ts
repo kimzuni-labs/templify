@@ -110,7 +110,7 @@ describe("getPattern", () => {
 		]);
 		run(getPattern({
 			spacing: {
-				count: -1,
+				size: -1,
 			},
 		}), [
 			"{key}",
@@ -124,7 +124,7 @@ describe("getPattern", () => {
 		]);
 		run(getPattern({
 			spacing: {
-				count: 0,
+				size: 0,
 			},
 		}), [
 			"{key}",
@@ -138,7 +138,7 @@ describe("getPattern", () => {
 		]);
 		run(getPattern({
 			spacing: {
-				count: 2,
+				size: 2,
 			},
 		}), [
 			"{  key  }",
@@ -152,7 +152,7 @@ describe("getPattern", () => {
 		]);
 		run(getPattern({
 			spacing: {
-				count: [1, 3, 4],
+				size: [1, 3, 4],
 			},
 		}), [
 			"{ key }",
@@ -167,7 +167,7 @@ describe("getPattern", () => {
 		run(getPattern({
 			spacing: {
 				strict: true,
-				count: [1, 3, 4],
+				size: [1, 3, 4],
 			},
 		}), [
 			"{ key }",
