@@ -17,7 +17,7 @@
   "homepage": "https://github.com/kimzuni-labs/templify",
   "bugs": "https://github.com/kimzuni-labs/templify/issues",
   "scripts": {
-    "test": "bun run build && bun test",
+    "test": "NODE_ENV=test tsx --test",
     "lint": "markdownlint-cli2 && eslint .",
     "lint:eslint": "eslint .",
     "lint:markdown": "markdownlint-cli2",
@@ -54,6 +54,7 @@
     "markdownlint-cli2": "^0.18.1",
     "standard-version": "^9.5.0",
     "tsdown": "^0.15.10",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.2"
   }

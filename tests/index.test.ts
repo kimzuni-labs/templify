@@ -3,8 +3,9 @@
 import assert from "node:assert";
 import { describe, test } from "node:test";
 
-import { compile, keys, matches, render } from "../dist/index.js";
-import type { RenderOptions } from "../dist/index.js";
+import type { RenderOptions } from "../src/types";
+import { compile } from "../src/compile";
+import { keys, matches, render } from "../src/direct";
 
 
 
