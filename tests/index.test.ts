@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
-import { describe, test, type TestContext } from "node:test";
+import assert from "node:assert";
+import { describe, test } from "node:test";
 
 import { compile, keys, matches, render } from "../dist/index.js";
 import type { RenderOptions } from "../dist/index.js";
@@ -25,11 +26,11 @@ const init = (label: string, callback: Callback) => {
 		allKeys: string[],
 		allMatches: string[],
 		rendered: string,
-	) => test(label, (t: TestContext) => {
+	) => test(label, () => {
 		const result = callback(template, options);
-		t.assert.deepStrictEqual(result[0], allKeys);
-		t.assert.deepStrictEqual(result[1], allMatches);
-		t.assert.equal(result[2], rendered);
+		assert.deepStrictEqual(result[0], allKeys);
+		assert.deepStrictEqual(result[1], allMatches);
+		assert.equal(result[2], rendered);
 	});
 
 	describe(label, () => {
