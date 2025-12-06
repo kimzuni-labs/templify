@@ -29,9 +29,14 @@ export interface SpacingOptions {
 	 * Number of spaces allowed inside the braces. Negative value disables space checking.
 	 *
 	 * - If a single number, exactly that many spaces are required.
-	 * - If an array of numbers, any of the specified counts are allowed.
+	 * - If an array of numbers, any of the specified sizes are allowed.
 	 *
 	 * @default -1
+	 */
+	size?: number | number[];
+
+	/**
+	 * @deprecated Use `size` instead
 	 */
 	count?: number | number[];
 }
@@ -94,7 +99,7 @@ export interface CommonOptions {
 
 	/**
 	 * Rules for controlling spacing inside placeholders.
-	 * Can be provided as a simple `count` value or as a full {@link SpacingOptions} object.
+	 * Can be provided as a simple `size` value or as a full {@link SpacingOptions} object.
 	 *
 	 * @default -1
 	 *
@@ -111,14 +116,14 @@ export interface CommonOptions {
 	 *
 	 * console.log( run(-1) ); // "value1 value1 value1 value1 value1"
 	 * console.log( run(1) ); // "{key1} value1 {  key1  } {   key1   } {   key1 }"
-	 * console.log( run({ count: [1, 3] }) ); // "{key1} value1 {  key1  } value1 value1"
-	 * console.log( run({ strict: true, count: [1, 3] }) ); // "{key1} value1 {  key1  } value1 {   key1 }"
+	 * console.log( run({ size: [1, 3] }) ); // "{key1} value1 {  key1  } value1 value1"
+	 * console.log( run({ strict: true, size: [1, 3] }) ); // "{key1} value1 {  key1  } value1 {   key1 }"
 	 */
-	spacing?: SpacingOptions["count"] | SpacingOptions;
+	spacing?: SpacingOptions["size"] | SpacingOptions;
 }
 
 /**
- * Options used during the rendering phase.
+ * Options used for rendering.
  *
  * Extends {@link CommonOptions} with additional behavior.
  */
@@ -134,4 +139,9 @@ export interface RenderOptions extends CommonOptions {
 	fallback?: AllowValue;
 }
 
+/**
+ * Options used for compile.
+ *
+ * Extends {@link CommonOptions} with additional behavior.
+ */
 export interface CompileOptions extends RenderOptions {}
