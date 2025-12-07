@@ -145,3 +145,10 @@ export interface RenderOptions extends CommonOptions {
  * Extends {@link CommonOptions} with additional behavior.
  */
 export interface CompileOptions extends RenderOptions {}
+
+/**
+ * Options used to override compile options during rendering.
+ *
+ * Picks from {@link CompileOptions}
+ */
+export interface OverrideOptions extends Pick<CompileOptions, "fallback"> {}

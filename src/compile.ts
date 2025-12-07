@@ -1,5 +1,5 @@
 import { keyIdx, getPattern, parseData } from "./utils";
-import type { RenderData, CompileOptions } from "./types";
+import type { RenderData, CompileOptions, OverrideOptions } from "./types";
 
 
 
@@ -79,14 +79,15 @@ export function compile(template: string, options: CompileOptions = {}) {
 		 * console.log(result); // value1 value1 { key2}
 		 * ```
 		 */
-		render(data: RenderData) {
+		render(data: RenderData, options: OverrideOptions = {}) {
+			const fb = "fallback" in options ? options.fallback : fallback;
 			return template.replace(pattern, (target, ...args) => {
 				const key = args[keyIdx - 1] as string;
 
 				/* Allow string index access on both array and object for flexibility */
 				// @ts-expect-error: ts(7053)
 				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-				return `${data[key] !== undefined ? data[key] : fallback !== undefined ? `${fallback}` : target}`;
+				return `${data[key] !== undefined ? data[key] : fb !== undefined ? `${fb}` : target}`;
 			});
 		},
 	};

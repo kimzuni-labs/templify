@@ -199,3 +199,35 @@ console.log(render(template, data, {
 }));
 // "null value1 null null null"
 ```
+
+
+
+## Override Options
+
+Options used to override compile options during rendering.
+
+Support Options:
+
+- [fallback](#fallback)
+
+```javascript
+const { compile } = require("@kimzuni/templify");
+
+const template = "{ key1 }/{ key2 }/{ key3 }";
+const options = { fallback: "fallback" };
+const data = { key1: "value1", key3: "value3" };
+
+const c = compile(template, options);
+
+console.log( c.render(data) );
+// "value1/fallback/value3"
+
+console.log( c.render(data, { fallback: undefined }) );
+// "value1/{ key2 }/value3"
+
+console.log( c.render(data, { fallback: "x" }) );
+// "value1/x/value3"
+
+console.log( c.render(data, { fallback: null }) );
+// "value1/null/value3"
+```
