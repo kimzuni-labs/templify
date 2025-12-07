@@ -65,18 +65,10 @@ npm run lint:markdown
 Make sure your changes work as expected.
 
 ```shell
-bun run test
-# or
-npm run build && node tests/index.test.ts
+npm run test
+# or (faster)
+bun test
 ```
-
-> [!NOTE]
-> If your Node.js version is **lower than v22.18.0**,
-> add the `--experimental-strip-types` flag when running tests:
->
-> ```shell
-> npm run build && node --experimental-strip-types tests/index.test.ts
-> ```
 
 
 
