@@ -3,7 +3,7 @@
 import assert from "node:assert";
 import { describe, test } from "node:test";
 
-import type { RenderOptions, RenderData } from "../src/types";
+import type { RenderOptions, RenderData, OverrideOptions } from "../src/types";
 import { compile } from "../src/compile";
 import { keys, matches, groups, render } from "../src/direct";
 
@@ -13,6 +13,7 @@ type Callback = (
 	template: string,
 	options: RenderOptions,
 	data: RenderData,
+	overrideOptions?: OverrideOptions,
 ) => {
 	keys: string[];
 	matches: string[];
@@ -243,43 +244,73 @@ const init = (label: string, callback: Callback) => {
 			);
 		});
 
-		test("fallback", () => {
-			const run = (
-				fallback: RenderOptions["fallback"],
-				render: string,
-			) => {
-				const template = "{ key } / { key1 } / { key_1 } / { key2 }";
-				const options = { key: /[a-z0-9]+/, fallback } satisfies RenderOptions;
-				const data = { key: "value", key1: "value1" };
-				const resutls = callback(template, options, data);
-				assert.equal(resutls.render, render);
-			};
+		describe("fallback", () => {
+			test("normal", () => {
+				const run = (
+					fallback: RenderOptions["fallback"],
+					render: string,
+				) => {
+					const template = "{ key } / { key1 } / { key_1 } / { key2 }";
+					const options = { key: /[a-z0-9]+/, fallback } satisfies RenderOptions;
+					const data = { key: "value", key1: "value1" };
+					const resutls = callback(template, options, data);
+					assert.equal(resutls.render, render);
+				};
 
-			run(
-				undefined,
-				"value / value1 / { key_1 } / { key2 }",
-			);
-			run(
-				null,
-				"value / value1 / { key_1 } / null",
-			);
-			run(
-				"x",
-				"value / value1 / { key_1 } / x",
-			);
+				run(
+					undefined,
+					"value / value1 / { key_1 } / { key2 }",
+				);
+				run(
+					null,
+					"value / value1 / { key_1 } / null",
+				);
+				run(
+					"x",
+					"value / value1 / { key_1 } / x",
+				);
+			});
+
+			if (label === "compile") {
+				test("override", () => {
+					const run = (
+						fallback: RenderOptions["fallback"],
+						render: string,
+					) => {
+						const template = "{ key } / { key1 } / { key_1 } / { key2 }";
+						const options = { key: /[a-z0-9]+/, fallback: "fb" } satisfies RenderOptions;
+						const data = { key: "value", key1: "value1" };
+						const resutls = callback(template, options, data, { fallback });
+						assert.equal(resutls.render, render);
+					};
+
+					run(
+						undefined,
+						"value / value1 / { key_1 } / { key2 }",
+					);
+					run(
+						null,
+						"value / value1 / { key_1 } / null",
+					);
+					run(
+						"x",
+						"value / value1 / { key_1 } / x",
+					);
+				});
+			}
 		});
 	});
 };
 
 
 
-init("compile", (template, options, data) => {
+init("compile", (template, options, data, overrideOptions) => {
 	const c = compile(template, options);
 	return {
 		keys: c.keys(),
 		matches: c.matches(),
 		groups: c.groups(),
-		render: c.render(data),
+		render: c.render(data, overrideOptions),
 	};
 });
 
