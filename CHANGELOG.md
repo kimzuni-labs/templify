@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/kimzuni-labs/templify/compare/v1.2.0...v1.3.0) (2025-12-07)
+
+
+### ✨ Features
+
+* **options:** support override options ([300c84d](https://github.com/kimzuni-labs/templify/commit/300c84d88423b23919471daeb024d68645346317))
+* **options:** support override options ([e1def0d](https://github.com/kimzuni-labs/templify/commit/e1def0de92906af2faceeb3de6e8faeafb752f52))
+
+
+### 🐛 Bug Fixes
+
+* **tests:** type error ([9e762d7](https://github.com/kimzuni-labs/templify/commit/9e762d7139e54dc7371c8b3d707a9aa10c804d02))
+* **tests:** type error ([a959033](https://github.com/kimzuni-labs/templify/commit/a959033aa0b7b86a0993b2405d4681940643473d))
+
 ## [1.2.0](https://github.com/kimzuni-labs/templify/compare/v1.1.0...v1.2.0) (2025-12-06)
 
 
