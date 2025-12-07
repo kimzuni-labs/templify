@@ -21,8 +21,7 @@
     "lint": "markdownlint-cli2 && eslint .",
     "lint:eslint": "eslint .",
     "lint:markdown": "markdownlint-cli2",
-    "build": "tsdown",
-    "release": "bun run test && bun run lint && bun run build && standard-version"
+    "build": "tsdown"
   },
   "files": [
     "dist",
@@ -52,7 +51,6 @@
     "eslint": "9.39.1",
     "jiti": "2.6.1",
     "markdownlint-cli2": "0.20.0",
-    "standard-version": "9.5.0",
     "tsdown": "0.17.0",
     "tsx": "4.21.0",
     "typescript": "5.9.3",
