@@ -195,8 +195,8 @@ describe("parseData", () => {
 
 		for (const key in data.groups) {
 			assert.deepStrictEqual(
-				data.groups[key].sort(),
-				groups[key].sort(),
+				data.groups[key]?.sort(),
+				groups[key]?.sort(),
 			);
 
 			// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
