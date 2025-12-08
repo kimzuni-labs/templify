@@ -2,11 +2,18 @@
 name: Test and Lint
 
 on:
+  workflow_dispatch:
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
     paths:
       - "**/*.ts"
       - "**/*.md"
       - "bun.lock"
+      - "bunfig.toml"
       - "package.json"
       - "tsconfig.json"
       - ".markdownlint-cli2.jsonc"
@@ -16,6 +23,7 @@ on:
 
 jobs:
   test:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,3 +40,6 @@ jobs:
 
       - name: Run lints
         run: bun run lint
+
+      - name: Run build
+        run: bun run build
