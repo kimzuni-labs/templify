@@ -1,5 +1,5 @@
 ---
-name: Test and Lint
+name: CI
 
 on:
   workflow_dispatch:
@@ -36,7 +36,7 @@ jobs:
         run: bun ci
 
       - name: Run tests
-        run: bun run test
+        run: bun test
 
       - name: Run lints
         run: bun run lint

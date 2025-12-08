@@ -1,7 +1,7 @@
 # @kimzuni/templify
 
 [![CI](https://github.com/kimzuni-labs/templify/actions/workflows/ci.yml/badge.svg)](https://github.com/kimzuni-labs/templify/actions/workflows/ci.yml)
-[![Release](https://github.com/kimzuni-labs/templify/actions/workflows/release.yml/badge.svg)](https://github.com/kimzuni-labs/templify/actions/workflows/release.yml)
+[![Publish](https://github.com/kimzuni-labs/templify/actions/workflows/publish.yml/badge.svg)](https://github.com/kimzuni-labs/templify/actions/workflows/publish.yml)
 [![NPM version](https://img.shields.io/npm/v/@kimzuni/templify.svg)](https://www.npmjs.com/package/@kimzuni/templify)
 
 Flexible template string processor for JavaScript and TypeScript.
@@ -29,21 +29,18 @@ bun add @kimzuni/templify
 ## Example
 
 ```javascript
-const { compile } = require("@kimzuni/templify");
+const { keys, matches, groups, render } = require("@kimzuni/templify");
 
 const template = "{key1} {key1 } { key2} {key1}";
-const options = { key: /[a-zA-Z0-9_-]+/, open: "{", close: "}", spacing: -1, fallback: undefined };
 const data = { key1: "value1", key3: "value3" };
 
-const c = compile(template, options);
-
-console.log( c.keys() );
+console.log(keys(template));
 // ["key1", "key2"]
 
-console.log( c.matches() );
+console.log(matches(template));
 // ["{key1}", "{key1 }", "{ key2}"]
 
-console.log( c.groups() );
+console.log(groups(template));
 /*
 {
 	key1: ["{key1}", "{key1 }"],
@@ -51,7 +48,7 @@ console.log( c.groups() );
 }
 */
 
-console.log( c.render(data) );
+console.log(render(template, data));
 // "value1 value1 { key2} value1"
 ```
 
@@ -69,15 +66,19 @@ console.log( c.render(data) );
 // "item1 item2 {2} item2"
 ```
 
-### without compile
+### with compile
 
 ```javascript
-const { keys, matches, groups, render } = require("@kimzuni/templify");
+const { compile } = require("@kimzuni/templify");
 
-console.log( keys(template, options) );
-console.log( matches(template, options) );
-console.log( groups(template, options) );
-console.log( render(template, data, options) );
+const template = "{key1} {key1 } { key2} {key1}";
+const data = { key1: "value1", key3: "value3" };
+
+const c = compile(template);
+console.log( c.keys() );
+console.log( c.matches() );
+console.log( c.groups() );
+console.log( c.render(data) );
 ```
 
 
@@ -137,7 +138,7 @@ const template = "{key1} { key1 } {  key1  } {   key1   } {   key1 }";
 const data = { key1: "value1" };
 
 console.log(render(template, data, {
-	spacing: -1,
+	spacing: -1, // alias for `spacing: { size: -1 }`
 }));
 // "value1 value1 value1 value1 value1"
 
