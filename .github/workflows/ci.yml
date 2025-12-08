@@ -1,5 +1,5 @@
 ---
-name: Test and Lint
+name: CI
 
 on:
   workflow_dispatch:
