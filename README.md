@@ -55,14 +55,12 @@ console.log(render(template, data));
 ### with array
 
 ```javascript
-const { compile } = require("@kimzuni/templify");
+const { render } = require("@kimzuni/templify");
 
 const template = "{0} {1} {2} {1}";
 const data = ["item1", "item2"];
 
-const c = compile(template);
-
-console.log( c.render(data) );
+console.log( render(template, data) );
 // "item1 item2 {2} item2"
 ```
 
@@ -166,7 +164,7 @@ console.log(render(template, data, {
 console.log(render(template, data, {
 	spacing: {
 		strict: true,
-		size: 1,
+		size: [1, 3],
 	},
 }));
 // "{key1} value1 {  key1  } value1 {   key1 }"
@@ -216,10 +214,8 @@ Support Options:
 - [fallback](#fallback)
 
 ```javascript
-const { compile } = require("@kimzuni/templify");
-
 const template = "{ key } / { key1 } / { key_2 }";
-const options = { fallback: "fallback" };
+const options = { key: /[a-z0-9]+/, fallback: "fallback" };
 const data = { key1: "value1", key_2: "value2" };
 
 const c = compile(template, options);
