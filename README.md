@@ -55,14 +55,12 @@ console.log(render(template, data));
 ### with array
 
 ```javascript
-const { compile } = require("@kimzuni/templify");
+const { render } = require("@kimzuni/templify");
 
 const template = "{0} {1} {2} {1}";
 const data = ["item1", "item2"];
 
-const c = compile(template);
-
-console.log( c.render(data) );
+console.log( render(template, data) );
 // "item1 item2 {2} item2"
 ```
 
@@ -166,7 +164,7 @@ console.log(render(template, data, {
 console.log(render(template, data, {
 	spacing: {
 		strict: true,
-		size: 1,
+		size: [1, 3],
 	},
 }));
 // "{key1} value1 {  key1  } value1 {   key1 }"
@@ -182,23 +180,27 @@ If not set, the placeholder remains unchanged.
 | `string`, `number`, `boolean`, `null`, `undefined` | `undefined`   |
 
 ```javascript
-const template = "{key1} { key1 } {  key1  } {   key1   } {   key1 }";
-const data = { key1: "value1" };
+const template = "{ key } / { key1 } / { key_2 }";
+const options = { key: /[a-z0-9]+/ };
+const data = { key1: "value1", key_2: "value2" };
 
 console.log(render(template, data, {
+	...options,
 	fallback: undefined,
 }));
-// "{key1} value1 {  key1  } {   key1   } {   key1 }"
+// "{ key } / value1 / { key_2 }"
 
 console.log(render(template, data, {
+	...options,
 	fallback: "x",
 }));
-// "x value1 x x x"
+// "x / value1 / { key_2 }"
 
 console.log(render(template, data, {
+	...options,
 	fallback: null,
 }));
-// "null value1 null null null"
+// "null / value1 / { key_2 }"
 ```
 
 
@@ -212,23 +214,21 @@ Support Options:
 - [fallback](#fallback)
 
 ```javascript
-const { compile } = require("@kimzuni/templify");
-
-const template = "{ key1 }/{ key2 }/{ key3 }";
-const options = { fallback: "fallback" };
-const data = { key1: "value1", key3: "value3" };
+const template = "{ key } / { key1 } / { key_2 }";
+const options = { key: /[a-z0-9]+/, fallback: "fallback" };
+const data = { key1: "value1", key_2: "value2" };
 
 const c = compile(template, options);
 
 console.log( c.render(data) );
-// "value1/fallback/value3"
+// "fallback / value1 / { key_2 }"
 
 console.log( c.render(data, { fallback: undefined }) );
-// "value1/{ key2 }/value3"
+// "{ key } / value1 / { key_2 }"
 
 console.log( c.render(data, { fallback: "x" }) );
-// "value1/x/value3"
+// "x / value1 / { key_2 }"
 
 console.log( c.render(data, { fallback: null }) );
-// "value1/null/value3"
+// "null / value1 / { key_2 }"
 ```
