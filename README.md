@@ -3,6 +3,7 @@
 [![CI](https://github.com/kimzuni-labs/templify/actions/workflows/ci.yml/badge.svg)](https://github.com/kimzuni-labs/templify/actions/workflows/ci.yml)
 [![Publish](https://github.com/kimzuni-labs/templify/actions/workflows/publish.yml/badge.svg)](https://github.com/kimzuni-labs/templify/actions/workflows/publish.yml)
 [![NPM version](https://img.shields.io/npm/v/@kimzuni/templify.svg)](https://www.npmjs.com/package/@kimzuni/templify)
+[![codecov](https://codecov.io/gh/kimzuni-labs/templify/graph/badge.svg?token=932ALHWG7H)](https://codecov.io/gh/kimzuni-labs/templify)
 
 Flexible template string processor for JavaScript and TypeScript.
 
