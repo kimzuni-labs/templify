@@ -18,6 +18,7 @@
   "bugs": "https://github.com/kimzuni-labs/templify/issues",
   "scripts": {
     "test": "NODE_ENV=test tsx --test",
+    "test:all": "NODE_ENV=test tsx --test tests/*.test.ts",
     "lint": "markdownlint-cli2 && eslint .",
     "lint:eslint": "eslint .",
     "lint:markdown": "markdownlint-cli2",
