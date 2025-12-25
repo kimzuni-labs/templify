@@ -10,6 +10,7 @@ const options = {
 	outDir  : "./dist",
 	platform: "neutral",
 	target  : "es6",
+	unbundle: true,
 };
 
 export default defineConfig([
