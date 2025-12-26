@@ -19,9 +19,10 @@
   "scripts": {
     "test": "NODE_ENV=test tsx --test",
     "test:all": "NODE_ENV=test tsx --test tests/*.test.ts",
-    "lint": "markdownlint-cli2 && eslint .",
+    "lint": "markdownlint-cli2 && yamllint . && eslint .",
     "lint:eslint": "eslint .",
     "lint:markdown": "markdownlint-cli2",
+    "lint:yaml": "yamllint .",
     "build": "tsdown",
     "prepare": "husky"
   },
@@ -59,6 +60,7 @@
     "tsdown": "0.18.3",
     "tsx": "4.21.0",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.50.1"
+    "typescript-eslint": "8.50.1",
+    "yamllint-js": "0.1.0"
   }
 }
