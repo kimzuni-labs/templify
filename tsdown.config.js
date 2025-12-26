@@ -1,8 +1,10 @@
-import { defineConfig, type UserConfig } from "tsdown";
+import { defineConfig } from "tsdown";
 
 
 
-const options: UserConfig = {
+/** @type {import("tsdown").UserConfig} */
+
+const options = {
 	clean   : false,
 	entry   : "./src/index.ts",
 	outDir  : "./dist",
