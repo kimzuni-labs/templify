@@ -1,6 +1,11 @@
-{
+import tsconfig from "./tsconfig.base.json" with { type: "json" };
+
+export default {
   "globs": ["**/*.md"],
-  "ignores": ["CHANGELOG.md"],
+  "ignores": [
+    ...tsconfig.exclude,
+    "**/CHANGELOG.md",
+  ],
   "fix": false,
   "gitignore": true,
   "noBanner": true,
@@ -340,4 +345,4 @@
       "style": "aligned"
     }
   }
-}
+};

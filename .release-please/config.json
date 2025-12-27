@@ -1,8 +1,9 @@
 {
 	"release-type": "node",
 	"pull-request-title-pattern": "chore: release${component} ${version}",
+	"separate-pull-requests": true,
 	"packages": {
-		".": {
+		"packages/@kimzuni/templify": {
 			"package-name": ""
 		}
 	},

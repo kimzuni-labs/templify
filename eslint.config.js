@@ -3,14 +3,13 @@ import tseslint from "typescript-eslint";
 import stylistic from "@stylistic/eslint-plugin";
 import { defineConfig } from "eslint/config";
 
+import tsconfig from "./tsconfig.base.json" with { type: "json" };
+
 
 
 export default defineConfig(
 	{
-		ignores: [
-			"node_modules",
-			"dist",
-		],
+		ignores: tsconfig.exclude,
 	},
 	{
 		extends: [
