@@ -12,6 +12,7 @@ const options = {
 	outDir  : "./dist",
 	platform: "neutral",
 	target  : tsconfig.compilerOptions.target,
+	unbundle: true,
 };
 
 export default defineConfig([
