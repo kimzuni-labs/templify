@@ -109,6 +109,16 @@ describe("getPattern", () => {
 		], [
 		]);
 		run(getPattern({
+			spacing: true,
+		}), [
+			"{key}",
+			"{ key }",
+			"{  key  }",
+			"{   key   }",
+			"{    key    }",
+		], [
+		]);
+		run(getPattern({
 			spacing: {
 				size: -1,
 			},
