@@ -9,17 +9,14 @@ import { keys, matches, groups, render } from "../src/direct";
 
 
 
+type Compiled = ReturnType<typeof compile>;
+type CallbackData = { [K in keyof Compiled]: ReturnType<Compiled[K]> };
 type Callback = (
 	template: string,
 	options: RenderOptions,
 	data: RenderData,
 	overrideOptions?: OverrideOptions,
-) => {
-	keys: string[];
-	matches: string[];
-	groups: ReturnType<typeof groups>;
-	render: string;
-};
+) => CallbackData;
 
 const init = (label: string, callback: Callback) => {
 	describe(label, () => {
@@ -27,7 +24,7 @@ const init = (label: string, callback: Callback) => {
 			test("groups/keys/matches", () => {
 				const run = (
 					template: string,
-					groups: ReturnType<Callback>["groups"],
+					groups: CallbackData["groups"],
 				) => {
 					const options = {};
 					const data = {};

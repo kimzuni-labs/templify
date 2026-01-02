@@ -1,4 +1,4 @@
-import type { CommonOptions } from "./types";
+import type { CommonOptions, Keys, Matches, Groups } from "./types";
 
 
 
@@ -47,9 +47,9 @@ export function parseData(template: string, pattern: RegExp) {
 		extract[key].add(target);
 	}
 
-	const groups: Partial<Record<string, string[]>> = {};
-	const keys: string[] = [];
-	const matches: string[] = [];
+	const groups: Groups = {};
+	const keys: Keys = [];
+	const matches: Matches = [];
 	for (const key in extract) {
 		const value = [...extract[key]];
 		groups[key] = value;
