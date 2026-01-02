@@ -34,8 +34,8 @@ const init = (label: string, callback: Callback) => {
 					const matches = Object.values(groups).flat();
 					for (const key in results.groups) {
 						assert.deepStrictEqual(
-							results.groups[key]?.sort(),
-							groups[key]?.sort(),
+							results.groups[key].sort(),
+							groups[key].sort(),
 						);
 
 						// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
