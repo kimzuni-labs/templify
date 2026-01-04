@@ -10,9 +10,7 @@ export type Context = Primitive[] | Record<string, Primitive>;
 
 /**
  * Options for controlling the number of spaces inside template placeholders.
- *
- * Can be used in {@link CompileOptions} or {@link RenderOptions} to enforce
- * consistent spacing rules when matching or rendering templates.
+ * Can be used to enforce consistent spacing rules when matching them.
  */
 export interface SpacingOptions {
 	/**
@@ -26,7 +24,7 @@ export interface SpacingOptions {
 	strict?: boolean;
 
 	/**
-	 * Number of spaces allowed inside the braces. Negative value disables space checking.
+	 * Number of spaces allowed inside placeholders. Negative value disables space checking.
 	 *
 	 * - If a single number, exactly that many spaces are required.
 	 * - If an array of numbers, any of the specified sizes are allowed.
@@ -37,7 +35,7 @@ export interface SpacingOptions {
 }
 
 /**
- * Options that control how templates are parsed and compiled.
+ * Options that control how placeholders are parsed and compiled.
  */
 export interface CommonOptions {
 	/**
@@ -93,8 +91,10 @@ export interface CommonOptions {
 	close?: string;
 
 	/**
-	 * Rules for controlling spacing inside placeholders.
-	 * Can be provided as a simple `size` value or as a full {@link SpacingOptions} object.
+	 * Options for controlling the number of spaces inside template placeholders.
+	 * Can be used to enforce consistent spacing rules when matching them.
+	 *
+	 * Can be provided as a simple value or as a full {@link SpacingOptions} object.
 	 *
 	 * @default -1
 	 *
@@ -124,7 +124,7 @@ export interface CommonOptions {
  */
 export interface RenderOptions extends CommonOptions {
 	/**
-	 * Value to use when a placeholder key is missing in the context.
+	 * Value to use when a placeholder key is missing in the provided context.
 	 *
 	 * - `string`, `number`, `boolean`, and `null` are stringified
 	 * - `undefined` is treated as absence: the key is considered missing

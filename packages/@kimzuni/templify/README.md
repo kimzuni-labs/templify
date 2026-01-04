@@ -89,6 +89,7 @@ All options are optional.
 
 Regex pattern defining valid characters for placeholder keys.
 This controls what is allowed between the opening and closing delimiters.
+Any regex flags (e.g., `i`, `g`) are ignored if provided.
 
 | Type               | Default value |
 |--------------------|---------------|
@@ -125,6 +126,7 @@ console.log(result); // "value1 { key1 }"
 ### spacing
 
 Controls how whitespace inside placeholders is handled.
+Can be provided as a simple value or as a full object.
 
 | key    | Type                 | Default value | Info                                                            |
 |--------|----------------------|---------------|-----------------------------------------------------------------|

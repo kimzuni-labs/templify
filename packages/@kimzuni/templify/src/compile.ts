@@ -24,22 +24,7 @@ export function compile(template: string, options: CompileOptions = {}) {
 
 	return {
 		/**
-		 * Extracts a mapping of each placeholder key to all its matched template strings.
-		 *
-		 * @example
-		 *
-		 * ```typescript
-		 * const c = compile("{key1} { key1 } { key2}");
-		 * const result = c.groups();
-		 * console.log(result); // { key1: ["{key1}", "{ key1 }"], key2: ["{ key2}"] }
-		 * ```
-		 */
-		groups() {
-			return getData().groups;
-		},
-
-		/**
-		 * Extracts a list of unique placeholder keys found in the given template string.
+		 * Extracts a list of unique placeholder keys from the provided template string.
 		 *
 		 * @example
 		 *
@@ -54,7 +39,7 @@ export function compile(template: string, options: CompileOptions = {}) {
 		},
 
 		/**
-		 * Extracts a list of unique placeholders from the given template.
+		 * Extracts a list of unique placeholders from the provided template.
 		 *
 		 * @example
 		 *
@@ -73,6 +58,21 @@ export function compile(template: string, options: CompileOptions = {}) {
 		 */
 		fields() {
 			return this.placeholders();
+		},
+
+		/**
+		 * Groups placeholders by their normalized key.
+		 *
+		 * @example
+		 *
+		 * ```typescript
+		 * const c = compile("{key1} { key1 } { key2}");
+		 * const result = c.groups();
+		 * console.log(result); // { key1: ["{key1}", "{ key1 }"], key2: ["{ key2}"] }
+		 * ```
+		 */
+		groups() {
+			return getData().groups;
 		},
 
 		/**
