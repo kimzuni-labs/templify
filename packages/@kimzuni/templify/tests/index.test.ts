@@ -3,7 +3,7 @@
 import assert from "node:assert";
 import { describe, test } from "node:test";
 
-import type { RenderOptions, RenderData, OverrideOptions } from "../src/types";
+import type { RenderOptions, Context, OverrideOptions } from "../src/types";
 import { compile } from "../src/compile";
 import { keys, matches, groups, render } from "../src/direct";
 
@@ -14,7 +14,7 @@ type CallbackData = { [K in keyof Compiled]: ReturnType<Compiled[K]> };
 type Callback = (
 	template: string,
 	options: RenderOptions,
-	data: RenderData,
+	context: Context,
 	overrideOptions?: OverrideOptions,
 ) => CallbackData;
 
@@ -27,8 +27,8 @@ const init = (label: string, callback: Callback) => {
 					groups: CallbackData["groups"],
 				) => {
 					const options = {};
-					const data = {};
-					const results = callback(template, options, data);
+					const context = {};
+					const results = callback(template, options, context);
 
 					const keys = Object.keys(groups);
 					const matches = Object.values(groups).flat();
@@ -85,9 +85,9 @@ const init = (label: string, callback: Callback) => {
 					keys: string[],
 				) => test(`${options.open} ... ${options.close}`, () => {
 					const template = "{ key1 } / {{ key2 }} / <%= key3 %>";
-					const data = {};
+					const context = {};
 					assert.deepStrictEqual(
-						callback(template, options, data).keys.sort(),
+						callback(template, options, context).keys.sort(),
 						keys.sort(),
 					);
 				});
@@ -117,9 +117,9 @@ const init = (label: string, callback: Callback) => {
 				) => test(pattern.source, () => {
 					const template = "{ key } / { Key } / { key1 } / { key_1 } / { key-1 }";
 					const options = { key: pattern } satisfies RenderOptions;
-					const data = {};
+					const context = {};
 					assert.deepStrictEqual(
-						callback(template, options, data).keys.sort(),
+						callback(template, options, context).keys.sort(),
 						keys.sort(),
 					);
 				});
@@ -146,9 +146,9 @@ const init = (label: string, callback: Callback) => {
 				) => test(label, () => {
 					const template = "{key} / { key } / {  key  } / {   key   } / {    key    } / { key   } / {   key }";
 					const options = { spacing };
-					const data = {};
+					const context = {};
 					assert.deepStrictEqual(
-						callback(template, options, data).matches.sort(),
+						callback(template, options, context).matches.sort(),
 						matches.sort(),
 					);
 				});
@@ -231,10 +231,10 @@ const init = (label: string, callback: Callback) => {
 			const run = (
 				label: string,
 				template: string,
-				data: RenderData,
+				context: Context,
 				render: string,
 			) => test(label, () => {
-				assert.equal(callback(template, {}, data).render, render);
+				assert.equal(callback(template, {}, context).render, render);
 			});
 
 			run(
@@ -260,8 +260,8 @@ const init = (label: string, callback: Callback) => {
 				) => {
 					const template = "{ key } / { key1 } / { key_1 } / { key2 }";
 					const options = { key: /[a-z0-9]+/, fallback } satisfies RenderOptions;
-					const data = { key: "value", key1: "value1" };
-					const resutls = callback(template, options, data);
+					const context = { key: "value", key1: "value1" };
+					const resutls = callback(template, options, context);
 					assert.equal(resutls.render, render);
 				};
 
@@ -287,8 +287,8 @@ const init = (label: string, callback: Callback) => {
 					) => {
 						const template = "{ key } / { key1 } / { key_1 } / { key2 }";
 						const options = { key: /[a-z0-9]+/, fallback: "fb" } satisfies RenderOptions;
-						const data = { key: "value", key1: "value1" };
-						const resutls = callback(template, options, data, { fallback });
+						const context = { key: "value", key1: "value1" };
+						const resutls = callback(template, options, context, { fallback });
 						assert.equal(resutls.render, render);
 					};
 
@@ -312,21 +312,21 @@ const init = (label: string, callback: Callback) => {
 
 
 
-init("compile", (template, options, data, overrideOptions) => {
+init("compile", (template, options, context, overrideOptions) => {
 	const c = compile(template, options);
 	return {
 		keys: c.keys(),
 		matches: c.matches(),
 		groups: c.groups(),
-		render: c.render(data, overrideOptions),
+		render: c.render(context, overrideOptions),
 	};
 });
 
-init("direct", (template, options, data) => {
+init("direct", (template, options, context) => {
 	return {
 		keys: keys(template, options),
 		matches: matches(template, options),
 		groups: groups(template, options),
-		render: render(template, data, options),
+		render: render(template, context, options),
 	};
 });
