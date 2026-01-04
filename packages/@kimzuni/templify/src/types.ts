@@ -124,7 +124,7 @@ export interface CommonOptions {
  */
 export interface RenderOptions extends CommonOptions {
 	/**
-	 * Value to use when a template key is missing in the context.
+	 * Value to use when a placeholder key is missing in the context.
 	 *
 	 * - `string`, `number`, `boolean`, and `null` are stringified
 	 * - `undefined` is treated as absence: the key is considered missing
@@ -151,5 +151,10 @@ export interface OverrideOptions extends Pick<CompileOptions, "fallback"> {}
 
 
 export type Keys = string[];
-export type Matches = string[];
+export type Placeholders = string[];
 export type Groups = Record<string, string[]>;
+
+/**
+ * Alias of {@link Placeholders}.
+ */
+export type Fields = Placeholders;

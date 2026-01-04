@@ -199,7 +199,7 @@ describe("parseData", () => {
 		groups: Groups,
 	) => {
 		const keys = Object.keys(groups);
-		const matches = Object.values(groups).flat();
+		const placeholders = Object.values(groups).flat();
 		const data = parseData(template, getPattern({
 			key: /\w+/,
 		}));
@@ -215,10 +215,10 @@ describe("parseData", () => {
 		}
 		assert.ok(Object.keys(groups).length === 0);
 		assert.deepStrictEqual(data.keys.sort(), keys.sort());
-		assert.deepStrictEqual(data.matches.sort(), matches.sort());
+		assert.deepStrictEqual(data.placeholders.sort(), placeholders.sort());
 	};
 
-	test("groups/keys/matches", () => {
+	test("keys/placeholders/groups", () => {
 		run(
 			"{key}/{ key }/{  key  }/{ key }/{  key  }",
 			{

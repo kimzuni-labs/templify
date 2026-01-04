@@ -36,20 +36,25 @@ export function keys(template: string, options?: CommonOptions) {
 }
 
 /**
- * Extracts all matched placeholder strings from the given template.
+ * Extracts a list of unique placeholders from the given template.
  *
  * For more advanced or repeated usage, consider using {@link compile} to precompile the template.
  *
  * @example
  *
  * ```typescript
- * const result = matches("{key1} { key1 } { key2}", { open: "{", close: "}", spacing: -1 });
+ * const result = placeholders("{key1} { key1 } { key2}", { open: "{", close: "}", spacing: -1 });
  * console.log(result); // ["{key1}", "{ key1 }", "{ key2}"]
  * ```
  */
-export function matches(template: string, options?: CommonOptions) {
-	return compile(template, options).matches();
+export function placeholders(template: string, options?: CommonOptions) {
+	return compile(template, options).placeholders();
 }
+
+/**
+ * Alias of {@link placeholders}
+ */
+export const fields = placeholders;
 
 /**
  * Renders a template string by replacing placeholders with corresponding values from context.

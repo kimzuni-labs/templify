@@ -29,7 +29,7 @@ bun add @kimzuni/templify
 ## Example
 
 ```javascript
-const { keys, matches, groups, render } = require("@kimzuni/templify");
+const { keys, placeholders, groups, render } = require("@kimzuni/templify");
 
 const template = "{key1} {key1 } { key2} {key1}";
 const context = { key1: "value1", key3: "value3" };
@@ -37,7 +37,7 @@ const context = { key1: "value1", key3: "value3" };
 console.log(keys(template));
 // ["key1", "key2"]
 
-console.log(matches(template));
+console.log(placeholders(template));
 // ["{key1}", "{key1 }", "{ key2}"]
 
 console.log(groups(template));
@@ -74,7 +74,7 @@ const context = { key1: "value1", key3: "value3" };
 
 const c = compile(template);
 console.log( c.keys() );
-console.log( c.matches() );
+console.log( c.placeholders() );
 console.log( c.groups() );
 console.log( c.render(context) );
 ```
