@@ -10,13 +10,10 @@ export type Context = Primitive[] | Record<string, Primitive>;
 
 /**
  * Options for controlling the number of spaces inside template placeholders.
- *
- * Can be used in {@link CompileOptions} or {@link RenderOptions} to enforce
- * consistent spacing rules when matching or rendering templates.
  */
 export interface SpacingOptions {
 	/**
-	 * Whether to enforce exact space rules strictly.
+	 * Enforce exact spacing rules.
 	 *
 	 * When `true`, placeholders must have the same number of spaces
 	 * on both sides of the key to be considered a valid match.
@@ -26,7 +23,8 @@ export interface SpacingOptions {
 	strict?: boolean;
 
 	/**
-	 * Number of spaces allowed inside the braces. Negative value disables space checking.
+	 * Allowed number of spaces inside placeholder delimiters.
+	 * Negative value disables space checking.
 	 *
 	 * - If a single number, exactly that many spaces are required.
 	 * - If an array of numbers, any of the specified sizes are allowed.
@@ -37,12 +35,12 @@ export interface SpacingOptions {
 }
 
 /**
- * Options that control how templates are parsed and compiled.
+ * Options that control how placeholders are parsed and compiled.
  */
 export interface CommonOptions {
 	/**
 	 * Regex pattern defining valid characters for placeholder keys.
-	 * This controls what is allowed between the opening and closing delimiters.
+	 * Controls which characters are allowed inside the delimiters.
 	 * Any regex flags (e.g., `i`, `g`) are ignored if provided.
 	 *
 	 * By default, `/\w+/` allows only letters (A-Z, a-z), digits (0-9), and underscores (_).
@@ -93,8 +91,9 @@ export interface CommonOptions {
 	close?: string;
 
 	/**
-	 * Rules for controlling spacing inside placeholders.
-	 * Can be provided as a simple `size` value or as a full {@link SpacingOptions} object.
+	 * Options for controlling the number of spaces inside template placeholders.
+	 *
+	 * Can be provided as a simple value or as a full {@link SpacingOptions} object.
 	 *
 	 * @default -1
 	 *
@@ -124,7 +123,7 @@ export interface CommonOptions {
  */
 export interface RenderOptions extends CommonOptions {
 	/**
-	 * Value to use when a placeholder key is missing in the context.
+	 * Fallback value to use when a template key is missing.
 	 *
 	 * - `string`, `number`, `boolean`, and `null` are stringified
 	 * - `undefined` is treated as absence: the key is considered missing

@@ -4,23 +4,7 @@ import type { Context, CommonOptions, RenderOptions } from "./types";
 
 
 /**
- * Extracts a mapping of each placeholder key to all its matched template strings.
- *
- * For more advanced or repeated usage, consider using {@link compile} to precompile the template.
- *
- * @example
- *
- * ```typescript
- * const result = groups("{key1} { key1 } { key2}", { open: "{", close: "}", spacing: -1 });
- * console.log(result); // { key1: ["{key1}", "{ key1 }"], key2: ["{ key2}"] }
- * ```
- */
-export function groups(template: string, options?: CommonOptions) {
-	return compile(template, options).groups();
-}
-
-/**
- * Extracts a list of unique placeholder keys found in the given template string.
+ * Extracts a list of unique placeholder keys from the provided template string.
  *
  * For more advanced or repeated usage, consider using {@link compile} to precompile the template.
  *
@@ -28,7 +12,8 @@ export function groups(template: string, options?: CommonOptions) {
  *
  * ```typescript
  * const result = keys("{key1} { key1 } { key2}", { open: "{", close: "}", spacing: -1 });
- * console.log(result); // ["key1", "key2"]
+ * console.log(result);
+ * [ 'key1', 'key2' ]
  * ```
  */
 export function keys(template: string, options?: CommonOptions) {
@@ -36,7 +21,7 @@ export function keys(template: string, options?: CommonOptions) {
 }
 
 /**
- * Extracts a list of unique placeholders from the given template.
+ * Extracts a list of unique placeholders from the provided template.
  *
  * For more advanced or repeated usage, consider using {@link compile} to precompile the template.
  *
@@ -44,7 +29,8 @@ export function keys(template: string, options?: CommonOptions) {
  *
  * ```typescript
  * const result = placeholders("{key1} { key1 } { key2}", { open: "{", close: "}", spacing: -1 });
- * console.log(result); // ["{key1}", "{ key1 }", "{ key2}"]
+ * console.log(result);
+ * [ '{key1}', '{ key1 }', '{ key2}' ]
  * ```
  */
 export function placeholders(template: string, options?: CommonOptions) {
@@ -57,6 +43,23 @@ export function placeholders(template: string, options?: CommonOptions) {
 export const fields = placeholders;
 
 /**
+ * Groups placeholders by their normalized key.
+ *
+ * For more advanced or repeated usage, consider using {@link compile} to precompile the template.
+ *
+ * @example
+ *
+ * ```typescript
+ * const result = groups("{key1} { key1 } { key2}", { open: "{", close: "}", spacing: -1 });
+ * console.log(result);
+ * { key1: [ '{key1}', '{ key1 }' ], key2: [ '{ key2}' ] }
+ * ```
+ */
+export function groups(template: string, options?: CommonOptions) {
+	return compile(template, options).groups();
+}
+
+/**
  * Renders a template string by replacing placeholders with corresponding values from context.
  *
  * For more advanced or repeated usage, consider using {@link compile} to precompile the template.
@@ -65,7 +68,8 @@ export const fields = placeholders;
  *
  * ```typescript
  * const result = render("{key1} { key1 } { key2}", { key1: "value1", key3: "value3" }, { open: "{", close: "}", spacing: -1, fallback: "x" });
- * console.log(result); // value1 value1 x
+ * console.log(result);
+ * // value1 value1 x
  * ```
  */
 export function render(template: string, context: Context, options?: RenderOptions) {

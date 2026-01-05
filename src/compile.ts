@@ -24,29 +24,15 @@ export function compile(template: string, options: CompileOptions = {}) {
 
 	return {
 		/**
-		 * Extracts a mapping of each placeholder key to all its matched template strings.
-		 *
-		 * @example
-		 *
-		 * ```typescript
-		 * const c = compile("{key1} { key1 } { key2}");
-		 * const result = c.groups();
-		 * console.log(result); // { key1: ["{key1}", "{ key1 }"], key2: ["{ key2}"] }
-		 * ```
-		 */
-		groups() {
-			return getData().groups;
-		},
-
-		/**
-		 * Extracts a list of unique placeholder keys found in the given template string.
+		 * Extracts a list of unique placeholder keys from the provided template string.
 		 *
 		 * @example
 		 *
 		 * ```typescript
 		 * const c = compile("{key1} { key1 } { key2}");
 		 * const result = c.keys();
-		 * console.log(result); // ["key1", "key2"]
+		 * console.log(result);
+		 * [ 'key1', 'key2' ]
 		 * ```
 		 */
 		keys() {
@@ -54,14 +40,15 @@ export function compile(template: string, options: CompileOptions = {}) {
 		},
 
 		/**
-		 * Extracts a list of unique placeholders from the given template.
+		 * Extracts a list of unique placeholders from the provided template.
 		 *
 		 * @example
 		 *
 		 * ```typescript
 		 * const c = compile("{key1} { key1 } { key2}");
 		 * const result = c.placeholders();
-		 * console.log(result); // ["{key1}", "{ key1 }", "{ key2}"]
+		 * console.log(result);
+		 * [ '{key1}', '{ key1 }', '{ key2}' ]
 		 * ```
 		 */
 		placeholders() {
@@ -77,6 +64,22 @@ export function compile(template: string, options: CompileOptions = {}) {
 		},
 
 		/**
+		 * Groups placeholders by their normalized key.
+		 *
+		 * @example
+		 *
+		 * ```typescript
+		 * const c = compile("{key1} { key1 } { key2}");
+		 * const result = c.groups();
+		 * console.log(result);
+		 * { key1: [ '{key1}', '{ key1 }' ], key2: [ '{ key2}' ] }
+		 * ```
+		 */
+		groups() {
+			return getData().groups;
+		},
+
+		/**
 		 * Renders a template string by replacing placeholders with corresponding values from context.
 		 *
 		 * @example
@@ -84,7 +87,8 @@ export function compile(template: string, options: CompileOptions = {}) {
 		 * ```typescript
 		 * const c = compile("{key1} {key1 } { key2}");
 		 * const result = c.render({ key1: "value1", key3: "value3" });
-		 * console.log(result); // value1 value1 { key2}
+		 * console.log(result);
+		 * // value1 value1 { key2}
 		 * ```
 		 */
 		render(context: Context, options: OverrideOptions = {}) {
