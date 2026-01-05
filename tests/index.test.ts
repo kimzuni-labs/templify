@@ -170,6 +170,17 @@ const init = (label: string, callback: Callback) => {
 					],
 				);
 				run(
+					"true",
+					true,
+					[
+						"{key}",
+						"{ key }",
+						"{  key  }",
+						"{   key   }",
+						"{    key    }",
+					],
+				);
+				run(
 					"size: -1",
 					{ size: -1 },
 					[

@@ -17,7 +17,11 @@ export function getPattern(options: CommonOptions = {}) {
 	const {
 		size: spacingSize = -1,
 		strict: spacingStrict = false,
-	} = typeof spacing === "number" || Array.isArray(spacing) ? { size: spacing } : spacing;
+	} = typeof spacing === "number" || Array.isArray(spacing)
+		? { size: spacing }
+		: typeof spacing === "boolean"
+			? { strict: spacing }
+			: spacing;
 
 	let leftSpace = "";
 	const innerSpaceArray = Array.isArray(spacingSize) ? spacingSize : [spacingSize];

@@ -142,6 +142,11 @@ console.log(render(template, data, {
 // "value1 value1 value1 value1 value1"
 
 console.log(render(template, data, {
+	spacing: true, // alias for `spacing: { strict: true }`
+}));
+// "value1 value1 value1 value1 {   key1 }"
+
+console.log(render(template, data, {
 	spacing: {
 		size: -1,
 	},

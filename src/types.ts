@@ -114,7 +114,7 @@ export interface CommonOptions {
 	 * console.log( run({ size: [1, 3] }) ); // "{key1} value1 {  key1  } value1 value1"
 	 * console.log( run({ strict: true, size: [1, 3] }) ); // "{key1} value1 {  key1  } value1 {   key1 }"
 	 */
-	spacing?: SpacingOptions["size"] | SpacingOptions;
+	spacing?: SpacingOptions["size"] | SpacingOptions["strict"] | SpacingOptions;
 }
 
 /**
