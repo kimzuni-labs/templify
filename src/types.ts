@@ -1,12 +1,12 @@
 /**
- * Allowed types for template replacement values.
+ * Primitive values that can be used as placeholders.
  */
-export type AllowValue = string | number | boolean | null | undefined;
+export type Primitive = string | number | boolean | null | undefined;
 
 /**
- * Data source used for template rendering.
+ * The context used for resolving placeholders.
  */
-export type RenderData = AllowValue[] | Record<string, AllowValue>;
+export type Context = Primitive[] | Record<string, Primitive>;
 
 /**
  * Options for controlling the number of spaces inside template placeholders.
@@ -124,14 +124,14 @@ export interface CommonOptions {
  */
 export interface RenderOptions extends CommonOptions {
 	/**
-	 * Value to use when a template key is missing in the `data` object.
+	 * Value to use when a template key is missing in the context.
 	 *
-	 * - If `undefined`, the placeholder is left unchanged.
-	 * - If set, the placeholder is replaced with this value.
+	 * - `string`, `number`, `boolean`, and `null` are stringified
+	 * - `undefined` is treated as absence: the key is considered missing
 	 *
 	 * @default undefined
 	 */
-	fallback?: AllowValue;
+	fallback?: Primitive;
 }
 
 /**
