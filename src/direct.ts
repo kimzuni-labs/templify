@@ -1,5 +1,5 @@
 import { compile } from "./compile";
-import type { RenderData, CommonOptions, RenderOptions } from "./types";
+import type { Context, CommonOptions, RenderOptions } from "./types";
 
 
 
@@ -52,7 +52,7 @@ export function matches(template: string, options?: CommonOptions) {
 }
 
 /**
- * Renders a template string by replacing placeholders with corresponding values from `data`.
+ * Renders a template string by replacing placeholders with corresponding values from context.
  *
  * For more advanced or repeated usage, consider using {@link compile} to precompile the template.
  *
@@ -63,6 +63,6 @@ export function matches(template: string, options?: CommonOptions) {
  * console.log(result); // value1 value1 x
  * ```
  */
-export function render(template: string, data: RenderData, options?: RenderOptions) {
-	return compile(template, options).render(data);
+export function render(template: string, context: Context, options?: RenderOptions) {
+	return compile(template, options).render(context);
 }

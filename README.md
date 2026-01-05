@@ -33,7 +33,7 @@ bun add @kimzuni/templify
 const { keys, matches, groups, render } = require("@kimzuni/templify");
 
 const template = "{key1} {key1 } { key2} {key1}";
-const data = { key1: "value1", key3: "value3" };
+const context = { key1: "value1", key3: "value3" };
 
 console.log(keys(template));
 // ["key1", "key2"]
@@ -49,7 +49,7 @@ console.log(groups(template));
 }
 */
 
-console.log(render(template, data));
+console.log(render(template, context));
 // "value1 value1 { key2} value1"
 ```
 
@@ -59,9 +59,9 @@ console.log(render(template, data));
 const { render } = require("@kimzuni/templify");
 
 const template = "{0} {1} {2} {1}";
-const data = ["item1", "item2"];
+const context = ["item1", "item2"];
 
-console.log( render(template, data) );
+console.log( render(template, context) );
 // "item1 item2 {2} item2"
 ```
 
@@ -71,13 +71,13 @@ console.log( render(template, data) );
 const { compile } = require("@kimzuni/templify");
 
 const template = "{key1} {key1 } { key2} {key1}";
-const data = { key1: "value1", key3: "value3" };
+const context = { key1: "value1", key3: "value3" };
 
 const c = compile(template);
 console.log( c.keys() );
 console.log( c.matches() );
 console.log( c.groups() );
-console.log( c.render(data) );
+console.log( c.render(context) );
 ```
 
 
@@ -97,10 +97,10 @@ This controls what is allowed between the opening and closing delimiters.
 
 ```javascript
 const template = "{ key } { key1 }";
-const data = { key: "value", key1: "value1" };
+const context = { key: "value", key1: "value1" };
 const options = { key: /[a-z]+/ };
 
-const result = render(template, data, options);
+const result = render(template, context, options);
 console.log(result); // "value { key1 }"
 ```
 
@@ -116,10 +116,10 @@ The `open` string marks the start, and `close` marks the end of a placeholder in
 
 ```javascript
 const template = "{{ key1 }} { key1 }";
-const data = { key1: "value1" };
+const context = { key1: "value1" };
 const options = { open: "{{", close: "}}" };
 
-const result = render(template, data, options);
+const result = render(template, context, options);
 console.log(result); // "value1 { key1 }"
 ```
 
@@ -134,40 +134,40 @@ Controls how whitespace inside placeholders is handled.
 
 ```javascript
 const template = "{key1} { key1 } {  key1  } {   key1   } {   key1 }";
-const data = { key1: "value1" };
+const context = { key1: "value1" };
 
-console.log(render(template, data, {
+console.log(render(template, context, {
 	spacing: -1, // alias for `spacing: { size: -1 }`
 }));
 // "value1 value1 value1 value1 value1"
 
-console.log(render(template, data, {
+console.log(render(template, context, {
 	spacing: true, // alias for `spacing: { strict: true }`
 }));
 // "value1 value1 value1 value1 {   key1 }"
 
-console.log(render(template, data, {
+console.log(render(template, context, {
 	spacing: {
 		size: -1,
 	},
 }));
 // "value1 value1 value1 value1 value1"
 
-console.log(render(template, data, {
+console.log(render(template, context, {
 	spacing: {
 		size: 1,
 	},
 }));
 // "{key1} value1 {  key1  } {   key1   } {   key1 }"
 
-console.log(render(template, data, {
+console.log(render(template, context, {
 	spacing: {
 		size: [1, 3],
 	},
 }));
 // "{key1} value1 {  key1  } value1 value1"
 
-console.log(render(template, data, {
+console.log(render(template, context, {
 	spacing: {
 		strict: true,
 		size: [1, 3],
@@ -178,8 +178,10 @@ console.log(render(template, data, {
 
 ### fallback
 
-Value to use when a placeholder key is missing in the provided data.
-If not set, the placeholder remains unchanged.
+Value to use when a placeholder key is missing in the provided context.
+
+- `string`, `number`, `boolean`, and `null` are stringified
+- `undefined` is treated as absence: the key is considered missing
 
 | Type                                               | Default value |
 |----------------------------------------------------|---------------|
@@ -188,21 +190,21 @@ If not set, the placeholder remains unchanged.
 ```javascript
 const template = "{ key } / { key1 } / { key_2 }";
 const options = { key: /[a-z0-9]+/ };
-const data = { key1: "value1", key_2: "value2" };
+const context = { key1: "value1", key_2: "value2" };
 
-console.log(render(template, data, {
+console.log(render(template, context, {
 	...options,
 	fallback: undefined,
 }));
 // "{ key } / value1 / { key_2 }"
 
-console.log(render(template, data, {
+console.log(render(template, context, {
 	...options,
 	fallback: "x",
 }));
 // "x / value1 / { key_2 }"
 
-console.log(render(template, data, {
+console.log(render(template, context, {
 	...options,
 	fallback: null,
 }));
@@ -222,19 +224,19 @@ Support Options:
 ```javascript
 const template = "{ key } / { key1 } / { key_2 }";
 const options = { key: /[a-z0-9]+/, fallback: "fallback" };
-const data = { key1: "value1", key_2: "value2" };
+const context = { key1: "value1", key_2: "value2" };
 
 const c = compile(template, options);
 
-console.log( c.render(data) );
+console.log( c.render(context) );
 // "fallback / value1 / { key_2 }"
 
-console.log( c.render(data, { fallback: undefined }) );
+console.log( c.render(context, { fallback: undefined }) );
 // "{ key } / value1 / { key_2 }"
 
-console.log( c.render(data, { fallback: "x" }) );
+console.log( c.render(context, { fallback: "x" }) );
 // "x / value1 / { key_2 }"
 
-console.log( c.render(data, { fallback: null }) );
+console.log( c.render(context, { fallback: null }) );
 // "null / value1 / { key_2 }"
 ```
