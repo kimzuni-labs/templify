@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/kimzuni-labs/templify/compare/v1.3.0...v2.0.0) (2026-01-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* **api:** Use placeholders/fields instead of matches.
+* **types:** Exported type AllowValue renamed to Primitive
+* **types:** Exported type RenderData renamed to Context
+* The output file structure has changed due to `unbundle: true`.
+* Use a named import (`compile`) instead of a default import.
+* `count` is no longer supported. Replace with `size`.
+
+### ✨ Features
+
+* **api:** rename matches to placeholders ([df78800](https://github.com/kimzuni-labs/templify/commit/df788003d70c260b40ee398e71f8e2abb14440de))
+* **options:** add strict alias support to spacing options ([db7ece4](https://github.com/kimzuni-labs/templify/commit/db7ece40180fdfb8efecca909c3cae1086834705))
+* remove deprecated count option ([8a68613](https://github.com/kimzuni-labs/templify/commit/8a68613dbc2a301a7756a81cd976d270382ae64a))
+* **types:** export Keys, Matches, Groups types ([90b836b](https://github.com/kimzuni-labs/templify/commit/90b836b71c767f1d2c1b86c7f78e61d8d9f93fe8))
+* **types:** rename exported types ([7502c16](https://github.com/kimzuni-labs/templify/commit/7502c16eec1cfd05b2fad51a4142af7f07a9ac51))
+
+
+### ♻️ Code Refactoring
+
+* remove default export ([cab52db](https://github.com/kimzuni-labs/templify/commit/cab52db87d37718c17301a73252183e26edee0aa))
+
+
+### 🏗️ Build System
+
+* enable unbundle mode ([415f862](https://github.com/kimzuni-labs/templify/commit/415f862f425412b00165979a2dd16730ae1be254))
+
 ## [1.3.0](https://github.com/kimzuni-labs/templify/compare/v1.2.0...v1.3.0) (2025-12-07)
 
 
