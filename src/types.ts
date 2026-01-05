@@ -152,4 +152,4 @@ export interface OverrideOptions extends Pick<CompileOptions, "fallback"> {}
 
 export type Keys = string[];
 export type Matches = string[];
-export type Groups = Partial<Record<string, string[]>>;
+export type Groups = Record<string, string[]>;
