@@ -8,7 +8,8 @@ All notable changes to this project will be documented in this file. See [standa
 ### ⚠ BREAKING CHANGES
 
 * **api:** Use placeholders/fields instead of matches.
-* **types:** 
+* **types:** Exported type AllowValue renamed to Primitive
+* **types:** Exported type RenderData renamed to Context
 * The output file structure has changed due to `unbundle: true`.
 * Use a named import (`compile`) instead of a default import.
 * `count` is no longer supported. Replace with `size`.
