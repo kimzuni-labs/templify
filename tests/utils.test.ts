@@ -3,6 +3,7 @@
 import assert from "node:assert";
 import { describe, test } from "node:test";
 
+import type { Groups } from "../src/types";
 import { getPattern, parseData } from "../src/utils";
 
 
@@ -195,7 +196,7 @@ describe("getPattern", () => {
 describe("parseData", () => {
 	const run = (
 		template: string,
-		groups: ReturnType<typeof parseData>["groups"],
+		groups: Groups,
 	) => {
 		const keys = Object.keys(groups);
 		const matches = Object.values(groups).flat();
