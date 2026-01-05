@@ -5,7 +5,7 @@
 [![NPM version](https://img.shields.io/npm/v/@kimzuni/templify.svg)](https://www.npmjs.com/package/@kimzuni/templify)
 [![codecov](https://codecov.io/gh/kimzuni-labs/templify/graph/badge.svg?token=932ALHWG7H)](https://codecov.io/gh/kimzuni-labs/templify)
 
-Flexible template string processor for JavaScript and TypeScript.
+A flexible template string processor for JavaScript and TypeScript.
 
 Supports customizable template delimiters, spacing rules, and fallback values.
 Supports both ESM and CommonJS.
@@ -91,7 +91,8 @@ All options are optional.
 ### key
 
 Regex pattern defining valid characters for placeholder keys.
-This controls what is allowed between the opening and closing delimiters.
+Controls which characters are allowed inside the delimiters.
+Any regex flags (e.g., `i`, `g`) are ignored if provided.
 
 | Type               | Default value |
 |--------------------|---------------|
@@ -127,12 +128,13 @@ console.log(result); // "value1 { key1 }"
 
 ### spacing
 
-Controls how whitespace inside placeholders is handled.
+Options for controlling the number of spaces inside template placeholders.
+Can be provided as a simple value or as a full object.
 
-| key    | Type                 | Default value | Info                                                            |
-|--------|----------------------|---------------|-----------------------------------------------------------------|
-| strict | `boolean`            | `false`       | Requires the number of spaces on both sides to be exactly equal |
-| size   | `number`, `number[]` | `-1`          | Specifies the allowed number of spaces                          |
+| key    | Type                 | Default value | Info                                                                                                                  |
+|--------|----------------------|---------------|-----------------------------------------------------------------------------------------------------------------------|
+| strict | `boolean`            | `false`       | When `true`, placeholders must have the same number of spaces on both sides of the key to be considered a valid match |
+| size   | `number`, `number[]` | `-1`          | Allowed number of spaces inside placeholder delimiters. Negative value disables space checking                        |
 
 ```javascript
 const template = "{key1} { key1 } {  key1  } {   key1   } {   key1 }";
@@ -180,7 +182,7 @@ console.log(render(template, context, {
 
 ### fallback
 
-Value to use when a placeholder key is missing in the provided context.
+Fallback value to use when a template key is missing.
 
 - `string`, `number`, `boolean`, and `null` are stringified
 - `undefined` is treated as absence: the key is considered missing
