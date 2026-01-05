@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
-		"target": "esnext",
-		"lib": ["ESNext"],
+		"target": "es6",
+		"lib": ["ES6"],
 		"module": "esnext",
 		"moduleResolution": "bundler",
 		"esModuleInterop": true,
@@ -12,10 +12,10 @@
 		"noUnusedParameters": true,
 		"skipLibCheck": true,
 		"isolatedModules": true,
-		"noEmit": true,
+		"noEmit": true
 	},
 	"exclude": [
 		"node_modules",
-		"dist",
-	],
+		"dist"
+	]
 }

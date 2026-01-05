@@ -1,5 +1,7 @@
 import { defineConfig } from "tsdown";
 
+import tsconfig from "./tsconfig.json" with { type: "json" };
+
 
 
 /** @type {import("tsdown").UserConfig} */
@@ -9,7 +11,7 @@ const options = {
 	entry   : "./src/index.ts",
 	outDir  : "./dist",
 	platform: "neutral",
-	target  : "es6",
+	target  : tsconfig.compilerOptions.target,
 	unbundle: true,
 };
 

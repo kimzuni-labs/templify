@@ -18,4 +18,6 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    uses: kimzuni-labs/workflows/.github/workflows/bun-and-nodejs-lts-ci.yml@main
+    uses: kimzuni-labs/workflows/.github/workflows/nodejs-lts-and-bun-ci.yml@main
+    with:
+      bun-test-script: "test:coverage"
