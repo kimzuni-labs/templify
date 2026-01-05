@@ -5,7 +5,7 @@ import { describe, test } from "node:test";
 
 import type { RenderOptions, Context, OverrideOptions } from "../src/types";
 import { compile } from "../src/compile";
-import { keys, matches, groups, render } from "../src/direct";
+import { keys, placeholders, fields, groups, render } from "../src/direct";
 
 
 
@@ -21,7 +21,7 @@ type Callback = (
 const init = (label: string, callback: Callback) => {
 	describe(label, () => {
 		describe("methods", () => {
-			test("groups/keys/matches", () => {
+			test("keys/placeholders/fields/groups", () => {
 				const run = (
 					template: string,
 					groups: CallbackData["groups"],
@@ -31,7 +31,7 @@ const init = (label: string, callback: Callback) => {
 					const results = callback(template, options, context);
 
 					const keys = Object.keys(groups);
-					const matches = Object.values(groups).flat();
+					const placeholders = Object.values(groups).flat();
 					for (const key in results.groups) {
 						assert.deepStrictEqual(
 							results.groups[key].sort(),
@@ -43,7 +43,7 @@ const init = (label: string, callback: Callback) => {
 					}
 					assert.ok(Object.keys(groups).length === 0);
 					assert.deepStrictEqual(results.keys.sort(), keys.sort());
-					assert.deepStrictEqual(results.matches.sort(), matches.sort());
+					assert.deepStrictEqual(results.placeholders.sort(), placeholders.sort());
 				};
 
 				run(
@@ -142,15 +142,14 @@ const init = (label: string, callback: Callback) => {
 				const run = (
 					label: string,
 					spacing: Exclude<RenderOptions["spacing"], undefined>,
-					matches: string[],
+					placeholders: string[],
 				) => test(label, () => {
 					const template = "{key} / { key } / {  key  } / {   key   } / {    key    } / { key   } / {   key }";
 					const options = { spacing };
 					const context = {};
-					assert.deepStrictEqual(
-						callback(template, options, context).matches.sort(),
-						matches.sort(),
-					);
+					const data = callback(template, options, context);
+					assert.deepStrictEqual(data.placeholders.sort(), placeholders.sort());
+					assert.deepStrictEqual(data.fields.sort(), data.placeholders.sort());
 				});
 
 				run(
@@ -316,7 +315,8 @@ init("compile", (template, options, context, overrideOptions) => {
 	const c = compile(template, options);
 	return {
 		keys: c.keys(),
-		matches: c.matches(),
+		placeholders: c.placeholders(),
+		fields: c.fields(),
 		groups: c.groups(),
 		render: c.render(context, overrideOptions),
 	};
@@ -325,7 +325,8 @@ init("compile", (template, options, context, overrideOptions) => {
 init("direct", (template, options, context) => {
 	return {
 		keys: keys(template, options),
-		matches: matches(template, options),
+		placeholders: placeholders(template, options),
+		fields: fields(template, options),
 		groups: groups(template, options),
 		render: render(template, context, options),
 	};

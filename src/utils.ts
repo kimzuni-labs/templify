@@ -1,4 +1,4 @@
-import type { CommonOptions, Keys, Matches, Groups } from "./types";
+import type { CommonOptions, Keys, Placeholders, Groups } from "./types";
 
 
 
@@ -49,12 +49,12 @@ export function parseData(template: string, pattern: RegExp) {
 
 	const groups: Groups = {};
 	const keys: Keys = [];
-	const matches: Matches = [];
+	const placeholders: Placeholders = [];
 	for (const key in extract) {
 		const value = [...extract[key]];
 		groups[key] = value;
 		keys.push(key);
-		matches.push(...value);
+		placeholders.push(...value);
 	}
-	return { groups, keys, matches };
+	return { groups, keys, placeholders };
 }

@@ -54,18 +54,26 @@ export function compile(template: string, options: CompileOptions = {}) {
 		},
 
 		/**
-		 * Extracts all matched placeholder strings from the given template.
+		 * Extracts a list of unique placeholders from the given template.
 		 *
 		 * @example
 		 *
 		 * ```typescript
 		 * const c = compile("{key1} { key1 } { key2}");
-		 * const result = c.matches();
+		 * const result = c.placeholders();
 		 * console.log(result); // ["{key1}", "{ key1 }", "{ key2}"]
 		 * ```
 		 */
-		matches() {
-			return getData().matches;
+		placeholders() {
+			return getData().placeholders;
+		},
+
+
+		/**
+		 * Alias of `.placeholders()`.
+		 */
+		fields() {
+			return getData().placeholders;
 		},
 
 		/**
