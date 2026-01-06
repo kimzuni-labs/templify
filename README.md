@@ -20,4 +20,6 @@ Packages:
 
 ## 💛 Contributing
 
+The contribution workflow is currently documented around the [Bun](https://bun.sh/)-based setup.
+
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development and contribution guidelines.

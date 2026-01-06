@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-floating-promises, @stylistic/key-spacing */
+/* eslint-disable @typescript-eslint/no-confusing-void-expression, @stylistic/key-spacing */
 
-import assert from "node:assert";
-import { describe, test } from "node:test";
+import { describe, test, expect } from "bun:test";
 
 import type { RenderOptions, Context, OverrideOptions } from "../src/types";
 import { compile } from "../src/compile";
@@ -33,17 +32,15 @@ const init = (label: string, callback: Callback) => {
 					const keys = Object.keys(groups);
 					const placeholders = Object.values(groups).flat();
 					for (const key in results.groups) {
-						assert.deepStrictEqual(
-							results.groups[key].sort(),
-							groups[key].sort(),
-						);
+						expect(results.groups[key].sort()).toStrictEqual(groups[key].sort());
 
 						// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 						delete groups[key];
 					}
-					assert.ok(Object.keys(groups).length === 0);
-					assert.deepStrictEqual(results.keys.sort(), keys.sort());
-					assert.deepStrictEqual(results.placeholders.sort(), placeholders.sort());
+					expect(groups).toBeEmptyObject();
+					expect(results.keys.sort()).toStrictEqual(keys.sort());
+					expect(results.placeholders.sort()).toStrictEqual(placeholders.sort());
+					expect(results.fields.sort()).toStrictEqual(results.placeholders.sort());
 				};
 
 				run(
@@ -86,10 +83,7 @@ const init = (label: string, callback: Callback) => {
 				) => test(`${options.open} ... ${options.close}`, () => {
 					const template = "{ key1 } / {{ key2 }} / <%= key3 %>";
 					const context = {};
-					assert.deepStrictEqual(
-						callback(template, options, context).keys.sort(),
-						keys.sort(),
-					);
+					expect(callback(template, options, context).keys.sort()).toStrictEqual(keys.sort());
 				});
 
 				run(
@@ -118,10 +112,7 @@ const init = (label: string, callback: Callback) => {
 					const template = "{ key } / { Key } / { key1 } / { key_1 } / { key-1 }";
 					const options = { key: pattern } satisfies RenderOptions;
 					const context = {};
-					assert.deepStrictEqual(
-						callback(template, options, context).keys.sort(),
-						keys.sort(),
-					);
+					expect(callback(template, options, context).keys.sort()).toStrictEqual(keys.sort());
 				});
 
 				run(
@@ -148,8 +139,8 @@ const init = (label: string, callback: Callback) => {
 					const options = { spacing };
 					const context = {};
 					const data = callback(template, options, context);
-					assert.deepStrictEqual(data.placeholders.sort(), placeholders.sort());
-					assert.deepStrictEqual(data.fields.sort(), data.placeholders.sort());
+					expect(data.placeholders.sort()).toStrictEqual(placeholders.sort());
+					expect(data.fields.sort()).toStrictEqual(data.placeholders.sort());
 				});
 
 				run(
@@ -233,7 +224,7 @@ const init = (label: string, callback: Callback) => {
 				context: Context,
 				render: string,
 			) => test(label, () => {
-				assert.equal(callback(template, {}, context).render, render);
+				expect(callback(template, {}, context).render).toBe(render);
 			});
 
 			run(
@@ -261,7 +252,7 @@ const init = (label: string, callback: Callback) => {
 					const options = { key: /[a-z0-9]+/, fallback } satisfies RenderOptions;
 					const context = { key: "value", key1: "value1" };
 					const resutls = callback(template, options, context);
-					assert.equal(resutls.render, render);
+					expect(resutls.render).toBe(render);
 				};
 
 				run(
@@ -288,7 +279,7 @@ const init = (label: string, callback: Callback) => {
 						const options = { key: /[a-z0-9]+/, fallback: "fb" } satisfies RenderOptions;
 						const context = { key: "value", key1: "value1" };
 						const resutls = callback(template, options, context, { fallback });
-						assert.equal(resutls.render, render);
+						expect(resutls.render).toBe(render);
 					};
 
 					run(
