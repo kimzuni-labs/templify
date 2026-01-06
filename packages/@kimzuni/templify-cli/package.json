@@ -43,7 +43,9 @@
     "typescript"
   ],
   "dependencies": {
-    "@kimzuni/templify": "workspace:^"
+    "@commander-js/extra-typings": "^14.0.0",
+    "@kimzuni/templify": "workspace:^",
+    "commander": "^14.0.2"
   },
   "devDependencies": {
     "tsdown": "0.18.3"
