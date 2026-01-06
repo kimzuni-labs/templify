@@ -12,15 +12,6 @@ Please follow this guide to help ensure smooth collaboration.
 
 This project uses [Bun](https://bun.sh/) for a faster runtime during development and deployment.
 
-However, **contributors do not need to use Bun** — Node.js is fully supported.
-
-If you prefer Node.js, make sure you’re using **v20 or higher**.
-
-> [!NOTE]
-> You can use **Bun** instead of **npm** unless stated otherwise.
->
-> For example, `npm install` can be replaced with `bun install`.
-
 
 
 ## 🚀 Setup
@@ -37,7 +28,7 @@ Clone the repository and install dependencies.
 2. Install dependencies:
 
     ```shell
-    npm install
+    bun install
     ```
 
 ## 🎨 Linting
@@ -51,15 +42,15 @@ This project uses the following tools to maintain code quality:
 You can run all lint checks with:
 
 ```shell
-npm run lint
+bun run lint
 ```
 
 Or run them individually:
 
 ```shell
-npm run lint:eslint
-npm run lint:markdown
-npm run lint:yaml
+bun run lint:eslint
+bun run lint:markdown
+bun run lint:yaml
 ```
 
 ## 🧪 Testing
@@ -67,11 +58,7 @@ npm run lint:yaml
 Make sure your changes work as expected.
 
 ```shell
-npm run test
-# or (for node v20)
-npm run test:all
-# or (faster)
-bun test
+bun run test
 ```
 
 

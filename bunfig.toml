@@ -1,3 +1,7 @@
+[install]
+linkWorkspacePackages = true
+
 [test]
-root = "./tests"
+coverage = true
+coverageReporter = ["lcov"]
 coverageSkipTestFiles = true

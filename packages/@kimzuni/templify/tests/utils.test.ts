@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-floating-promises, @stylistic/key-spacing */
+/* eslint-disable @stylistic/key-spacing */
 
-import assert from "node:assert";
-import { describe, test } from "node:test";
+import { describe, test, expect } from "bun:test";
 
 import type { Groups } from "../src/types";
 import { getPattern, parseData } from "../src/utils";
@@ -17,10 +16,10 @@ describe("getPattern", () => {
 		// remove global flag
 		pattern = new RegExp(pattern.source);
 		for (const item of matches) {
-			assert.match(item, pattern);
+			expect(item).toMatch(pattern);
 		}
 		for (const item of notMatches) {
-			assert.doesNotMatch(item, pattern);
+			expect(item).not.toMatch(pattern);
 		}
 	};
 
@@ -205,17 +204,14 @@ describe("parseData", () => {
 		}));
 
 		for (const key in data.groups) {
-			assert.deepStrictEqual(
-				data.groups[key].sort(),
-				groups[key].sort(),
-			);
+			expect(data.groups[key].sort()).toStrictEqual(groups[key].sort());
 
 			// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 			delete groups[key];
 		}
-		assert.ok(Object.keys(groups).length === 0);
-		assert.deepStrictEqual(data.keys.sort(), keys.sort());
-		assert.deepStrictEqual(data.placeholders.sort(), placeholders.sort());
+		expect(groups).toBeEmptyObject();
+		expect(data.keys.sort()).toStrictEqual(keys.sort());
+		expect(data.placeholders.sort()).toStrictEqual(placeholders.sort());
 	};
 
 	test("keys/placeholders/groups", () => {

@@ -1,6 +1,6 @@
 {
   "globs": ["**/*.md"],
-  "ignores": ["CHANGELOG.md"],
+  "ignores": ["**/CHANGELOG.md"],
   "fix": false,
   "gitignore": true,
   "noBanner": true,
