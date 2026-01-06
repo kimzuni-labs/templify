@@ -1,9 +1,14 @@
 {
 	"release-type": "node",
+	"bump-minor-pre-major": true,
+	"bump-patch-for-minor-pre-major": true,
 	"pull-request-title-pattern": "chore: release${component} ${version}",
 	"packages": {
 		"packages/@kimzuni/templify": {
 			"package-name": ""
+		},
+		"packages/@kimzuni/templify-cli": {
+			"package-name": "cli"
 		}
 	},
 	"changelog-sections": [

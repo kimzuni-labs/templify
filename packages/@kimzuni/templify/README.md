@@ -8,6 +8,9 @@ A flexible template string processor for JavaScript and TypeScript.
 Supports customizable template delimiters, spacing rules, and fallback values.
 Supports both ESM and CommonJS.
 
+The CLI is available as
+[@kimzuni/templify-cli](../templify-cli).
+
 
 
 ## Installation

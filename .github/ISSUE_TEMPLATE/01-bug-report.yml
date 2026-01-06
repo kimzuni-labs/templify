@@ -24,6 +24,13 @@ body:
         - node: `node --version`
         - bun: `bun --version`
       placeholder: bun 0.0.0 / node v0.0.0
+  - id: what-cli-version
+    type: input
+    attributes:
+      label: What version of `@kimzuni/templify-cli` are you using?
+      description: |
+        Copy the output of `templify --version`
+      placeholder: 0.0.0
   - id: what-templify-version
     type: input
     attributes:

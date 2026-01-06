@@ -1,0 +1,56 @@
+{
+  "name": "@kimzuni/templify-cli",
+  "description": "CLI for the @kimzuni/templify, a flexible template string processor.",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "author": {
+    "name": "kimzuni",
+    "email": "me@zuni.kim",
+    "url": "https://github.com/kimzuni"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimzuni-labs/templify.git",
+    "directory": "packages/@kimzuni/templify-cli"
+  },
+  "homepage": "https://github.com/kimzuni-labs/templify/tree/main/packages/@kimzuni/templify-cli",
+  "bugs": "https://github.com/kimzuni-labs/templify/issues",
+  "scripts": {
+    "test": "bun test",
+    "build": "tsdown"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
+    "package.json"
+  ],
+  "bin": {
+    "templify": "dist/index.mjs",
+    "tply": "dist/index.mjs"
+  },
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "keywords": [
+    "template",
+    "string",
+    "render",
+    "placeholder",
+    "typescript"
+  ],
+  "dependencies": {
+    "@commander-js/extra-typings": "^14.0.0",
+    "@kimzuni/templify": "workspace:^",
+    "commander": "^14.0.2"
+  },
+  "devDependencies": {
+    "tsdown": "0.18.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

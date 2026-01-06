@@ -4,3 +4,6 @@ component_management:
     - component_id: templify
       paths:
         - packages/@kimzuni/templify
+    - component_id: templify-cli
+      paths:
+        - packages/@kimzuni/templify-cli
