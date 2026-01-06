@@ -35,7 +35,7 @@ jobs:
         with:
           bun-version: latest
           registries: |
-            ${{ inputs.registry-url }}
+            https://registry.npmjs.org
 
       - name: Update npm
         run: bun add -g npm@latest
@@ -44,9 +44,9 @@ jobs:
         run: bun ci
 
       - name: Build
-        working-directory: ${{ inputs.working-directory }}
+        working-directory: ${{ matrix.path }}
         run: bun run build --if-present
 
       - name: Publish
-        working-directory: ${{ inputs.working-directory }}
+        working-directory: ${{ matrix.path }}
         run: npm publish --access public
