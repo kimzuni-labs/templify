@@ -4,6 +4,9 @@
 	"packages": {
 		"packages/@kimzuni/templify": {
 			"package-name": ""
+		},
+		"packages/@kimzuni/templify-cli": {
+			"package-name": "cli"
 		}
 	},
 	"changelog-sections": [
