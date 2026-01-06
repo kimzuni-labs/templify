@@ -1,0 +1,49 @@
+{
+  "name": "@kimzuni/templify",
+  "description": "Flexible template string processor for JavaScript and TypeScript.",
+  "version": "2.0.0",
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "author": {
+    "name": "kimzuni",
+    "email": "me@zuni.kim",
+    "url": "https://github.com/kimzuni"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimzuni-labs/templify.git"
+  },
+  "homepage": "https://github.com/kimzuni-labs/templify",
+  "bugs": "https://github.com/kimzuni-labs/templify/issues",
+  "scripts": {
+    "test": "NODE_ENV=test tsx --test",
+    "test:all": "NODE_ENV=test tsx --test tests/*.test.ts",
+    "build": "tsdown"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
+    "package.json"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "keywords": [
+    "template",
+    "string",
+    "render",
+    "placeholder",
+    "typescript"
+  ],
+  "devDependencies": {
+    "tsdown": "^0.18.4"
+  }
+}

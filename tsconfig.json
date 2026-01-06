@@ -1,21 +1,7 @@
 {
+	"extends": "./tsconfig.base.json",
 	"compilerOptions": {
-		"target": "es6",
-		"lib": ["ES6"],
-		"module": "esnext",
-		"moduleResolution": "bundler",
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
 		"allowJs": true,
-		"strict": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"skipLibCheck": true,
-		"isolatedModules": true,
 		"noEmit": true
-	},
-	"exclude": [
-		"node_modules",
-		"dist"
-	]
+	}
 }

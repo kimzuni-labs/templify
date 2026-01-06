@@ -1,3 +1,5 @@
+[install]
+linkWorkspacePackages = true
+
 [test]
-root = "./tests"
 coverageSkipTestFiles = true
