@@ -3,6 +3,7 @@
 	"bump-minor-pre-major": true,
 	"bump-patch-for-minor-pre-major": true,
 	"pull-request-title-pattern": "chore: release${component} ${version}",
+	"separate-pull-requests": true,
 	"packages": {
 		"packages/@kimzuni/templify": {
 			"package-name": ""

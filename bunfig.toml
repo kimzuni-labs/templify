@@ -4,7 +4,7 @@ linkWorkspacePackages = true
 [test]
 preload = "./packages/@kimzuni/templify-cli/tests/preload.ts"
 coverage = true
-coverageReporter = ["lcov"]
+coverageReporter = ["text", "lcov"]
 coverageSkipTestFiles = true
 coveragePathIgnorePatterns = [
 	"**/tests/**",
