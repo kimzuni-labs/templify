@@ -3,6 +3,7 @@
 import { describe, test, expect } from "bun:test";
 
 import type { RenderOptions, Context, OverrideOptions } from "../src/types";
+import { KEY_PATTERNS } from "../src/constants";
 import { compile } from "../src/compile";
 import { keys, placeholders, fields, groups, render } from "../src/direct";
 
@@ -220,15 +221,17 @@ const init = (label: string, callback: Callback) => {
 		describe("render", () => {
 			const run = (
 				label: string,
+				options: RenderOptions,
 				template: string,
 				context: Context,
 				render: string,
 			) => test(label, () => {
-				expect(callback(template, {}, context).render).toBe(render);
+				expect(callback(template, { key: options.key, depth: options.depth }, context).render).toBe(render);
 			});
 
 			run(
 				"json",
+				{ key: KEY_PATTERNS.DEFAULT },
 				"{ key } / { key1 } / { key2 } / { key1 }",
 				{ key1: "value1" },
 				"{ key } / value1 / { key2 } / value1",
@@ -236,9 +239,61 @@ const init = (label: string, callback: Callback) => {
 
 			run(
 				"array",
+				{ key: KEY_PATTERNS.DEFAULT },
 				"{0}/{1}/{2}/{1}",
 				["item1", "item2"],
 				"item1/item2/{2}/item2",
+			);
+
+			const context = {
+				x: "xxx",
+				a: {
+					b: 111,
+					c: [
+						null,
+						{ d: "x" },
+					],
+				},
+			};
+
+			run(
+				"depth",
+				{ key: KEY_PATTERNS.DEFAULT },
+				"{ x }/{ a.b }/{a.c[0]}/{a.c.1.d}",
+				context,
+				"xxx/{ a.b }/{a.c[0]}/{a.c.1.d}",
+			);
+
+			run(
+				"depth: -1",
+				{ key: KEY_PATTERNS.DEEP, depth: -1 },
+				"{ x }/{ a.b }/{a.c[0]}/{a.c.1.d}",
+				context,
+				"xxx/111/null/x",
+			);
+
+			run(
+				"depth: 0",
+				{ key: KEY_PATTERNS.DEEP, depth: 0 },
+				"{ x }/{ a.b }/{a.c[0]}/{a.c.1.d}",
+				context,
+				"{ x }/{ a.b }/{a.c[0]}/{a.c.1.d}",
+			);
+
+			run(
+				"depth: 1",
+				{ key: KEY_PATTERNS.DEEP, depth: 1 },
+				"{ x }/{ a.b }/{a.c[0]}/{a.c.1.d}",
+				context,
+				"xxx/{ a.b }/{a.c[0]}/{a.c.1.d}",
+			);
+
+			run(
+				"depth: 3",
+				{ key: KEY_PATTERNS.DEEP, depth: 3 },
+				"{ x }/{ a.b }/{a.c[0]}/{a.c.1.d}",
+				context,
+				"xxx/111/null/{a.c.1.d}",
 			);
 		});
 

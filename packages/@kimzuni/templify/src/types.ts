@@ -1,12 +1,27 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { KEY_PATTERNS } from "./constants";
+
+
+
 /**
  * Primitive values that can be used as placeholders.
  */
 export type Primitive = string | number | boolean | null | undefined;
 
 /**
+ * A recursive value type that represents a node in the template context.
+ */
+export type ContextValue = Primitive | ContextValue[] | { [K: string ]: ContextValue };
+
+/**
  * The context used for resolving placeholders.
  */
-export type Context = Primitive[] | Record<string, Primitive>;
+export type Context = ContextValue[] | Record<string, ContextValue>;
+
+/**
+ * The context used for resolving placeholders.
+ */
+export type FlatContext = Record<string, Primitive>;
 
 /**
  * Options for controlling the number of spaces inside template placeholders.
@@ -43,9 +58,9 @@ export interface CommonOptions {
 	 * Controls which characters are allowed inside the delimiters.
 	 * Any regex flags (e.g., `i`, `g`) are ignored if provided.
 	 *
-	 * By default, `/\w+/` allows only letters (A-Z, a-z), digits (0-9), and underscores (_).
+	 * By default, {@link KEY_PATTERNS.DEFAULT} allows only letters (A-Z, a-z), digits (0-9), and underscores (_).
 	 *
-	 * @default /\w+/
+	 * @default KEY_PATTERNS.DEFAULT
 	 *
 	 * @example
 	 *
@@ -131,6 +146,20 @@ export interface RenderOptions extends CommonOptions {
 	 * @default undefined
 	 */
 	fallback?: Primitive;
+
+	/**
+	 * Maximum depth for resolving nested keys.
+	 *
+	 * Keys deeper than the specified depth are ignored and not included
+	 * in the flattened context.
+	 *
+	 * - `-1`: No depth limit (resolve keys at any depth)
+	 * - `0`: Do not resolve any keys from `context`
+	 * - `1+`: Allow key resolution up to the specified depth
+	 *
+	 * @default 1
+	 */
+	depth?: number;
 }
 
 /**
@@ -145,7 +174,7 @@ export interface CompileOptions extends RenderOptions {}
  *
  * Picks from {@link CompileOptions}
  */
-export interface OverrideOptions extends Pick<CompileOptions, "fallback"> {}
+export interface OverrideOptions extends Pick<CompileOptions, "fallback" | "depth"> {}
 
 
 
