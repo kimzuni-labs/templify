@@ -2,8 +2,8 @@
 
 import { describe, test, expect } from "bun:test";
 
-import type { Groups } from "../src/types";
-import { getPattern, parseData } from "../src/utils";
+import type { Context, FlatContext, Groups } from "../src/types";
+import { getPattern, parseData, flattenContext } from "../src/utils";
 
 
 
@@ -243,6 +243,91 @@ describe("parseData", () => {
 				1: ["{1}", "{ 1 }"],
 				2: ["{2}"],
 			},
+		);
+	});
+});
+
+describe("flattenContext", () => {
+	const run = (
+		context: Context,
+		expected: FlatContext,
+		depth = 1,
+	) => {
+		const flat = flattenContext(context, depth);
+		expect(flat).toStrictEqual(expected);
+	};
+
+	test("basic", () => {
+		run(
+			{ a: 1, b: "x" },
+			{ a: 1, b: "x" },
+		);
+	});
+	test("array", () => {
+		run(
+			[1, "x"],
+			{ 0: 1, 1: "x" },
+		);
+	});
+	test("depth", () => {
+		const context: Context = {
+			a: 123,
+			b: { ba: 1, bb: 2 },
+			c: [11, { "e.e": undefined, over: undefined }],
+			f: [[[{ g: null }]]],
+			"c[1].over": "ride",
+		};
+
+		run(
+			context,
+			{},
+			0,
+		);
+
+		run(
+			context,
+			{
+				a: 123,
+				"c[1].over": "ride",
+			},
+			1,
+		);
+
+		run(
+			context,
+			{
+				a: 123,
+				"b.ba": 1,
+				"b.bb": 2,
+				"c.0": 11,
+				"c[0]": 11,
+				"c[1].over": "ride",
+			},
+			2,
+		);
+
+		run(
+			context,
+			{
+				a: 123,
+				"b.ba": 1,
+				"b.bb": 2,
+				"c.0": 11,
+				"c.1.e.e": undefined,
+				"c.1.over": undefined,
+				"c[0]": 11,
+				"c[1].e.e": undefined,
+				"c[1].over": "ride",
+				"f.0.0.0.g": null,
+				"f.0.0[0].g": null,
+				"f.0[0].0.g": null,
+				"f.0[0][0].g": null,
+				"f[0].0.0.g": null,
+				"f[0].0[0].g": null,
+				"f[0][0].0.g": null,
+				"f[0][0][0].g": null,
+			},
+			-1,
 		);
 	});
 });

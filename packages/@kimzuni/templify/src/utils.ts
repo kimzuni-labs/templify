@@ -1,12 +1,11 @@
-import type { CommonOptions, Keys, Placeholders, Groups } from "./types";
+import type { ContextValue, Context, FlatContext, CommonOptions, Keys, Placeholders, Groups } from "./types";
+import { KEY_INDEX, KEY_PATTERNS } from "./constants";
 
 
-
-export const keyIdx = 2;
 
 export function getPattern(options: CommonOptions = {}) {
 	const {
-		key = /\w+/,
+		key = KEY_PATTERNS.DEFAULT,
 		open = "{",
 		close = "}",
 		spacing = {},
@@ -42,7 +41,7 @@ export function parseData(template: string, pattern: RegExp) {
 	const extract: Record<string, Set<string>> = {};
 	const matchAll = template.matchAll(pattern);
 	for (const [target, ...item] of matchAll) {
-		const key = item[keyIdx - 1];
+		const key = item[KEY_INDEX - 1];
 		extract[key] ??= new Set();
 		extract[key].add(target);
 	}
@@ -57,4 +56,42 @@ export function parseData(template: string, pattern: RegExp) {
 		placeholders.push(...value);
 	}
 	return { groups, keys, placeholders };
+}
+
+export function flattenContext(
+	context: Context,
+	depth = 1,
+	prefix: string[] = [],
+	isArray = false,
+	flatContext: FlatContext = {},
+) {
+	if (depth <= -1 || depth >= 1) {
+		/* Allow string index access on both array and object for flexibility */
+		// eslint-disable-next-line @typescript-eslint/no-for-in-array
+		for (const key in context) {
+			// @ts-expect-error: ts(7053)
+			const value = context[key] as ContextValue;
+
+			let currKeys: string[];
+			if (!prefix.length) {
+				currKeys = [key];
+			} else {
+				currKeys = prefix.map(x => `${x}.${key}`);
+				if (isArray) {
+					currKeys.push(...prefix.map(x => `${x}[${key}]`));
+				}
+			}
+
+			if (Array.isArray(value)) {
+				flattenContext(value, depth - 1, currKeys, true, flatContext);
+			} else if (value && typeof value === "object") {
+				flattenContext(value, depth - 1, currKeys, false, flatContext);
+			} else {
+				for (const curr of currKeys) {
+					flatContext[curr] = value;
+				}
+			}
+		}
+	}
+	return flatContext;
 }

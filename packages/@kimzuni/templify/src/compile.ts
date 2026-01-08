@@ -1,5 +1,6 @@
-import { keyIdx, getPattern, parseData } from "./utils";
 import type { Context, CompileOptions, OverrideOptions } from "./types";
+import { getPattern, parseData, flattenContext } from "./utils";
+import { KEY_INDEX } from "./constants";
 
 
 
@@ -14,7 +15,7 @@ import type { Context, CompileOptions, OverrideOptions } from "./types";
  */
 export function compile(template: string, options: CompileOptions = {}) {
 	const pattern = getPattern(options);
-	const { fallback } = options;
+	const { fallback, depth } = options;
 
 	let data: ReturnType<typeof parseData> | undefined;
 	const getData = () => {
@@ -93,13 +94,11 @@ export function compile(template: string, options: CompileOptions = {}) {
 		 */
 		render(context: Context, options: OverrideOptions = {}) {
 			const fb = "fallback" in options ? options.fallback : fallback;
+			const dt = "depth" in options ? options.depth : depth;
+			const flatContext = flattenContext(context, dt);
 			return template.replace(pattern, (target, ...args) => {
-				const key = args[keyIdx - 1] as string;
-
-				/* Allow string index access on both array and object for flexibility */
-				// @ts-expect-error: ts(7053)
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-				return `${context[key] !== undefined ? context[key] : fb !== undefined ? `${fb}` : target}`;
+				const key = args[KEY_INDEX - 1] as string;
+				return `${flatContext[key] !== undefined ? flatContext[key] : fb !== undefined ? `${fb}` : target}`;
 			});
 		},
 	};

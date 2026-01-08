@@ -6,13 +6,13 @@ import pkg from "../package.json";
 
 import type { SubCommand } from "./types";
 import { userInputs } from "./validate";
-import { subCommands, ARGUMENTS, OPTIONS } from "./common";
+import { SUB_COMMANDS, ARGUMENTS, OPTIONS } from "./constants";
 import { capitalize, loadContext, loadTemplate, toTemplifyOptions } from "./utils";
 
 
 
 export function isSubCommand(value: string): value is SubCommand {
-	return subCommands.includes(value as SubCommand);
+	return SUB_COMMANDS.includes(value as SubCommand);
 }
 
 export type Options = Partial<ReturnType<ReturnType<typeof getCommand>["opts"]>>;
@@ -28,7 +28,9 @@ export function getCommand(argv: string[], name = "templify", description = pkg.
 		.addOption(OPTIONS.noValidate)
 		.addOption(OPTIONS.template)
 		.addOption(OPTIONS.templateFile)
+		.addOption(OPTIONS.depth)
 		.addOption(OPTIONS.key)
+		.addOption(OPTIONS.keyPattern)
 		.addOption(OPTIONS.open)
 		.addOption(OPTIONS.close)
 		.addOption(OPTIONS.spacingSize)

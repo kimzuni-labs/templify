@@ -83,6 +83,22 @@ console.log( c.groups() );
 console.log( c.render(context) );
 ```
 
+### with deep access
+
+Deep access requires configuring the `key` option.
+By using `KEY_PATTERNS.DEEP`, deep access becomes available.
+
+```javascript
+const { KEY_PATTERNS, render } = require("@kimzuni/templify");
+
+const template = "{ key1 } { key2[0] } { key2[0].key3 }";
+const context = { key1: "value1", key2: ["item0", { key3: "value3" }] };
+const options = { key: KEY_PATTERNS.DEEP, depth: -1 };
+
+console.log( render(template, options, context) );
+// "value1 item0 value3"
+```
+
 
 
 ## Options
@@ -90,6 +106,9 @@ console.log( c.render(context) );
 All options are optional.
 
 ### key
+
+> [!TIP]
+> `KEY_PATTERNS` provides a set of predefined patterns that can be used for configuration.
 
 Regex pattern defining valid characters for placeholder keys.
 Controls which characters are allowed inside the delimiters.
@@ -100,6 +119,8 @@ Any regex flags (e.g., `i`, `g`) are ignored if provided.
 | `string`, `RegExp` | `/\w+/`       |
 
 ```javascript
+const { KEY_PATTERNS, render } = require("@kimzuni/templify");
+
 const template = "{ key } { key1 }";
 const context = { key: "value", key1: "value1" };
 const options = { key: /[a-z]+/ };
@@ -216,6 +237,31 @@ console.log(render(template, context, {
 // "null / value1 / { key_2 }"
 ```
 
+### depth
+
+Maximum depth for resolving nested keys.
+
+Keys deeper than the specified depth are ignored and not included in the flattened context.
+
+| Type     | Default value |
+|----------|---------------|
+| `number` | `1`           |
+
+```javascript
+const template = "{ key1 } { key2[0] } { key2[0].key3 }";
+const context = { key1: "value1", key2: ["item0", { key3: "value3" }] };
+const options = { key: KEY_PATTERNS.DEEP, fallback: "x" };
+
+console.log( render(template, { ...options, depth: -1 }, context) );
+// "value1 item0 value3"
+
+console.log( render(template, { ...options, depth: 0 }, context) );
+// "x x x
+
+console.log( render(template, { ...options, depth: 2 }, context) );
+// "value1 item0 x"
+```
+
 
 
 ## Override Options
@@ -225,6 +271,7 @@ Options used to override compile options during rendering.
 Support Options:
 
 - [fallback](#fallback)
+- [depth](#depth)
 
 ```javascript
 const template = "{ key } / { key1 } / { key_2 }";
