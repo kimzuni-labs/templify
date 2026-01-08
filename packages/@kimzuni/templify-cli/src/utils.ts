@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import fs from "node:fs/promises";
-import type * as tply from "@kimzuni/templify";
+import * as tply from "@kimzuni/templify";
 
 import type { Options } from "./types";
 
@@ -109,13 +109,24 @@ export async function loadContext(KEY_VALUE: string[], opts: Options): Promise<t
  */
 export function toTemplifyOptions(opts: Options): tply.CompileOptions {
 	const {
-		key,
 		open,
 		close,
 		fallback,
+		depth,
 		spacingSize: size,
 		spacingStrict: strict,
 	} = opts;
+
+	let key: string | RegExp | undefined = opts.key;
+	if (opts.key !== undefined) {
+		key = opts.key;
+	} else if (opts.keyPattern !== undefined) {
+		key = tply.KEY_PATTERNS[opts.keyPattern.toUpperCase() as keyof typeof tply.KEY_PATTERNS];
+	}
+	if (key === undefined && depth !== undefined && (depth <= -1 || depth > 1)) {
+		key = tply.KEY_PATTERNS.DEEP;
+	}
+
 	const spacing: tply.CompileOptions["spacing"] = { strict, size };
-	return { key, open, close, spacing, fallback };
+	return { key, open, close, spacing, fallback, depth };
 }

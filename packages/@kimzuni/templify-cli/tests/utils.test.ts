@@ -1,5 +1,5 @@
 import { describe, test, expect } from "bun:test";
-import type { SpacingOptions } from "@kimzuni/templify";
+import * as tply from "@kimzuni/templify";
 
 import type { Options } from "../src/types";
 import { capitalize, readStream, loadTemplate, loadContext, toTemplifyOptions } from "../src/utils";
@@ -133,6 +133,8 @@ describe("toTemplifyOptions", () => {
 			open        : "open",
 			close       : "close",
 			fallback    : "fallback",
+			depth       : -1,
+			keyPattern  : "deep",
 			dataFile    : "dataFile",
 			fromEnv     : true,
 			compact     : true,
@@ -144,8 +146,9 @@ describe("toTemplifyOptions", () => {
 		expect(opts.open).toBe(cmdOpts.open);
 		expect(opts.close).toBe(cmdOpts.close);
 		expect(opts.fallback).toBe(cmdOpts.fallback);
+		expect(opts.depth).toBe(cmdOpts.depth);
 		expect(opts).toContainKey("spacing");
-		expect(opts).not.toContainAnyKeys(["dataFile", "fromEnv", "compact", "template", "dataFileFile"]);
+		expect(opts).not.toContainAnyKeys(["keyPattern", "dataFile", "fromEnv", "compact", "template", "templateFile"]);
 	});
 
 	test("should normalize spacing options", () => {
@@ -153,7 +156,7 @@ describe("toTemplifyOptions", () => {
 			const spacing = toTemplifyOptions(opts).spacing;
 			expect(spacing).not.toBeArray();
 			expect(spacing).toBeTypeOf("object");
-			return spacing as SpacingOptions;
+			return spacing as tply.SpacingOptions;
 		};
 
 		expect(getSpacingOpts().size).toBeUndefined();
@@ -161,5 +164,36 @@ describe("toTemplifyOptions", () => {
 		expect(getSpacingOpts({ spacingSize: [1] }).size).toStrictEqual([1]);
 		expect(getSpacingOpts({ spacingSize: [1, 3] }).size).toStrictEqual([1, 3]);
 		expect(getSpacingOpts({ spacingStrict: true }).strict).toBeTrue();
+	});
+
+	test("should respect explicit key over keyPattern option", () => {
+		expect(toTemplifyOptions({}).key).toBe(undefined);
+		expect(toTemplifyOptions({ keyPattern: "x" }).key).toBe(undefined);
+		expect(toTemplifyOptions({ keyPattern: "deep" }).key).toBe(tply.KEY_PATTERNS.DEEP);
+		expect(toTemplifyOptions({ key: "key", keyPattern: "x" }).key).toBe("key");
+		expect(toTemplifyOptions({ key: "key", keyPattern: "deep" }).key).toBe("key");
+	});
+
+	test("should infer deep key pattern based on depth option", () => {
+		expect(toTemplifyOptions({}).key).toBe(undefined);
+		expect(toTemplifyOptions({ depth: -1 }).key).toBe(tply.KEY_PATTERNS.DEEP);
+		expect(toTemplifyOptions({ depth: 0 }).key).toBe(undefined);
+		expect(toTemplifyOptions({ depth: 1 }).key).toBe(undefined);
+		expect(toTemplifyOptions({ depth: 2 }).key).toBe(tply.KEY_PATTERNS.DEEP);
+
+		expect(toTemplifyOptions({ depth: -1, key: "xxx" }).key).toBe("xxx");
+		expect(toTemplifyOptions({ depth: 0, key: "xxx" }).key).toBe("xxx");
+		expect(toTemplifyOptions({ depth: 1, key: "xxx" }).key).toBe("xxx");
+		expect(toTemplifyOptions({ depth: 2, key: "xxx" }).key).toBe("xxx");
+
+		expect(toTemplifyOptions({ depth: -1, keyPattern: "yyy" }).key).toBe(tply.KEY_PATTERNS.DEEP);
+		expect(toTemplifyOptions({ depth: 0, keyPattern: "yyy" }).key).toBe(undefined);
+		expect(toTemplifyOptions({ depth: 1, keyPattern: "yyy" }).key).toBe(undefined);
+		expect(toTemplifyOptions({ depth: 2, keyPattern: "yyy" }).key).toBe(tply.KEY_PATTERNS.DEEP);
+
+		expect(toTemplifyOptions({ depth: -1, keyPattern: "default" }).key).toBe(tply.KEY_PATTERNS.DEFAULT);
+		expect(toTemplifyOptions({ depth: 0, keyPattern: "deep" }).key).toBe(tply.KEY_PATTERNS.DEEP);
+		expect(toTemplifyOptions({ depth: 1, keyPattern: "deep" }).key).toBe(tply.KEY_PATTERNS.DEEP);
+		expect(toTemplifyOptions({ depth: 2, keyPattern: "default" }).key).toBe(tply.KEY_PATTERNS.DEFAULT);
 	});
 });

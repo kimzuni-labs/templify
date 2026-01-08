@@ -2,7 +2,7 @@ import { describe, test, expect } from "bun:test";
 
 import type { SubCommand, Options } from "../src/types";
 import { toNumber, toNumberArray, userInputs } from "../src/validate";
-import { subCommands } from "../src/common";
+import { SUB_COMMANDS } from "../src/constants";
 
 import { createStdin, type CreateStdinProps } from "./common";
 
@@ -25,7 +25,7 @@ test("toNumberArray", () => {
 });
 
 describe("userInputs", () => {
-	const withoutRenderCommands = subCommands.filter(x => x !== "render");
+	const withoutRenderCommands = SUB_COMMANDS.filter(x => x !== "render");
 	const run = (
 		stream: string,
 		streamOpts: CreateStdinProps,
@@ -48,7 +48,7 @@ describe("userInputs", () => {
 	test("should resolve template conflicts using precedence: stdin > --template > --template-file > TEMPLATE(only non render)", () => {
 		// pipe/redirect, --template, --template-file, pos arg, waits
 
-		for (const key of subCommands) {
+		for (const key of SUB_COMMANDS) {
 			expect(run("stdin", {}, key, [], {})).not.toThrow();
 			expect(run("", { readable: false }, key, ["arg1"], {})).not.toThrow();
 			expect(run("", { readable: false }, key, [], { template: "str" })).not.toThrow();
@@ -75,6 +75,14 @@ describe("userInputs", () => {
 			expect(run("", { readable: false }, key, ["arg1"], { templateFile: "path" })).toThrow();
 			expect(run("stdin", {}, key, ["arg1"], {})).toThrow();
 		}
+	});
+
+	test("should validate key options and reject invalid combinations", () => {
+		// --key, --key-pattern
+
+		expect(run("", {}, "render", [], { key: "x", keyPattern: "deep" })).toThrow();
+		expect(run("", {}, "render", [], { keyPattern: "x" })).toThrow();
+		expect(run("", {}, "render", [], { keyPattern: "deep" })).not.toThrow();
 	});
 
 	test("should allow fallback option only in render", () => {

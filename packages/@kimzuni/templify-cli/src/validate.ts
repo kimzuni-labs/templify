@@ -1,7 +1,8 @@
 import { CommanderError, InvalidArgumentError } from "@commander-js/extra-typings";
+import * as tply from "@kimzuni/templify";
 
 import type { SubCommand, Options } from "./types";
-import { ARGUMENTS, OPTIONS } from "./common";
+import { ARGUMENTS, OPTIONS } from "./constants";
 import { isInteractiveStdin, isNonInteractiveStdin } from "./utils";
 
 
@@ -40,6 +41,13 @@ export function userInputs(
 		throw new CommanderError(1, "conflicts", `Error: multiple template sources specified. Only one of ${oneOf}`);
 	} else if (numberOfTemplates !== 1 && !isInteractive) {
 		throw new CommanderError(1, "conflicts", `Error: no template sources specified. Specify one of ${oneOf}`);
+	}
+
+	if (opts.key !== undefined && opts.keyPattern !== undefined) {
+		throw new CommanderError(2, "conflicts", `Error: option '${OPTIONS.key.flags}' cannot be used with option '${OPTIONS.keyPattern.flags}'`);
+	} else if (opts.keyPattern !== undefined && !(opts.keyPattern.toUpperCase() in tply.KEY_PATTERNS)) {
+		const arr = Object.keys(tply.KEY_PATTERNS).map(x => x.toLowerCase());
+		throw new CommanderError(2, "invalid", `Error: option '${OPTIONS.keyPattern.flags}' argument '${opts.keyPattern}' is invalid. Allowed choices are ${arr.join(", ")}.`);
 	}
 
 	if (subCommand === "render") {

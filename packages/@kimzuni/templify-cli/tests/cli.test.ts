@@ -3,7 +3,7 @@ import { describe, test, expect } from "bun:test";
 import * as tply from "@kimzuni/templify";
 
 import pkg from "../package.json";
-import { subCommands } from "../src/common";
+import { SUB_COMMANDS } from "../src/constants";
 import { loadContext } from "../src/utils";
 import * as cli from "../src/cli";
 
@@ -34,25 +34,32 @@ const run = (
  * @param stream if not Stream type, write stdin
  */
 const check = async (
-	opts: CreateStdinProps & { stdin?: boolean } = {},
+	opts: CreateStdinProps & { stdin?: boolean; isENV?: boolean } = {},
 	template: string,
 	optKeys: string[],
 	args: string[],
 	expectedOrOpts: string | tply.CompileOptions,
-	env?: Env,
+	context?: tply.Context,
 ) => {
 	const stream = opts.stdin ? template : undefined;
 	const expected = typeof expectedOrOpts === "string"
 		? expectedOrOpts
 		: tply.render(
 			template,
-			env ?? await loadContext(data, {}),
+			context ?? await loadContext(data, {}),
 			expectedOrOpts,
 		);
 
 	const prefix: string[] = opts.stdin ? [] : [template];
 	const step = async (extraArgs: string[] = []) => {
-		const s = await run([...prefix, ...extraArgs, ...args], { env, stream, ...opts });
+		const s = await run(
+			[...prefix, ...extraArgs, ...args],
+			{
+				env: opts.isENV !== false ? context as Env : undefined,
+				stream,
+				...opts,
+			},
+		);
 		expect(s.exitCode).toBe(0);
 		expect(stdoutToString(s.log)).toBe(expected);
 	};
@@ -141,6 +148,32 @@ describe("Options", () => {
 			);
 		});
 
+		test("--key-pattern", async () => {
+			await check(
+				{},
+				template,
+				["--key-pattern"],
+				["default", ...data],
+				{ key: tply.KEY_PATTERNS.DEFAULT },
+			);
+
+			await check(
+				{},
+				template,
+				["--key-pattern"],
+				["deep", ...data],
+				{ key: tply.KEY_PATTERNS.DEEP },
+			);
+
+			await check(
+				{},
+				template,
+				["--key-pattern"],
+				["DEeP", ...data],
+				{ key: tply.KEY_PATTERNS.DEEP },
+			);
+		});
+
 		test("--open", async () => {
 			const open = "<%=";
 			await check(
@@ -182,6 +215,29 @@ describe("Options", () => {
 					["--", ...data],
 					{ spacing: true },
 				);
+			});
+		});
+
+		describe("--depth", () => {
+			const template = "{ x }/{ a.b }/{ a.c[0] }/{ a.c.1.d }";
+
+			test("should infer deep key pattern from depth when no key option is explicitly provided", async () => {
+				const customKey = "[\\w.]+";
+				const defaultKeys = tply.keys(template);
+				const deepKeys = tply.keys(template, { key: tply.KEY_PATTERNS.DEEP });
+				const customKeys = tply.keys(template, { key: customKey });
+
+				const noDepth = await run(["keys", template]);
+				expect(noDepth.log[0][0]).toStrictEqual(defaultKeys);
+
+				const result = await run(["keys", template, "--depth", "2"]);
+				expect(result.log[0][0]).toStrictEqual(deepKeys);
+
+				const withKey = await run(["keys", template, "--depth", "2", "--key", customKey]);
+				expect(withKey.log[0][0]).toStrictEqual(customKeys);
+
+				const withPattern = await run(["keys", template, "--depth", "2", "--key-pattern", "default"]);
+				expect(withPattern.log[0][0]).toStrictEqual(defaultKeys);
 			});
 		});
 
@@ -266,6 +322,31 @@ describe("Options", () => {
 				{},
 			);
 		});
+
+		test("--depth", async () => {
+			const template = "{ x }/{ a.b }/{ a.c[0] }/{ a.c.1.d }";
+			const depth = 2;
+			const context = {
+				x: "xxx",
+				a: {
+					b: 111,
+					c: [
+						null,
+						{ d: "x" },
+					],
+				},
+			};
+
+			const filepath = await tempfile(JSON.stringify(context));
+			await check(
+				{ isENV: false },
+				template,
+				["--depth"],
+				[`${depth}`, "-D", filepath],
+				{ depth: depth, key: tply.KEY_PATTERNS.DEEP },
+				context,
+			);
+		});
 	});
 
 	describe("non render", () => {
@@ -319,7 +400,7 @@ describe("Sub command", () => {
 		expect(stdoutToString(frame.log)).toBe(tply.render(template, {}));
 	});
 
-	for (const subCommand of subCommands.filter(x => x !== "render")) {
+	for (const subCommand of SUB_COMMANDS.filter(x => x !== "render")) {
 		test(subCommand, async () => {
 			const key = subCommand;
 			const { frame } = await capture(() => cli.run([subCommand, template]));
