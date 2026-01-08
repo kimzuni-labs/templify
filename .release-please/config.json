@@ -6,10 +6,24 @@
 	"separate-pull-requests": true,
 	"packages": {
 		"packages/@kimzuni/templify": {
-			"package-name": ""
+			"package-name": "",
+			"extra-files": [
+				{
+					"type": "json",
+					"path": "bun.lock",
+					"jsonpath": "$.workspaces['packages/@kimzuni/templify'].version"
+				}
+			]
 		},
 		"packages/@kimzuni/templify-cli": {
-			"package-name": "cli"
+			"package-name": "cli",
+			"extra-files": [
+				{
+					"type": "json",
+					"path": "bun.lock",
+					"jsonpath": "$.workspaces['packages/@kimzuni/templify-cli'].version"
+				}
+			]
 		}
 	},
 	"changelog-sections": [
