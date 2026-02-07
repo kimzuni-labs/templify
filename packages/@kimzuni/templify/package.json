@@ -27,6 +27,7 @@
     "CHANGELOG.md",
     "package.json"
   ],
+  "types": "./dist/index.d.ts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
