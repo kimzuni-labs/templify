@@ -54,10 +54,13 @@ export async function capture<T>(cb: () => T | Promise<T>) {
 	};
 	captureStack.push(frame);
 
+	const exitCode = process.exitCode;
 	try {
 		const result = await cb();
+		frame.exitCode = process.exitCode;
 		return { result, frame };
 	} finally {
+		process.exitCode = exitCode;
 		captureStack.pop();
 	}
 }
