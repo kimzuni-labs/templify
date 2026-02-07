@@ -30,8 +30,8 @@
     "package.json"
   ],
   "bin": {
-    "templify": "dist/index.mjs",
-    "tply": "dist/index.mjs"
+    "templify": "dist/index.cjs",
+    "tply": "dist/index.cjs"
   },
   "exports": {
     "./package.json": "./package.json"

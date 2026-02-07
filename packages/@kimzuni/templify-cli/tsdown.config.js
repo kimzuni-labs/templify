@@ -13,6 +13,7 @@ export default defineConfig([
 		unbundle: true,
 		outDir  : "./dist",
 		platform: "node",
+		format  : "cjs",
 		target  : tsconfig.compilerOptions.target,
 		hash    : false,
 		dts     : false,
