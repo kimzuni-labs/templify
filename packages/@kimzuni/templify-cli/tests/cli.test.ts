@@ -8,7 +8,7 @@ import { loadContext } from "../src/utils";
 import * as cli from "../src/cli";
 
 import type { Env, CreateStdinProps } from "./common";
-import { randomString, tempfile, mockStdin, mockStdout, mockEnv, capture, stdoutToString } from "./common";
+import { randomString, tempfile, mockStdin, mockStdout, mockEnv, capture, frameStdoutToString, frameStderrToString } from "./common";
 
 
 
@@ -61,7 +61,7 @@ const check = async (
 			},
 		);
 		expect(s.exitCode).toBe(0);
-		expect(stdoutToString(s.log)).toBe(expected);
+		expect(frameStdoutToString(s)).toBe(expected);
 	};
 
 	for (const item of optKeys) await step([item]);
@@ -75,13 +75,13 @@ describe("Options", () => {
 		test("--help", async () => {
 			const result = await run(["--help"]);
 			expect(result.exitCode).toBe(0);
-			expect(stdoutToString(result.log)).toStartWith("Usage:");
+			expect(frameStdoutToString(result)).toStartWith("Usage:");
 		});
 
 		test("--version", async () => {
 			const result = await run(["--version"]);
 			expect(result.exitCode).toBe(0);
-			expect(stdoutToString(result.log)).toEndWith(pkg.version);
+			expect(frameStdoutToString(result)).toEndWith(pkg.version);
 		});
 
 		describe("template", () => {
@@ -255,7 +255,7 @@ describe("Options", () => {
 
 			const noStdin = await run(["-t", template, "--no-stdin"], { stream: "stream data" });
 			expect(noStdin.exitCode).toBe(0);
-			expect(stdoutToString(noStdin.log)).toBe(template);
+			expect(frameStdoutToString(noStdin)).toBe(template);
 		});
 	});
 
@@ -347,6 +347,18 @@ describe("Options", () => {
 				context,
 			);
 		});
+
+		test("should not append a trailing newline to render output", async () => {
+			const value = "hello";
+
+			const withoutNewline = await run([`key=${value}`], { stream: "{ key }" });
+			expect(withoutNewline.exitCode).toBe(0);
+			expect(withoutNewline.stdout).toBe(value);
+
+			const withNewline = await run([`key=${value}`], { stream: "{ key }\n" });
+			expect(withNewline.exitCode).toBe(0);
+			expect(withNewline.stdout).toBe(`${value}\n`);
+		});
 	});
 
 	describe("non render", () => {
@@ -371,7 +383,7 @@ describe("Invalid Option", () => {
 	const check = async (args: string[]) => {
 		const result = await run(args);
 		expect(result.exitCode).not.toBe(0);
-		expect(stdoutToString(result.error)).toStartWith("Error:");
+		expect(frameStderrToString(result)).toStartWith("Error:");
 	};
 
 	test("unknown option", async () => {
@@ -391,13 +403,13 @@ describe("Sub command", () => {
 	test("default", async () => {
 		const { frame } = await capture(() => cli.run([template]));
 		expect(frame.exitCode).toBe(0);
-		expect(stdoutToString(frame.log)).toBe(tply.render(template, {}));
+		expect(frameStdoutToString(frame)).toBe(tply.render(template, {}));
 	});
 
 	test("render", async () => {
 		const { frame } = await capture(() => cli.run(["render", template]));
 		expect(frame.exitCode).toBe(0);
-		expect(stdoutToString(frame.log)).toBe(tply.render(template, {}));
+		expect(frameStdoutToString(frame)).toBe(tply.render(template, {}));
 	});
 
 	for (const subCommand of SUB_COMMANDS.filter(x => x !== "render")) {
@@ -412,10 +424,10 @@ describe("Sub command", () => {
 	test("non first argument", async () => {
 		const groups = await run(["groups", "--compact", "--no-validate"], { stream: template });
 		expect(groups.exitCode).toBe(0);
-		expect(stdoutToString(groups.log)).toBe(JSON.stringify(tply.groups(template)));
+		expect(frameStdoutToString(groups)).toBe(JSON.stringify(tply.groups(template)));
 
 		const noGroups = await run(["--compact", "groups", "--no-validate"], { stream: template });
 		expect(noGroups.exitCode).toBe(0);
-		expect(noGroups.log[0][0]).toBe(template);
+		expect(frameStdoutToString(noGroups)).toBe(template);
 	});
 });
