@@ -45,7 +45,7 @@ jobs:
 
       - name: Build
         working-directory: ${{ matrix.path }}
-        run: bun run build --if-present
+        run: bun run --if-present build
 
       - name: Publish
         working-directory: ${{ matrix.path }}
