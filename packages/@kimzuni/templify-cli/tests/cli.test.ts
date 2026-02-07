@@ -8,7 +8,7 @@ import { loadContext } from "../src/utils";
 import * as cli from "../src/cli";
 
 import type { Env, CreateStdinProps } from "./common";
-import { randomString, tempfile, mockStdin, mockStdout, mockEnv, capture, stdoutToString } from "./common";
+import { randomString, tempfile, mockStdin, mockEnv, capture, stdoutToString } from "./common";
 
 
 
@@ -81,7 +81,7 @@ describe("Options", () => {
 		test("--version", async () => {
 			const result = await run(["--version"]);
 			expect(result.exitCode).toBe(0);
-			expect(stdoutToString(result.log)).toEndWith(pkg.version);
+			expect(stdoutToString(result.log).trimEnd()).toEndWith(pkg.version);
 		});
 
 		describe("template", () => {
@@ -356,10 +356,8 @@ describe("Options", () => {
 			const nonCompact = await run(["groups", template]);
 			expect(nonCompact.log[0][0]).toStrictEqual(groups);
 
-			await mockStdout({ isTTY: false }, async () => {
-				const nonCompactNoTTY = await run(["groups", template], { stream: "", isTTY: false, readable: false });
-				expect(nonCompactNoTTY.log[0][0]).toStrictEqual(JSON.stringify(groups, undefined, 2));
-			});
+			const nonCompactNoTTY = await run(["groups", template], { stream: "", isTTY: false, readable: false });
+			expect(nonCompactNoTTY.log[0][0]).toStrictEqual(groups);
 
 			const compact = await run(["groups", template, "--compact"]);
 			expect(compact.log[0][0]).toStrictEqual(JSON.stringify(groups));

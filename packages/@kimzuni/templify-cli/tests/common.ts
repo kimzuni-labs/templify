@@ -89,9 +89,6 @@ export const createStdin = (
 	},
 );
 
-// @ts-expect-error: ts(2740)
-export const createStdout = (props?: CreateStdinProps): typeof process.stdout => createStdin("", props);
-
 export async function mockStdin<T>(
 	string: Stream | undefined,
 	props: CreateStdinProps,
@@ -107,21 +104,6 @@ export async function mockStdin<T>(
 		return await cb();
 	} finally {
 		process.stdin = stdin;
-	}
-}
-
-export async function mockStdout<T>(
-	props: CreateStdinProps,
-	cb: () => T | Promise<T>,
-) {
-	const stdout = process.stdout;
-
-	process.stdout = createStdout(props);
-
-	try {
-		return await cb();
-	} finally {
-		process.stdout = stdout;
 	}
 }
 

@@ -56,9 +56,6 @@ export function getCommand(argv: string[], name = "templify", description = pkg.
 		})
 		.configureOutput({
 			writeErr: () => "",
-			writeOut(msg) {
-				console.log(msg.trimEnd());
-			},
 		})
 		.exitOverride()
 
@@ -73,7 +70,7 @@ export function getCommand(argv: string[], name = "templify", description = pkg.
 			if (subCommand === "render") {
 				const context = await loadContext(KEY_VALUE, opts);
 				const result = tply.render(template, context, compileOptions);
-				console.log(result);
+				process.stdout.write(result);
 			} else {
 				const result = tply[subCommand](template, compileOptions);
 
