@@ -9,7 +9,7 @@
     "lint:eslint": "eslint .",
     "lint:markdown": "markdownlint-cli2",
     "lint:yaml": "yamllint .",
-    "build": "bun --workspaces run build --if-present"
+    "build": "bun --workspaces run --if-present build"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.3.0",
