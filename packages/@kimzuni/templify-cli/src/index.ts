@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 
-import fs from "node:fs/promises";
+import fs from "node:fs";
 
 import { run } from "./cli";
 
 
 
-const execfile = await fs.realpath(process.argv.at(1) ?? "").catch(() => "");
-const filepath = await fs.realpath(import.meta.filename).catch(() => "");
+const execfile = fs.realpathSync(process.argv.at(1) ?? "");
+const filepath = fs.realpathSync(import.meta.filename);
 if (execfile && execfile === filepath) {
-	await run();
+	run().catch((e: unknown) => {
+		console.error(e);
+	});
 }
