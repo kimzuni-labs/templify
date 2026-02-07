@@ -19,7 +19,8 @@
   "bugs": "https://github.com/kimzuni-labs/templify/issues",
   "scripts": {
     "test": "bun test",
-    "build": "tsdown"
+    "build": "tsdown && if [ -n \"$GITHUB_WORKFLOW\" -o -n \"$GITHUB_ACTIONS\" ]; then bun workflow:build; fi",
+    "workflow:build": "bun pm pack --destination tgz && tar zxf tgz/* && mv package/package.json . && rm -r package/ tgz/"
   },
   "files": [
     "dist",
