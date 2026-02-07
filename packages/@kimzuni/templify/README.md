@@ -91,7 +91,7 @@ By using `KEY_PATTERNS.DEEP`, deep access becomes available.
 ```javascript
 const { KEY_PATTERNS, render } = require("@kimzuni/templify");
 
-const template = "{ key1 } { key2[0] } { key2[0].key3 }";
+const template = "{ key1 } { key2[0] } { key2[1].key3 }";
 const context = { key1: "value1", key2: ["item0", { key3: "value3" }] };
 const options = { key: KEY_PATTERNS.DEEP, depth: -1 };
 

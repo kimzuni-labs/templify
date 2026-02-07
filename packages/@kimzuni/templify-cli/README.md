@@ -7,7 +7,11 @@ CLI for the
 [@kimzuni/templify](../templify//README.md)
 a flexible template string processor.
 
-It supports customizable template delimiters, spacing rules, and fallback values.
+It supports customizable
+template delimiters,
+spacing rules,
+fallback values,
+and etc.
 
 
 
@@ -46,8 +50,8 @@ All options except [Template](#template) are optional.
 > The subcommand must be provided as the first argument.
 > Otherwise, it is treated as a template string or render data.
 
-Choices: `render`, `keys`, `placeholders`, `fields`, `groups`
-Default: `render`
+- Choices: `render`, `keys`, `placeholders`, `fields`, `groups`
+- Default: `render`
 
 See the
 [@kimzuni/templify Example](../templify/README.md#example)
@@ -64,7 +68,7 @@ Template resolution order:
 2. inline template option: `-t`, `--template`
 3. template file option: `-T`, `--template-file`
 4. positional argument: `TEMPLATE`
-    - If a template has already been resolved, the value is treated as `KEY=VALUE` render data.
+    + If a template has already been resolved, the value is treated as `KEY=VALUE` render data.
 5. wait for input from stdin (TTY only)
 
 ```shell
