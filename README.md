@@ -20,6 +20,18 @@ Packages:
 
 
 
+## Screenshots
+
+### [templify](packages/@kimzuni/templify)
+
+![templify example screenshot](packages/@kimzuni/templify/images/example.png)
+
+### [templify-cli](packages/@kimzuni/templify-cli)
+
+![templify-cli example screenshot](packages/@kimzuni/templify-cli/images/example.png)
+
+
+
 ## 💛 Contributing
 
 The contribution workflow is currently documented around the [Bun](https://bun.sh/)-based setup.
