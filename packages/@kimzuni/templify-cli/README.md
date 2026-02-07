@@ -15,6 +15,12 @@ and etc.
 
 
 
+## Screenshot
+
+![example screenshot](images/example.png)
+
+
+
 ## Installation
 
 ```shell
@@ -107,27 +113,27 @@ Merge order (later sources override earlier ones):
 3. positional argument: `[KEY=VALUE...]`
 
 ```shell
-echo -n "Hello, { USER }!" | templify
+echo "Hello, { USER }!" | templify
 # Hello, { USER }!
 
-echo -n "Hello, { USER }!" | templify XXX=USER_1
+echo "Hello, { USER }!" | templify XXX=USER_1
 # Hello, { USER }!
 
-echo -n "Hello, { USER }!" | templify USER=USER_1
+echo "Hello, { USER }!" | templify USER=USER_1
 # Hello, USER_1!
 
-echo -n "Hello, { USER }!" | templify -e
+echo "Hello, { USER }!" | templify -e
 # Hello, kimzuni!
 
 echo "USER=USER_1" > test.env
-echo -n "Hello, { USER }!" | templify -e -D test.env
+echo "Hello, { USER }!" | templify -e -D test.env
 # Hello, USER_1!
 
 echo '{ "USER": "USER_2" }' > test.json
-echo -n "Hello, { USER }!" | templify -e -D test.json
+echo "Hello, { USER }!" | templify -e -D test.json
 # Hello, USER_2!
 
-echo -n "Hello, { USER }!" | templify -e -D test.json USER=Guest
+echo "Hello, { USER }!" | templify -e -D test.json USER=Guest
 # Hello, Guest!
 ```
 
@@ -136,10 +142,10 @@ echo -n "Hello, { USER }!" | templify -e -D test.json USER=Guest
 Disable reading from standard input.
 
 ```shell
-echo -n "{ key1 }, { key2 }!" | templify key1=hello key2=world
+echo "{ key1 }, { key2 }!" | templify key1=hello key2=world
 # hello, world!
 
-echo -n "{ key1 }, { key2 }!" | templify key1=hello key2=world --no-stdin
+echo "{ key1 }, { key2 }!" | templify key1=hello key2=world --no-stdin
 # key1=hello
 ```
 
@@ -149,17 +155,17 @@ Disable validation of option usage and conflict checks.
 
 ```shell
 # Conflict between stdin and -T(--template-file) option
-echo -n "{ key1 }, { key2 }!" | templify -T file.txt key1=hello key2=world
+echo "{ key1 }, { key2 }!" | templify -T file.txt key1=hello key2=world
 # Error: ...
 
-echo -n "{ key1 }, { key2 }!" | templify -T file.txt key1=hello key2=world --no-validate
+echo "{ key1 }, { key2 }!" | templify -T file.txt key1=hello key2=world --no-validate
 # hello, world!
 
 # --compact is non-render option
-echo -n "{ key1 }, { key2 }!" | templify key1=hello key2=world --compact
+echo "{ key1 }, { key2 }!" | templify key1=hello key2=world --compact
 # Error: ...
 
-echo -n "{ key1 }, { key2 }!" | templify key1=hello key2=world --compact --no-validate
+echo "{ key1 }, { key2 }!" | templify key1=hello key2=world --compact --no-validate
 # hello, world!
 ```
 

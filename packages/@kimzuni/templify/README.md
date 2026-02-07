@@ -13,6 +13,12 @@ The CLI is available as
 
 
 
+## Screenshot
+
+![example screenshot](images/example.png)
+
+
+
 ## Installation
 
 ```shell
