@@ -114,5 +114,5 @@ export async function run(argv = process.argv.slice(2)) {
 			console.error(msg);
 		}
 	}
-	process.exit(exitCode);
+	process.exitCode = exitCode;
 }
