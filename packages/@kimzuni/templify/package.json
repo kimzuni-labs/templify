@@ -12,9 +12,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kimzuni-labs/templify.git"
+    "url": "git+https://github.com/kimzuni-labs/templify.git",
+    "directory": "packages/@kimzuni/templify"
   },
-  "homepage": "https://github.com/kimzuni-labs/templify",
+  "homepage": "https://github.com/kimzuni-labs/templify/tree/main/packages/@kimzuni/templify",
   "bugs": "https://github.com/kimzuni-labs/templify/issues",
   "scripts": {
     "test": "bun test",
@@ -27,9 +28,14 @@
     "CHANGELOG.md",
     "package.json"
   ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "unpkg": "./dist/browser/index.iife.js",
+  "jsdelivr": "./dist/browser/index.iife.js",
   "exports": {
     "./package.json": "./package.json",
+    "./browser": "./dist/browser/index.iife.js",
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
