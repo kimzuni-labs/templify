@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/kimzuni-labs/templify/compare/v2.1.0...v2.2.0) (2026-04-26)
+
+
+### ✨ Features
+
+* support browser ([#66](https://github.com/kimzuni-labs/templify/issues/66)) ([0a4c461](https://github.com/kimzuni-labs/templify/commit/0a4c461c49960c8d8945ee8f8633a95febaf2981))
+
 ## [2.1.0](https://github.com/kimzuni-labs/templify/compare/v2.0.0...v2.1.0) (2026-01-08)
 
 
