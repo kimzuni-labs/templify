@@ -26,4 +26,13 @@ export default defineConfig([
 		format: ["esm"],
 		dts   : true,
 	},
+	{
+		...options,
+		format    : ["iife"],
+		unbundle  : false,
+		platform  : "browser",
+		minify    : true,
+		globalName: "Templify",
+		outDir    : "./dist/browser",
+	},
 ]);

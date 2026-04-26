@@ -89,6 +89,28 @@ console.log( c.groups() );
 console.log( c.render(context) );
 ```
 
+### in browser
+
+You can use the browser bundle directly via script tag.
+
+```html
+<script src="https://unpkg.com/@kimzuni/templify/dist/browser/index.iife.js"></script>
+<script>
+	const template = "{ user.name } / { users[0].name }";
+	const context = {
+		user: { name: "John" },
+		users: [{ name: "Doe" }],
+	};
+
+	const result = Templify.render(template, context, {
+		key: Templify.KEY_PATTERNS.DEEP,
+		depth: -1,
+	});
+
+	console.log(result); // "John / Doe"
+</script>
+```
+
 ### with deep access
 
 Deep access requires configuring the `key` option.
