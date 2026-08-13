@@ -2,14 +2,17 @@
   "name": "@kimzuni/templify-monorepo",
   "private": true,
   "type": "module",
-  "workspaces": ["packages/**"],
+  "workspaces": [
+    "packages/**",
+    "playground"
+  ],
   "scripts": {
     "test": "bun test",
     "lint": "markdownlint-cli2 && yamllint . && eslint .",
     "lint:eslint": "eslint .",
     "lint:markdown": "markdownlint-cli2",
     "lint:yaml": "yamllint .",
-    "build": "bun --workspaces run --if-present build"
+    "build": "bun run --parallel --filter '!*/templify-playground' build"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.2",
@@ -18,6 +21,9 @@
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/bun": "^1.4.0",
     "eslint": "^10.9.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.4",
+    "globals": "^17.11.0",
     "markdownlint-cli2": "^0.23.2",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.67.0",

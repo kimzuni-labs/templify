@@ -1,0 +1,6 @@
+:root, body, #root {
+	@apply min-h-full;
+	@apply flex flex-col;
+} body, #root {
+	@apply flex-1;
+}
