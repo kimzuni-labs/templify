@@ -181,45 +181,45 @@ console.log(result); // "value1 { key1 }"
 Options for controlling the number of spaces inside template placeholders.
 Can be provided as a simple value or as a full object.
 
-| key    | Type                 | Default value | Info                                                                                                                  |
-|--------|----------------------|---------------|-----------------------------------------------------------------------------------------------------------------------|
-| strict | `boolean`            | `false`       | When `true`, placeholders must have the same number of spaces on both sides of the key to be considered a valid match |
-| size   | `number`, `number[]` | `-1`          | Allowed number of spaces inside placeholder delimiters. Negative value disables space checking                        |
+| key    | Type                                                 | Default value | Info                                                                                                                  |
+|--------|------------------------------------------------------|---------------|-----------------------------------------------------------------------------------------------------------------------|
+| strict | `boolean`                                            | `false`       | When `true`, placeholders must have the same number of spaces on both sides of the key to be considered a valid match |
+| size   | `number` or `[number]`, `[min: number, max: number]` | `-1`          | Allowed range or number of spaces inside placeholder delimiters. Negative value disables space checking               |
 
 ```javascript
-const template = "{key1} { key1 } {  key1  } {   key1   } {   key1 }";
+const template = "{key1} { key1 } {  key1  } {   key1   } {    key1    } {   key1 }";
 const context = { key1: "value1" };
 
 console.log(render(template, context, {
 	spacing: -1, // alias for `spacing: { size: -1 }`
 }));
-// "value1 value1 value1 value1 value1"
+// "value1 value1 value1 value1 value1 value1"
 
 console.log(render(template, context, {
 	spacing: true, // alias for `spacing: { strict: true }`
 }));
-// "value1 value1 value1 value1 {   key1 }"
+// "value1 value1 value1 value1 value1 {   key1 }"
 
 console.log(render(template, context, {
 	spacing: {
 		size: -1,
 	},
 }));
-// "value1 value1 value1 value1 value1"
+// "value1 value1 value1 value1 value1 value1"
 
 console.log(render(template, context, {
 	spacing: {
 		size: 1,
 	},
 }));
-// "{key1} value1 {  key1  } {   key1   } {   key1 }"
+// "{key1} value1 {  key1  } {   key1   } {    key1    } {   key1 }"
 
 console.log(render(template, context, {
 	spacing: {
 		size: [1, 3],
 	},
 }));
-// "{key1} value1 {  key1  } value1 value1"
+// "{key1} value1 value1 value1 {    key1    } value1"
 
 console.log(render(template, context, {
 	spacing: {
@@ -227,7 +227,21 @@ console.log(render(template, context, {
 		size: [1, 3],
 	},
 }));
-// "{key1} value1 {  key1  } value1 {   key1 }"
+// "{key1} value1 value1 value1 {    key1    } {   key1 }"
+
+console.log(render(template, context, {
+	spacing: {
+		size: [-1, 1],  // Same as [0, 1]
+	},
+}));
+// "value1 value1 {  key1  } {   key1   } {    key1    } {   key1 }"
+
+console.log(render(template, context, {
+	spacing: {
+		size: [1, -1],
+	},
+}));
+// "{key1} value1 value1 value1 value1 value1"
 ```
 
 ### fallback

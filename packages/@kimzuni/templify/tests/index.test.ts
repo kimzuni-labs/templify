@@ -136,7 +136,7 @@ const init = (label: string, callback: Callback) => {
 					spacing: Exclude<RenderOptions["spacing"], undefined>,
 					placeholders: string[],
 				) => test(label, () => {
-					const template = "{key} / { key } / {  key  } / {   key   } / {    key    } / { key   } / {   key }";
+					const template = "{key} / { key } / {  key  } / {   key   } / {    key    } / { key  } / { key   } / {   key }";
 					const options = { spacing };
 					const context = {};
 					const data = callback(template, options, context);
@@ -153,6 +153,7 @@ const init = (label: string, callback: Callback) => {
 						"{  key  }",
 						"{   key   }",
 						"{    key    }",
+						"{ key  }",
 						"{ key   }",
 						"{   key }",
 					],
@@ -177,6 +178,7 @@ const init = (label: string, callback: Callback) => {
 						"{  key  }",
 						"{   key   }",
 						"{    key    }",
+						"{ key  }",
 						"{ key   }",
 						"{   key }",
 					],
@@ -196,23 +198,31 @@ const init = (label: string, callback: Callback) => {
 					],
 				);
 				run(
-					"size: [1, 3, 4]",
-					{ size: [1, 3, 4] },
+					"size: [2]",
+					{ size: [2] },
+					[
+						"{  key  }",
+					],
+				);
+				run(
+					"size: [1, 3]",
+					{ size: [1, 3] },
 					[
 						"{ key }",
+						"{  key  }",
 						"{   key   }",
-						"{    key    }",
+						"{ key  }",
 						"{ key   }",
 						"{   key }",
 					],
 				);
 				run(
-					"strict: true, size: [1, 3, 4]",
-					{ strict: true, size: [1, 3, 4] },
+					"strict: true, size: [1, 3]",
+					{ strict: true, size: [1, 3] },
 					[
 						"{ key }",
+						"{  key  }",
 						"{   key   }",
-						"{    key    }",
 					],
 				);
 			});

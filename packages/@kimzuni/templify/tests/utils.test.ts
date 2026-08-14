@@ -92,6 +92,7 @@ describe("getPattern", () => {
 			"{ key_1 }",
 			"{ key-1 }",
 		], [
+			"{ key.1 }",
 		]);
 	});
 
@@ -106,6 +107,7 @@ describe("getPattern", () => {
 			"{    key    }",
 			"{ key   }",
 			"{   key }",
+			"{    key   }",
 		], [
 		]);
 		run(getPattern({
@@ -117,6 +119,9 @@ describe("getPattern", () => {
 			"{   key   }",
 			"{    key    }",
 		], [
+			"{ key   }",
+			"{   key }",
+			"{    key   }",
 		]);
 		run(getPattern({
 			spacing: {
@@ -130,6 +135,7 @@ describe("getPattern", () => {
 			"{    key    }",
 			"{ key   }",
 			"{   key }",
+			"{    key   }",
 		], [
 		]);
 		run(getPattern({
@@ -145,6 +151,7 @@ describe("getPattern", () => {
 			"{    key    }",
 			"{ key   }",
 			"{   key }",
+			"{    key   }",
 		]);
 		run(getPattern({
 			spacing: {
@@ -159,36 +166,60 @@ describe("getPattern", () => {
 			"{    key    }",
 			"{ key   }",
 			"{   key }",
+			"{    key   }",
 		]);
 		run(getPattern({
 			spacing: {
-				size: [1, 3, 4],
+				size: [2],
 			},
 		}), [
+			"{  key  }",
+		], [
+			"{key}",
 			"{ key }",
 			"{   key   }",
 			"{    key    }",
 			"{ key   }",
 			"{   key }",
+			"{    key   }",
+		]);
+		run(getPattern({
+			spacing: {
+				size: [1, 3],
+			},
+		}), [
+			"{ key }",
+			"{  key  }",
+			"{   key   }",
+			"{ key  }",
+			"{ key   }",
+			"{   key }",
 		], [
 			"{key}",
-			"{  key  }",
+			"{    key   }",
 		]);
 		run(getPattern({
 			spacing: {
 				strict: true,
-				size: [1, 3, 4],
+				size: [1, 3],
 			},
 		}), [
 			"{ key }",
+			"{  key  }",
 			"{   key   }",
-			"{    key    }",
 		], [
 			"{key}",
-			"{  key  }",
+			"{ key  }",
 			"{ key   }",
 			"{   key }",
+			"{    key   }",
 		]);
+
+		expect(() => getPattern({
+			spacing: {
+				size: [3, 1],
+			},
+		})).toThrow();
 	});
 });
 
