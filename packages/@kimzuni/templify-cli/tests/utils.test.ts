@@ -161,7 +161,6 @@ describe("toTemplifyOptions", () => {
 
 		expect(getSpacingOpts().size).toBeUndefined();
 		expect(getSpacingOpts().size).toBeUndefined();
-		expect(getSpacingOpts({ spacingSize: [1] }).size).toStrictEqual([1]);
 		expect(getSpacingOpts({ spacingSize: [1, 3] }).size).toStrictEqual([1, 3]);
 		expect(getSpacingOpts({ spacingStrict: true }).strict).toBeTrue();
 	});

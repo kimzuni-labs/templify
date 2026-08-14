@@ -1,6 +1,6 @@
 import { Option, Argument } from "@commander-js/extra-typings";
 
-import { toNumber, toNumberArray } from "./validate";
+import { toNumber, toRange } from "./validate";
 
 
 
@@ -28,7 +28,7 @@ export const OPTIONS = {
 	keyPattern   : new Option("--key-pattern <name>", "Use a predefined key pattern for placeholders (e.g. deep for nested keys)."),
 	open         : new Option("-o, --open <string>", "Opening delimiter for placeholders."),
 	close        : new Option("-c, --close <string>", "Closing delimiter for placeholders."),
-	spacingSize  : new Option("--spacing-size <string|number>", "Allowed number(s) of spaces inside placeholder delimiters. A negative value disables space checking. (e.g. \"1,2,3\", \"1 2 3\", \"1, 2, 3\")").argParser(toNumberArray),
+	spacingSize  : new Option("--spacing-size <string|number>", "Allowed range or number of spaces inside placeholder delimiters. A negative value disables space checking. (e.g. \"1\", \"1:\", \":3\", \"1:3\"").argParser(toRange),
 	spacingStrict: new Option("--spacing-strict", "Enforce exact spacing rules."),
 	fallback     : new Option("-f, --fallback <string>", "Fallback value to use when a template key is missing."),
 	depth        : new Option("--depth <number>", "Maximum depth for resolving nested keys, useful for JSON contexts.").argParser(toNumber),

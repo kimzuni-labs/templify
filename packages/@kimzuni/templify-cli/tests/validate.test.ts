@@ -1,7 +1,7 @@
 import { describe, test, expect } from "bun:test";
 
 import type { SubCommand, Options } from "../src/types";
-import { toNumber, toNumberArray, userInputs } from "../src/validate";
+import { toNumber, toRange, userInputs } from "../src/validate";
 import { SUB_COMMANDS } from "../src/constants";
 
 import { createStdin, type CreateStdinProps } from "./common";
@@ -16,12 +16,15 @@ test("toNumber", () => {
 	expect(() => toNumber("x")).toThrow();
 });
 
-test("toNumberArray", () => {
-	expect(toNumberArray("")).toStrictEqual([]);
-	expect(toNumberArray("1,2,3")).toStrictEqual([1, 2, 3]);
-	expect(toNumberArray("1 2 3")).toStrictEqual([1, 2, 3]);
-	expect(toNumberArray("1, 2, 3")).toStrictEqual([1, 2, 3]);
-	expect(() => toNumberArray("x")).toThrow();
+test("toRange", () => {
+	expect(toRange("")).toStrictEqual([-1, -1]);
+	expect(toRange("1")).toStrictEqual([1, -1]);
+	expect(toRange("1:2")).toStrictEqual([1, 2]);
+	expect(toRange("-1:2")).toStrictEqual([-1, 2]);
+	expect(toRange("1:-1")).toStrictEqual([1, -1]);
+	expect(toRange(":2")).toStrictEqual([-1, 2]);
+	expect(toRange("1:")).toStrictEqual([1, -1]);
+	expect(() => toRange("x")).toThrow();
 });
 
 describe("userInputs", () => {
