@@ -41,12 +41,13 @@ export interface SpacingOptions {
 	 * Allowed number of spaces inside placeholder delimiters.
 	 * Negative value disables space checking.
 	 *
-	 * - If a single number, exactly that many spaces are required.
-	 * - If an array of numbers, any of the specified sizes are allowed.
+	 * - If a single number or only one value in the array, exactly that many spaces are required.
+	 * - If an array with two numbers, the number of spaces will be between min and max (inclusive).
+	 * - If -1 is provided, the number of spaces is not limited. (e.g. `-1`, `[1, -1]`)
 	 *
 	 * @default -1
 	 */
-	size?: number | number[];
+	size?: number | [number] | [min: number, max: number];
 }
 
 /**

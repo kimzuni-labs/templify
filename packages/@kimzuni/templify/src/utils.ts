@@ -23,18 +23,22 @@ export function getPattern(options: CommonOptions = {}) {
 			: spacing;
 
 	let leftSpace = "";
-	const innerSpaceArray = Array.isArray(spacingSize) ? spacingSize : [spacingSize];
-	for (const number of innerSpaceArray) {
-		if (number < 0) {
-			leftSpace = "\\s*";
-			break;
-		} else {
-			leftSpace += `${leftSpace ? "|" : ""}\\s{${Math.floor(number)}}`;
-		}
+	const [innerSpaceMin, innerSpaceMax] = !Array.isArray(spacingSize)
+		? [spacingSize, spacingSize]
+		: spacingSize.length === 2
+			? spacingSize
+			: [spacingSize[0], spacingSize[0]];
+
+	if (innerSpaceMin < 0 && innerSpaceMax < 0) {
+		leftSpace = "\\s*";
+	} else {
+		const min = innerSpaceMin < 0 ? 0 : innerSpaceMin;
+		const max = innerSpaceMax < 0 ? "" : innerSpaceMax;
+		leftSpace = `\\s{${min},${max}}`;
 	}
 
 	const rightSpace = spacingStrict ? "\\1" : leftSpace;
-	return new RegExp(`${open}(?:(${leftSpace}))(${keyPattern})(?:${rightSpace})${close}`, "g");
+	return new RegExp(`${open}(${leftSpace})(${keyPattern})${rightSpace}${close}`, "g");
 }
 
 export function parseData(template: string, pattern: RegExp) {
