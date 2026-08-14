@@ -202,8 +202,8 @@ describe("Options", () => {
 					{},
 					template,
 					["--spacing-size"],
-					["1,2", ...data],
-					{ spacing: [1, 2] },
+					["1:3", ...data],
+					{ spacing: [1, 3] },
 				);
 			});
 
@@ -367,7 +367,7 @@ describe("Options", () => {
 
 describe("Invalid Option", () => {
 	const check = async (args: string[]) => {
-		const result = await run(args);
+		const result = await run(args, { stream: "" });
 		expect(result.exitCode).not.toBe(0);
 		expect(stdoutToString(result.error)).toStartWith("Error:");
 	};
@@ -378,9 +378,8 @@ describe("Invalid Option", () => {
 
 	describe("invalid value", () => {
 		test("spacing", async () => {
-			await check(["-s", "x"]);
 			await check(["--spacing-size", "x"]);
-			await check(["-s", "1, x, 2"]);
+			await check(["--spacing-size", "1:x"]);
 		});
 	});
 });

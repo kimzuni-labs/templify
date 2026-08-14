@@ -15,9 +15,11 @@ export function toNumber(value: string) {
 	return number;
 }
 
-export function toNumberArray(value: string) {
-	const split = value.split(/[, ]/g);
-	return split.filter(Boolean).map(toNumber);
+export function toRange(value: string): [number, number] {
+	const [minStr = "", maxStr = ""] = value.split(":", 2);
+	const min = minStr.length ? toNumber(minStr) : -1;
+	const max = maxStr.length ? toNumber(maxStr) : -1;
+	return [min, max];
 }
 
 export function userInputs(
