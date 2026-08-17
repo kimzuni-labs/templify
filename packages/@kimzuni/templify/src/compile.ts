@@ -56,14 +56,6 @@ export function compile(template: string, options: CompileOptions = {}) {
 			return getData().placeholders;
 		},
 
-
-		/**
-		 * Alias of `.placeholders()`.
-		 */
-		fields() {
-			return getData().placeholders;
-		},
-
 		/**
 		 * Groups placeholders by their normalized key.
 		 *

@@ -182,8 +182,3 @@ export interface OverrideOptions extends Pick<CompileOptions, "fallback" | "dept
 export type Keys = string[];
 export type Placeholders = string[];
 export type Groups = Record<string, string[]>;
-
-/**
- * Alias of {@link Placeholders}.
- */
-export type Fields = Placeholders;
