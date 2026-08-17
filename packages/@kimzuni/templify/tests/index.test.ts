@@ -5,7 +5,7 @@ import { describe, test, expect } from "bun:test";
 import type { RenderOptions, Context, OverrideOptions } from "../src/types";
 import { KEY_PATTERNS } from "../src/constants";
 import { compile } from "../src/compile";
-import { keys, placeholders, fields, groups, render } from "../src/direct";
+import { keys, placeholders, groups, render } from "../src/direct";
 
 
 
@@ -21,7 +21,7 @@ type Callback = (
 const init = (label: string, callback: Callback) => {
 	describe(label, () => {
 		describe("methods", () => {
-			test("keys/placeholders/fields/groups", () => {
+			test("keys/placeholders/groups", () => {
 				const run = (
 					template: string,
 					groups: CallbackData["groups"],
@@ -41,7 +41,6 @@ const init = (label: string, callback: Callback) => {
 					expect(groups).toBeEmptyObject();
 					expect(results.keys.sort()).toStrictEqual(keys.sort());
 					expect(results.placeholders.sort()).toStrictEqual(placeholders.sort());
-					expect(results.fields.sort()).toStrictEqual(results.placeholders.sort());
 				};
 
 				run(
@@ -141,7 +140,6 @@ const init = (label: string, callback: Callback) => {
 					const context = {};
 					const data = callback(template, options, context);
 					expect(data.placeholders.sort()).toStrictEqual(placeholders.sort());
-					expect(data.fields.sort()).toStrictEqual(data.placeholders.sort());
 				});
 
 				run(
@@ -372,7 +370,6 @@ init("compile", (template, options, context, overrideOptions) => {
 	return {
 		keys: c.keys(),
 		placeholders: c.placeholders(),
-		fields: c.fields(),
 		groups: c.groups(),
 		render: c.render(context, overrideOptions),
 	};
@@ -382,7 +379,6 @@ init("direct", (template, options, context) => {
 	return {
 		keys: keys(template, options),
 		placeholders: placeholders(template, options),
-		fields: fields(template, options),
 		groups: groups(template, options),
 		render: render(template, context, options),
 	};

@@ -36,8 +36,6 @@ bun add @kimzuni/templify
 
 ## Example
 
-`fields` is an alias for `placeholders`
-
 ```javascript
 const { keys, placeholders, fields, groups, render } = require("@kimzuni/templify");
 
