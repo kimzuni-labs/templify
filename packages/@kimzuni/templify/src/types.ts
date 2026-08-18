@@ -19,11 +19,6 @@ export type ContextValue = Primitive | ContextValue[] | { [K: string ]: ContextV
 export type Context = ContextValue[] | Record<string, ContextValue>;
 
 /**
- * The context used for resolving placeholders.
- */
-export type FlatContext = Record<string, Primitive>;
-
-/**
  * Options for controlling the number of spaces inside template placeholders.
  */
 export interface SpacingOptions {

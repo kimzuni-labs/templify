@@ -1,5 +1,5 @@
 import type { Context, CompileOptions, OverrideOptions } from "./types";
-import { getPattern, parseData, flattenContext, renderTemplate } from "./utils";
+import { getPattern, parseData, renderTemplate } from "./utils";
 
 
 
@@ -88,8 +88,9 @@ export function compile(template: string, options: CompileOptions = {}) {
 		render(context: Context, options: OverrideOptions = {}) {
 			return renderTemplate(
 				template,
-				flattenContext(context, "depth" in options ? options.depth : depth),
+				context,
 				getKeyPattern(),
+				"depth" in options ? options.depth : depth,
 				"fallback" in options ? options.fallback : fallback,
 			);
 		},

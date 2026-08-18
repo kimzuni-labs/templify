@@ -1,4 +1,4 @@
-import { getPattern, flattenContext, renderTemplate } from "./utils";
+import { getPattern, renderTemplate } from "./utils";
 import type { Context, RenderOptions } from "./types";
 
 
@@ -19,8 +19,9 @@ import type { Context, RenderOptions } from "./types";
 export function render(template: string, context: Context, options?: RenderOptions) {
 	return renderTemplate(
 		template,
-		flattenContext(context, options?.depth),
+		context,
 		getPattern(options),
+		options?.depth,
 		options?.fallback,
 	);
 }

@@ -2,8 +2,8 @@
 
 import { describe, test, expect } from "bun:test";
 
-import type { Primitive, Context, FlatContext, Groups } from "../src/types";
-import { getPattern, parseData, flattenContext, renderTemplate } from "../src/utils";
+import type { Primitive, Context, Groups } from "../src/types";
+import { getPattern, parseData, isQuote, unquote, getPaths, getValue, renderTemplate } from "../src/utils";
 import { KEY_PATTERNS } from "../src/constants";
 
 
@@ -279,87 +279,506 @@ describe("parseData", () => {
 	});
 });
 
-describe("flattenContext", () => {
+test("isQuote", () => {
+	expect(isQuote("'")).toBe(true);
+	expect(isQuote("\"")).toBe(true);
+	expect(isQuote("\\'")).toBe(false);
+	expect(isQuote("x")).toBe(false);
+	expect(isQuote("")).toBe(false);
+});
+
+describe("unquote", () => {
+	test("no quotes", () => {
+		expect(unquote("xx")).toBe("xx");
+	});
+
+	test("single", () => {
+		expect(unquote("'xx'")).toBe("xx");
+		expect(unquote("'x'x'")).toBe("x'x");
+	});
+
+	test("double", () => {
+		expect(unquote("\"xx\"")).toBe("xx");
+		expect(unquote("\"x\"x\"")).toBe("x\"x");
+	});
+
+	test("mixed", () => {
+		expect(unquote("'xx\"")).toBe("'xx\"");
+		expect(unquote("\"xx'")).toBe("\"xx'");
+		expect(unquote("\"x'x\"")).toBe("x'x");
+		expect(unquote("'x\"x'")).toBe("x\"x");
+	});
+});
+
+describe("getPaths", () => {
 	const run = (
-		context: Context,
-		expected: FlatContext,
-		depth = 1,
+		key: string,
+		expected: string[],
 	) => {
-		const flat = flattenContext(context, depth);
-		expect(flat).toStrictEqual(expected);
+		expect(getPaths(key)).toStrictEqual(expected);
 	};
 
 	test("basic", () => {
 		run(
-			{ a: 1, b: "x" },
-			{ a: 1, b: "x" },
-		);
-	});
-	test("array", () => {
-		run(
-			[1, "x"],
-			{ 0: 1, 1: "x" },
-		);
-	});
-	test("depth", () => {
-		const context: Context = {
-			a: 123,
-			b: { ba: 1, bb: 2 },
-			c: [11, { "e.e": undefined, over: undefined }],
-			f: [[[{ g: null }]]],
-			"c[1].over": "ride",
-		};
-
-		run(
-			context,
-			{},
-			0,
+			"abc",
+			["abc"],
 		);
 
 		run(
-			context,
+			"a_b_c",
+			["a_b_c"],
+		);
+
+		run(
+			"a-b-c",
+			["a-b-c"],
+		);
+
+		run(
+			"a b c",
+			["a b c"],
+		);
+
+		run(
+			"1 2 3",
+			["1 2 3"],
+		);
+
+		run(
+			"가 나 다",
+			["가 나 다"],
+		);
+	});
+
+	test("dot", () => {
+		run(
+			"1.2.3",
+			["1", "2", "3"],
+		);
+
+		run(
+			"a.b.c",
+			["a", "b", "c"],
+		);
+
+		run(
+			".a.b.c",
+			["a", "b", "c"],
+		);
+
+		run(
+			"a.b.c.",
+			["a", "b", "c", ""],
+		);
+
+		run(
+			".a.b.c.",
+			["a", "b", "c", ""],
+		);
+	});
+
+	test("brackets", () => {
+		run(
+			"1[2][3]",
+			["1", "2", "3"],
+		);
+
+		run(
+			"a[b][c]",
+			["a", "b", "c"],
+		);
+
+		run(
+			"[1][2][3]",
+			["1", "2", "3"],
+		);
+
+		run(
+			"[a][b][c]",
+			["a", "b", "c"],
+		);
+	});
+
+	test("mixed", () => {
+		run(
+			"a[b.c]",
+			["a", "b.c"],
+		);
+
+		run(
+			"a.[b.c]",
+			["a", "", "b.c"],
+		);
+
+		run(
+			"[a].b.c",
+			["a", "b", "c"],
+		);
+
+		run(
+			".[a].b.c.",
+			["", "a", "b", "c", ""],
+		);
+
+		run(
+			".a[b].c",
+			["a", "b", "c"],
+		);
+
+		run(
+			".a.[b].c",
+			["a", "", "b", "c"],
+		);
+
+		run(
+			"a.b[c]",
+			["a", "b", "c"],
+		);
+
+		run(
+			"a.b.[c]",
+			["a", "b", "", "c"],
+		);
+
+		run(
+			"a.b[[c]]",
+			["a", "b", "[c]"],
+		);
+
+		run(
+			"a[b[c]]",
+			["a", "b[c]"],
+		);
+
+		run(
+			"a[b[c].d]",
+			["a", "b[c].d"],
+		);
+
+		run(
+			"a[b[c]].d",
+			["a", "b[c]", "d"],
+		);
+	});
+
+	describe("special case", () => {
+		test("quotes/whitespace in key", () => {
+			run(
+				"a[b c]",
+				["a", "b c"],
+			);
+
+			run(
+				"a['b c']",
+				["a", "b c"],
+			);
+
+			run(
+				"a[\"b c\"]",
+				["a", "b c"],
+			);
+
+			run(
+				"a['b c\"]",
+				["a", "b c\"]"],
+			);
+
+			run(
+				"a[ b c ]",
+				["a", "b c"],
+			);
+
+			// tab instead of space
+			run(
+				"a[	b	c	]",
+				["a", "b	c"],
+			);
+
+			run(
+				"a[' b c ']",
+				["a", " b c "],
+			);
+
+			run(
+				"a[ 'b c'  ]",
+				["a", "b c"],
+			);
+
+			run(
+				"a[ b' 'c ]",
+				["a", "b' 'c"],
+			);
+
+			run(
+				"a['b.'c]",
+				["a", "'b.'c"],
+			);
+
+			run(
+				"a['b c]",
+				["a", "b c]"],
+			);
+
+			run(
+				"a['b.c].d[e.f']",
+				["a", "b.c].d[e.f"],
+			);
+
+			run(
+				"a['b.c].d[e.f'].g",
+				["a", "b.c].d[e.f", "g"],
+			);
+
+			run(
+				"a['b.c].d[e.f]",
+				["a", "b.c].d[e.f]"],
+			);
+
+			run(
+				"a['b.c].d[e.f].g",
+				["a", "b.c].d[e.f].g"],
+			);
+		});
+
+		test("special chracter in key", () => {
+			run(
+				"a.b&c",
+				["a", "b&c"],
+			);
+
+			run(
+				"a.b*c",
+				["a", "b*c"],
+			);
+
+			run(
+				"a.b?c",
+				["a", "b?c"],
+			);
+
+			run(
+				"a.b,c",
+				["a", "b,c"],
+			);
+
+			run(
+				"a.b;c",
+				["a", "b;c"],
+			);
+
+			run(
+				"a.b'c",
+				["a", "b'c"],
+			);
+
+			run(
+				"a.b>c",
+				["a", "b>c"],
+			);
+		});
+	});
+});
+
+describe("getValue", () => {
+	const context: Context = {
+		key1: 1,
+		key2: [
+			"item1",
 			{
-				a: 123,
-				"c[1].over": "ride",
+				key3: ["item2", 42, null, undefined],
 			},
+			"item3",
+		],
+	};
+
+	const run = (
+		context: Context,
+		key: string,
+		depth: number,
+		expected: Primitive,
+	) => {
+		expect(getValue(context, key, depth)).toStrictEqual(expected);
+	};
+
+	test("basic", () => {
+		run(
+			context,
+			"key1",
+			-1,
 			1,
 		);
 
 		run(
 			context,
-			{
-				a: 123,
-				"b.ba": 1,
-				"b.bb": 2,
-				"c.0": 11,
-				"c[0]": 11,
-				"c[1].over": "ride",
-			},
-			2,
+			"key2",
+			-1,
+			undefined,
 		);
 
 		run(
 			context,
-			{
-				a: 123,
-				"b.ba": 1,
-				"b.bb": 2,
-				"c.0": 11,
-				"c.1.e.e": undefined,
-				"c.1.over": undefined,
-				"c[0]": 11,
-				"c[1].e.e": undefined,
-				"c[1].over": "ride",
-				"f.0.0.0.g": null,
-				"f.0.0[0].g": null,
-				"f.0[0].0.g": null,
-				"f.0[0][0].g": null,
-				"f[0].0.0.g": null,
-				"f[0].0[0].g": null,
-				"f[0][0].0.g": null,
-				"f[0][0][0].g": null,
-			},
+			"key3",
 			-1,
+			undefined,
+		);
+
+		run(
+			context,
+			"key4",
+			-1,
+			undefined,
+		);
+	});
+
+	describe("nested", () => {
+		test("dot", () => {
+			run(
+				context,
+				"key2.0",
+				-1,
+				"item1",
+			);
+
+			run(
+				context,
+				"key2.1",
+				-1,
+				undefined,
+			);
+
+			run(
+				context,
+				"key2.1.key3",
+				-1,
+				undefined,
+			);
+
+			run(
+				context,
+				"key2.1.key3.1",
+				-1,
+				42,
+			);
+		});
+
+		test("brackets", () => {
+			run(
+				context,
+				"key2[1][key3][1]",
+				-1,
+				42,
+			);
+
+			run(
+				context,
+				"key2[1]['key3'][1]",
+				-1,
+				42,
+			);
+
+			run(
+				context,
+				"key2[1][\"key3\"][1]",
+				-1,
+				42,
+			);
+
+			run(
+				context,
+				"key2[1]['key3\"][1]",
+				-1,
+				undefined,
+			);
+		});
+
+		test("mixed", () => {
+			run(
+				context,
+				"key2.1[key3][1]",
+				-1,
+				42,
+			);
+
+			run(
+				context,
+				"key2[1].key3[1]",
+				-1,
+				42,
+			);
+
+			run(
+				context,
+				"key2[1][key3].1",
+				-1,
+				42,
+			);
+
+			run(
+				context,
+				"key2.1[key3].1",
+				-1,
+				42,
+			);
+
+			run(
+				context,
+				"key2[1].key3.1",
+				-1,
+				42,
+			);
+		});
+	});
+
+	test("depth", () => {
+		const key = "key2[1].key3[1]";
+
+		run(
+			context,
+			key,
+			-1,
+			42,
+		);
+
+		run(
+			context,
+			key,
+			0,
+			undefined,
+		);
+
+		run(
+			context,
+			key,
+			1,
+			undefined,
+		);
+
+		run(
+			context,
+			key,
+			2,
+			undefined,
+		);
+
+		run(
+			context,
+			key,
+			3,
+			undefined,
+		);
+
+		run(
+			context,
+			key,
+			4,
+			42,
+		);
+
+		run(
+			context,
+			key,
+			5,
+			42,
 		);
 	});
 });
@@ -376,8 +795,7 @@ describe("renderTemplate", () => {
 		fallback: Primitive,
 		expected: string,
 	) => {
-		const ctx = flattenContext(context, depth);
-		expect(renderTemplate(template, ctx, pattern, fallback)).toBe(expected);
+		expect(renderTemplate(template, context, pattern, depth, fallback)).toBe(expected);
 	};
 
 	test("basic", () => {
@@ -414,45 +832,55 @@ describe("renderTemplate", () => {
 
 	test("nested", () => {
 		run(
-			"{a} {b.c} {d.e} {f[0]} {f[1][0]}",
+			"{a} {b.c} {d[e]}",
 			{
 				a: 0,
 				b: { c: 1 },
-				"d.e": 2,
-				f: [3, [4]],
+				d: { e: 2 },
 			},
 			defaultKey,
 			1,
 			undefined,
-			"0 {b.c} {d.e} {f[0]} {f[1][0]}",
+			"0 {b.c} {d[e]}",
 		);
 
 		run(
-			"{a} {b.c} {d.e} {f[0]} {f[1][0]}",
+			"{a} {b.c} {d[e]}",
 			{
 				a: 0,
 				b: { c: 1 },
-				"d.e": 2,
-				f: [3, [4]],
-			},
-			deepKey,
-			1,
-			undefined,
-			"0 {b.c} 2 {f[0]} {f[1][0]}",
-		);
-
-		run(
-			"{a} {b.c} {d.e} {f[0]} {f[1][0]}",
-			{
-				a: 0,
-				b: { c: 1 },
-				"d.e": 2,
-				f: [3, [4]],
+				d: { e: 2 },
 			},
 			deepKey,
 			-1,
 			undefined,
-			"0 1 2 3 4",
+			"0 1 2",
+		);
+
+		run(
+			"{a} {[b.c]} {d[e]}",
+			{
+				a: 0,
+				"b.c": 1,
+				"d.e": 2,
+			},
+			defaultKey,
+			-1,
+			undefined,
+			"0 {[b.c]} {d[e]}",
+		);
+
+		run(
+			"{a} {[b.c]} {d[e]}",
+			{
+				a: 0,
+				"b.c": 1,
+				"d.e": 2,
+			},
+			deepKey,
+			-1,
+			undefined,
+			"0 1 {d[e]}",
 		);
 	});
 });
