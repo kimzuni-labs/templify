@@ -81,9 +81,9 @@ const template = "{key1} {key1 } { key2} {key1}";
 const context = { key1: "value1", key3: "value3" };
 
 const c = compile(template);
-console.log( c.keys() );
-console.log( c.placeholders() );
-console.log( c.groups() );
+console.log( c.keys );
+console.log( c.placeholders );
+console.log( c.groups );
 console.log( c.render(context) );
 ```
 

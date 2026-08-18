@@ -31,12 +31,11 @@ export function compile(template: string, options: CompileOptions = {}) {
 		 *
 		 * ```typescript
 		 * const c = compile("{key1} { key1 } { key2}");
-		 * const result = c.keys();
-		 * console.log(result);
+		 * console.log(c.keys);
 		 * [ 'key1', 'key2' ]
 		 * ```
 		 */
-		keys() {
+		get keys() {
 			return getData().keys;
 		},
 
@@ -47,12 +46,11 @@ export function compile(template: string, options: CompileOptions = {}) {
 		 *
 		 * ```typescript
 		 * const c = compile("{key1} { key1 } { key2}");
-		 * const result = c.placeholders();
-		 * console.log(result);
+		 * console.log(c.placeholders);
 		 * [ '{key1}', '{ key1 }', '{ key2}' ]
 		 * ```
 		 */
-		placeholders() {
+		get placeholders() {
 			return getData().placeholders;
 		},
 
@@ -63,12 +61,11 @@ export function compile(template: string, options: CompileOptions = {}) {
 		 *
 		 * ```typescript
 		 * const c = compile("{key1} { key1 } { key2}");
-		 * const result = c.groups();
-		 * console.log(result);
+		 * console.log(c.groups);
 		 * { key1: [ '{key1}', '{ key1 }' ], key2: [ '{ key2}' ] }
 		 * ```
 		 */
-		groups() {
+		get groups() {
 			return getData().groups;
 		},
 
