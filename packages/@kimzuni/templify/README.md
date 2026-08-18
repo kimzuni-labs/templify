@@ -272,7 +272,7 @@ console.log(render(template, context, {
 
 Maximum depth for resolving nested keys.
 
-Keys deeper than the specified depth are ignored and not included in the flattened context.
+Keys deeper than the specified depth are ignored.
 
 | Type     | Default value |
 |----------|---------------|
