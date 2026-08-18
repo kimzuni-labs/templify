@@ -14,12 +14,17 @@ import { KEY_INDEX } from "./constants";
  * ```
  */
 export function compile(template: string, options: CompileOptions = {}) {
-	const pattern = getPattern(options);
 	const { fallback, depth } = options;
+
+	let keyPattern: RegExp | undefined;
+	const getKeyPattern = () => {
+		keyPattern ??= getPattern(options);
+		return keyPattern;
+	};
 
 	let data: ReturnType<typeof parseData> | undefined;
 	const getData = () => {
-		data ??= parseData(template, pattern);
+		data ??= parseData(template, getKeyPattern());
 		return data;
 	};
 
@@ -85,7 +90,7 @@ export function compile(template: string, options: CompileOptions = {}) {
 			const fb = "fallback" in options ? options.fallback : fallback;
 			const dt = "depth" in options ? options.depth : depth;
 			const flatContext = flattenContext(context, dt);
-			return template.replace(pattern, (target, ...args) => {
+			return template.replace(getKeyPattern(), (target, ...args) => {
 				const key = args[KEY_INDEX - 1] as string;
 				return `${flatContext[key] !== undefined ? flatContext[key] : fb !== undefined ? `${fb}` : target}`;
 			});
