@@ -1,15 +1,59 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression, @stylistic/key-spacing */
 
-import { describe, test, expect } from "bun:test";
+import { describe, test, expect, beforeEach, afterEach, spyOn, type Mock } from "bun:test";
 
 import type { RenderOptions, Context, Groups } from "../src/types";
 import { KEY_PATTERNS } from "../src/constants";
+import * as utils from "../src/utils";
 import { compile } from "../src/compile";
 import { render } from "../src/direct";
 
 
 
 describe("compile", () => {
+	describe("Lazy Evaluation & Caching", () => {
+		let getPatternSpy: Mock<typeof utils.getPattern>;
+		let parseDataSpy: Mock<typeof utils.parseData>;
+
+		beforeEach(() => {
+			getPatternSpy = spyOn(utils, "getPattern");
+			parseDataSpy = spyOn(utils, "parseData");
+		});
+
+		afterEach(() => {
+			getPatternSpy.mockRestore();
+			parseDataSpy.mockRestore();
+		});
+
+		test("should not call parseData when compile is invoked", () => {
+			compile("{key1} {key2}");
+			expect(getPatternSpy).not.toHaveBeenCalled();
+			expect(parseDataSpy).not.toHaveBeenCalled();
+		});
+
+		test("should call parseData exactly once upon first property access", () => {
+			const c = compile("{key1} {key2}");
+			const keys = c.keys;
+			expect(getPatternSpy).toHaveBeenCalledTimes(1);
+			expect(parseDataSpy).toHaveBeenCalledTimes(1);
+			expect(keys).toEqual(["key1", "key2"]);
+		});
+
+		test("should cache the parsed data and call parseData only once across multiple accesses", () => {
+			const c = compile("{key1} {key2}");
+
+			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+			c.keys;
+			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+			c.placeholders;
+			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+			c.groups;
+			c.render({});
+			expect(getPatternSpy).toHaveBeenCalledTimes(1);
+			expect(parseDataSpy).toHaveBeenCalledTimes(1);
+		});
+	});
+
 	describe("methods", () => {
 		test("keys/placeholders/groups", () => {
 			const run = (
