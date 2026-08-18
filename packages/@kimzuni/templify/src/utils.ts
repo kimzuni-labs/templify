@@ -1,4 +1,4 @@
-import type { ContextValue, Context, FlatContext, CommonOptions, Keys, Placeholders, Groups } from "./types";
+import type { Primitive, ContextValue, Context, FlatContext, CommonOptions, Keys, Placeholders, Groups } from "./types";
 import { KEY_INDEX, KEY_PATTERNS } from "./constants";
 
 
@@ -98,4 +98,16 @@ export function flattenContext(
 		}
 	}
 	return flatContext;
+}
+
+export function renderTemplate(
+	template: string,
+	context: FlatContext,
+	pattern: RegExp,
+	fallback?: Primitive,
+) {
+	return template.replace(pattern, (target, ...args) => {
+		const key = args[KEY_INDEX - 1] as string;
+		return `${context[key] !== undefined ? context[key] : fallback !== undefined ? `${fallback}` : target}`;
+	});
 }

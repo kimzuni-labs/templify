@@ -1,4 +1,4 @@
-import { compile } from "./compile";
+import { getPattern, flattenContext, renderTemplate } from "./utils";
 import type { Context, RenderOptions } from "./types";
 
 
@@ -6,7 +6,7 @@ import type { Context, RenderOptions } from "./types";
 /**
  * Renders a template string by replacing placeholders with corresponding values from context.
  *
- * For more advanced or repeated usage, consider using {@link compile} to precompile the template.
+ * For more advanced or repeated usage, consider using `compile` to precompile the template.
  *
  * @example
  *
@@ -17,5 +17,10 @@ import type { Context, RenderOptions } from "./types";
  * ```
  */
 export function render(template: string, context: Context, options?: RenderOptions) {
-	return compile(template, options).render(context);
+	return renderTemplate(
+		template,
+		flattenContext(context, options?.depth),
+		getPattern(options),
+		options?.fallback,
+	);
 }

@@ -2,8 +2,9 @@
 
 import { describe, test, expect } from "bun:test";
 
-import type { Context, FlatContext, Groups } from "../src/types";
-import { getPattern, parseData, flattenContext } from "../src/utils";
+import type { Primitive, Context, FlatContext, Groups } from "../src/types";
+import { getPattern, parseData, flattenContext, renderTemplate } from "../src/utils";
+import { KEY_PATTERNS } from "../src/constants";
 
 
 
@@ -359,6 +360,99 @@ describe("flattenContext", () => {
 				"f[0][0][0].g": null,
 			},
 			-1,
+		);
+	});
+});
+
+describe("renderTemplate", () => {
+	const defaultKey = getPattern({ key: KEY_PATTERNS.DEFAULT });
+	const deepKey = getPattern({ key: KEY_PATTERNS.DEEP });
+
+	const run = (
+		template: string,
+		context: Context,
+		pattern: RegExp,
+		depth: number,
+		fallback: Primitive,
+		expected: string,
+	) => {
+		const ctx = flattenContext(context, depth);
+		expect(renderTemplate(template, ctx, pattern, fallback)).toBe(expected);
+	};
+
+	test("basic", () => {
+		run(
+			"{a} { b} { c } {d} {e}",
+			{
+				a: 1,
+				b: "x",
+				c: true,
+				d: null,
+				e: undefined,
+			},
+			defaultKey,
+			1,
+			undefined,
+			"1 x true null {e}",
+		);
+
+		run(
+			"{a} { b} { c } {d} {e}",
+			{
+				a: 1,
+				b: "x",
+				c: true,
+				d: null,
+				e: undefined,
+			},
+			defaultKey,
+			1,
+			null,
+			"1 x true null null",
+		);
+	});
+
+	test("nested", () => {
+		run(
+			"{a} {b.c} {d.e} {f[0]} {f[1][0]}",
+			{
+				a: 0,
+				b: { c: 1 },
+				"d.e": 2,
+				f: [3, [4]],
+			},
+			defaultKey,
+			1,
+			undefined,
+			"0 {b.c} {d.e} {f[0]} {f[1][0]}",
+		);
+
+		run(
+			"{a} {b.c} {d.e} {f[0]} {f[1][0]}",
+			{
+				a: 0,
+				b: { c: 1 },
+				"d.e": 2,
+				f: [3, [4]],
+			},
+			deepKey,
+			1,
+			undefined,
+			"0 {b.c} 2 {f[0]} {f[1][0]}",
+		);
+
+		run(
+			"{a} {b.c} {d.e} {f[0]} {f[1][0]}",
+			{
+				a: 0,
+				b: { c: 1 },
+				"d.e": 2,
+				f: [3, [4]],
+			},
+			deepKey,
+			-1,
+			undefined,
+			"0 1 2 3 4",
 		);
 	});
 });
