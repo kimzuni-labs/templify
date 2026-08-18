@@ -2,15 +2,19 @@
 
 import { describe, test, expect } from "bun:test";
 
-import type { RenderOptions, Context, OverrideOptions } from "../src/types";
+import type { RenderOptions, Context, OverrideOptions, Keys, Placeholders, Groups } from "../src/types";
 import { KEY_PATTERNS } from "../src/constants";
 import { compile } from "../src/compile";
 import { keys, placeholders, groups, render } from "../src/direct";
 
 
 
-type Compiled = ReturnType<typeof compile>;
-type CallbackData = { [K in keyof Compiled]: ReturnType<Compiled[K]> };
+interface CallbackData {
+	keys: Keys;
+	placeholders: Placeholders;
+	groups: Groups;
+	render: string;
+}
 type Callback = (
 	template: string,
 	options: RenderOptions,
@@ -368,9 +372,9 @@ const init = (label: string, callback: Callback) => {
 init("compile", (template, options, context, overrideOptions) => {
 	const c = compile(template, options);
 	return {
-		keys: c.keys(),
-		placeholders: c.placeholders(),
-		groups: c.groups(),
+		keys: c.keys,
+		placeholders: c.placeholders,
+		groups: c.groups,
 		render: c.render(context, overrideOptions),
 	};
 });

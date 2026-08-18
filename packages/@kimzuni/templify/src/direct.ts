@@ -17,7 +17,7 @@ import type { Context, CommonOptions, RenderOptions } from "./types";
  * ```
  */
 export function keys(template: string, options?: CommonOptions) {
-	return compile(template, options).keys();
+	return compile(template, options).keys;
 }
 
 /**
@@ -34,7 +34,7 @@ export function keys(template: string, options?: CommonOptions) {
  * ```
  */
 export function placeholders(template: string, options?: CommonOptions) {
-	return compile(template, options).placeholders();
+	return compile(template, options).placeholders;
 }
 
 /**
@@ -56,7 +56,7 @@ export const fields = placeholders;
  * ```
  */
 export function groups(template: string, options?: CommonOptions) {
-	return compile(template, options).groups();
+	return compile(template, options).groups;
 }
 
 /**
