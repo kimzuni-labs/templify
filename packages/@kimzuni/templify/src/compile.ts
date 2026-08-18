@@ -1,6 +1,5 @@
 import type { Context, CompileOptions, OverrideOptions } from "./types";
-import { getPattern, parseData, flattenContext } from "./utils";
-import { KEY_INDEX } from "./constants";
+import { getPattern, parseData, flattenContext, renderTemplate } from "./utils";
 
 
 
@@ -87,13 +86,12 @@ export function compile(template: string, options: CompileOptions = {}) {
 		 * ```
 		 */
 		render(context: Context, options: OverrideOptions = {}) {
-			const fb = "fallback" in options ? options.fallback : fallback;
-			const dt = "depth" in options ? options.depth : depth;
-			const flatContext = flattenContext(context, dt);
-			return template.replace(getKeyPattern(), (target, ...args) => {
-				const key = args[KEY_INDEX - 1] as string;
-				return `${flatContext[key] !== undefined ? flatContext[key] : fb !== undefined ? `${fb}` : target}`;
-			});
+			return renderTemplate(
+				template,
+				flattenContext(context, "depth" in options ? options.depth : depth),
+				getKeyPattern(),
+				"fallback" in options ? options.fallback : fallback,
+			);
 		},
 	};
 }
