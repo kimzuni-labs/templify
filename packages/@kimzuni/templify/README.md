@@ -37,18 +37,19 @@ bun add @kimzuni/templify
 ## Example
 
 ```javascript
-const { keys, placeholders, fields, groups, render } = require("@kimzuni/templify");
+const { compile } = require("@kimzuni/templify");
 
 const template = "{key1} {key1 } { key2} {key1}";
 const context = { key1: "value1", key3: "value3" };
+const c = compile(template);
 
-console.log(keys(template));
+console.log(c.keys);
 // ["key1", "key2"]
 
-console.log(placeholders(template));
+console.log(c.placeholders);
 // ["{key1}", "{key1 }", "{ key2}"]
 
-console.log(groups(template));
+console.log(c.groups);
 /*
 {
 	key1: ["{key1}", "{key1 }"],
@@ -56,6 +57,11 @@ console.log(groups(template));
 }
 */
 
+console.log(c.render(context));
+// "value1 value1 { key2} value1"
+
+// can use direct render function also
+const { render } = require("@kimzuni/templify");
 console.log(render(template, context));
 // "value1 value1 { key2} value1"
 ```
@@ -72,19 +78,20 @@ console.log( render(template, context) );
 // "item1 item2 {2} item2"
 ```
 
-### with compile
+### with deep access
+
+Deep access requires configuring the `key` option.
+By using `KEY_PATTERNS.DEEP`, deep access becomes available.
 
 ```javascript
-const { compile } = require("@kimzuni/templify");
+const { KEY_PATTERNS, render } = require("@kimzuni/templify");
 
-const template = "{key1} {key1 } { key2} {key1}";
-const context = { key1: "value1", key3: "value3" };
+const template = "{ key1 } { key2[0] } { key2[1].key3 }";
+const context = { key1: "value1", key2: ["item0", { key3: "value3" }] };
+const options = { key: KEY_PATTERNS.DEEP, depth: -1 };
 
-const c = compile(template);
-console.log( c.keys );
-console.log( c.placeholders );
-console.log( c.groups );
-console.log( c.render(context) );
+console.log( render(template, options, context) );
+// "value1 item0 value3"
 ```
 
 ### in browser
@@ -107,22 +114,6 @@ You can use the browser bundle directly via script tag.
 
 	console.log(result); // "John / Doe"
 </script>
-```
-
-### with deep access
-
-Deep access requires configuring the `key` option.
-By using `KEY_PATTERNS.DEEP`, deep access becomes available.
-
-```javascript
-const { KEY_PATTERNS, render } = require("@kimzuni/templify");
-
-const template = "{ key1 } { key2[0] } { key2[1].key3 }";
-const context = { key1: "value1", key2: ["item0", { key3: "value3" }] };
-const options = { key: KEY_PATTERNS.DEEP, depth: -1 };
-
-console.log( render(template, options, context) );
-// "value1 item0 value3"
 ```
 
 
