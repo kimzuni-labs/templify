@@ -3,6 +3,8 @@ import { beforeAll, describe, expect, test } from "bun:test";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 
+import type { compile, render } from "../src";
+
 
 
 interface BrowserTemplify {
@@ -10,11 +12,8 @@ interface BrowserTemplify {
 		DEFAULT: RegExp;
 		DEEP   : RegExp;
 	};
-	render : (template: string, context: unknown, options?: Record<string, unknown>) => string;
-	keys   : (template: string, options?: Record<string, unknown>) => string[];
-	compile: (template: string, options?: Record<string, unknown>) => {
-		render: (context: unknown, options?: Record<string, unknown>) => string;
-	};
+	compile: typeof compile;
+	render : typeof render;
 }
 
 const packageDir = resolve(import.meta.dir, "..");
@@ -58,7 +57,6 @@ describe("browser bundle", () => {
 		expect(browserTemplify.KEY_PATTERNS.DEFAULT).toBeInstanceOf(RegExp);
 		expect(browserTemplify.KEY_PATTERNS.DEEP).toBeInstanceOf(RegExp);
 		expect(browserTemplify.render).toBeFunction();
-		expect(browserTemplify.keys).toBeFunction();
 		expect(browserTemplify.compile).toBeFunction();
 	});
 
