@@ -80,18 +80,28 @@ console.log( render(template, context) );
 
 ### with deep access
 
-Deep access requires configuring the `key` option.
-By using `KEY_PATTERNS.DEEP`, deep access becomes available.
+```javascript
+const { KEY_PATTERNS, render } = require("@kimzuni/templify");
+
+const template = "{ a } { b.c } { [b.c] } { d['e]f'] } { d['e]f'][0] } { d['e]f'].1 }";
+const context = { a: 1, "b.c": 2 d: { "e]f": [3, 4] } };
+const options = { key: KEY_PATTERNS.DEEP };
+
+console.log( render(template, options, context) );
+// "1 { b.c } 2 { d['e]f'] } 3 4"
+```
+
+### without deep access
 
 ```javascript
 const { KEY_PATTERNS, render } = require("@kimzuni/templify");
 
-const template = "{ key1 } { key2[0] } { key2[1].key3 }";
-const context = { key1: "value1", key2: ["item0", { key3: "value3" }] };
-const options = { key: KEY_PATTERNS.DEEP, depth: -1 };
+const template = "{ a } { b.c } { [b.c] } { d['e]f'] } { d['e]f'][0] } { d['e]f'].1 }";
+const context = { a: 1, "b.c": 2 d: { "e]f": [3, 4] } };
+const options = { key: KEY_PATTERNS.SHALLOW };
 
 console.log( render(template, options, context) );
-// "value1 item0 value3"
+// "1 { b.c } { [b.c] } { d['e]f'] } { d['e]f'][0] } { d['e]f'].1 }"
 ```
 
 ### in browser
@@ -107,10 +117,7 @@ You can use the browser bundle directly via script tag.
 		users: [{ name: "Doe" }],
 	};
 
-	const result = Templify.render(template, context, {
-		key: Templify.KEY_PATTERNS.DEEP,
-		depth: -1,
-	});
+	const result = Templify.render(template, context);
 
 	console.log(result); // "John / Doe"
 </script>
@@ -131,9 +138,9 @@ Regex pattern defining valid characters for placeholder keys.
 Controls which characters are allowed inside the delimiters.
 Any regex flags (e.g., `i`, `g`) are ignored if provided.
 
-| Type               | Default value |
-|--------------------|---------------|
-| `string`, `RegExp` | `/\w+/`       |
+| Type               | Default value                       |
+|--------------------|-------------------------------------|
+| `string`, `RegExp` | `/[\w.[\]]+/` (`KEY_PATTERNS.DEEP`) |
 
 ```javascript
 const { KEY_PATTERNS, render } = require("@kimzuni/templify");
@@ -269,6 +276,10 @@ console.log(render(template, context, {
 ```
 
 ### depth
+
+> [!NOTE]
+> `depth` refers to the nested level of the **context**,
+> not the path length of the **key**.
 
 Maximum depth for resolving nested keys.
 

@@ -784,7 +784,7 @@ describe("getValue", () => {
 });
 
 describe("renderTemplate", () => {
-	const defaultKey = getPattern({ key: KEY_PATTERNS.DEFAULT });
+	const shallowKey = getPattern({ key: KEY_PATTERNS.SHALLOW });
 	const deepKey = getPattern({ key: KEY_PATTERNS.DEEP });
 
 	const run = (
@@ -808,7 +808,7 @@ describe("renderTemplate", () => {
 				d: null,
 				e: undefined,
 			},
-			defaultKey,
+			shallowKey,
 			1,
 			undefined,
 			"1 x true null {e}",
@@ -823,7 +823,7 @@ describe("renderTemplate", () => {
 				d: null,
 				e: undefined,
 			},
-			defaultKey,
+			shallowKey,
 			1,
 			null,
 			"1 x true null null",
@@ -838,7 +838,7 @@ describe("renderTemplate", () => {
 				b: { c: 1 },
 				d: { e: 2 },
 			},
-			defaultKey,
+			shallowKey,
 			1,
 			undefined,
 			"0 {b.c} {d[e]}",
@@ -864,7 +864,7 @@ describe("renderTemplate", () => {
 				"b.c": 1,
 				"d.e": 2,
 			},
-			defaultKey,
+			shallowKey,
 			-1,
 			undefined,
 			"0 {[b.c]} {d[e]}",
