@@ -2,20 +2,21 @@
 
 import { describe, test, expect } from "bun:test";
 
-import type { Primitive, Context, Groups } from "../src/types";
+import type { CompileOptions, Primitive, Context, Groups } from "../src/types";
 import { getPattern, parseData, isQuote, unquote, getPaths, getValue, renderTemplate } from "../src/utils";
+import { normalizeOptions } from "../src/normalize";
 import { KEY_PATTERNS } from "../src/constants";
 
 
 
 describe("getPattern", () => {
 	const run = (
-		pattern: RegExp,
+		options: CompileOptions,
 		matches: string[] = [],
 		notMatches: string[] = [],
 	) => {
 		// remove global flag
-		pattern = new RegExp(pattern.source);
+		const pattern = new RegExp(getPattern(normalizeOptions(options)).source);
 		for (const item of matches) {
 			expect(item).toMatch(pattern);
 		}
@@ -25,37 +26,37 @@ describe("getPattern", () => {
 	};
 
 	test("open/close", () => {
-		run(getPattern({
+		run({
 			open: "{",
 			close: "}",
-		}), [
+		}, [
 			"{ key1 }",
 			"{{ key1 }}",
 		], [
 			"<%= key1 %>",
 		]);
-		run(getPattern({
+		run({
 			open: "{{",
 			close: "}}",
-		}), [
+		}, [
 			"{{ key1 }}",
 		], [
 			"{ key1 }",
 			"<%= key1 %>",
 		]);
-		run(getPattern({
+		run({
 			open: "<%=",
 			close: "%>",
-		}), [
+		}, [
 			"<%= key1 %>",
 		], [
 			"{ key1 }",
 			"{{ key1 }}",
 		]);
-		run(getPattern({
+		run({
 			open: "<?",
 			close: "?>",
-		}), [
+		}, [
 		], [
 			"{ key1 }",
 			"{{ key1 }}",
@@ -64,9 +65,9 @@ describe("getPattern", () => {
 	});
 
 	test("key", () => {
-		run(getPattern({
+		run({
 			key: /\w+/,
-		}), [
+		}, [
 			"{ key }",
 			"{ Key }",
 			"{ key1 }",
@@ -74,9 +75,9 @@ describe("getPattern", () => {
 		], [
 			"{ key-1 }",
 		]);
-		run(getPattern({
+		run({
 			key: /[a-z]+/,
-		}), [
+		}, [
 			"{ key }",
 		], [
 			"{ Key }",
@@ -84,9 +85,9 @@ describe("getPattern", () => {
 			"{ key_1 }",
 			"{ key-1 }",
 		]);
-		run(getPattern({
+		run({
 			key: /[a-zA-Z0-9_-]+/,
-		}), [
+		}, [
 			"{ key }",
 			"{ Key }",
 			"{ key1 }",
@@ -98,9 +99,9 @@ describe("getPattern", () => {
 	});
 
 	test("spacing", () => {
-		run(getPattern({
+		run({
 			spacing: -1,
-		}), [
+		}, [
 			"{key}",
 			"{ key }",
 			"{  key  }",
@@ -111,9 +112,9 @@ describe("getPattern", () => {
 			"{    key   }",
 		], [
 		]);
-		run(getPattern({
+		run({
 			spacing: true,
-		}), [
+		}, [
 			"{key}",
 			"{ key }",
 			"{  key  }",
@@ -124,11 +125,11 @@ describe("getPattern", () => {
 			"{   key }",
 			"{    key   }",
 		]);
-		run(getPattern({
+		run({
 			spacing: {
 				size: -1,
 			},
-		}), [
+		}, [
 			"{key}",
 			"{ key }",
 			"{  key  }",
@@ -139,11 +140,11 @@ describe("getPattern", () => {
 			"{    key   }",
 		], [
 		]);
-		run(getPattern({
+		run({
 			spacing: {
 				size: 0,
 			},
-		}), [
+		}, [
 			"{key}",
 		], [
 			"{ key }",
@@ -154,11 +155,11 @@ describe("getPattern", () => {
 			"{   key }",
 			"{    key   }",
 		]);
-		run(getPattern({
+		run({
 			spacing: {
 				size: 2,
 			},
-		}), [
+		}, [
 			"{  key  }",
 		], [
 			"{key}",
@@ -169,11 +170,11 @@ describe("getPattern", () => {
 			"{   key }",
 			"{    key   }",
 		]);
-		run(getPattern({
+		run({
 			spacing: {
 				size: [2],
 			},
-		}), [
+		}, [
 			"{  key  }",
 		], [
 			"{key}",
@@ -184,11 +185,11 @@ describe("getPattern", () => {
 			"{   key }",
 			"{    key   }",
 		]);
-		run(getPattern({
+		run({
 			spacing: {
 				size: [1, 3],
 			},
-		}), [
+		}, [
 			"{ key }",
 			"{  key  }",
 			"{   key   }",
@@ -199,12 +200,12 @@ describe("getPattern", () => {
 			"{key}",
 			"{    key   }",
 		]);
-		run(getPattern({
+		run({
 			spacing: {
 				strict: true,
 				size: [1, 3],
 			},
-		}), [
+		}, [
 			"{ key }",
 			"{  key  }",
 			"{   key   }",
@@ -216,11 +217,11 @@ describe("getPattern", () => {
 			"{    key   }",
 		]);
 
-		expect(() => getPattern({
+		expect(() => getPattern(normalizeOptions({
 			spacing: {
 				size: [3, 1],
 			},
-		})).toThrow();
+		}))).toThrow();
 	});
 });
 
@@ -231,9 +232,9 @@ describe("parseData", () => {
 	) => {
 		const keys = Object.keys(groups);
 		const placeholders = Object.values(groups).flat();
-		const data = parseData(template, getPattern({
+		const data = parseData(template, getPattern(normalizeOptions({
 			key: /\w+/,
-		}));
+		})));
 
 		for (const key in data.groups) {
 			expect(data.groups[key].sort()).toStrictEqual(groups[key].sort());
@@ -288,25 +289,36 @@ test("isQuote", () => {
 });
 
 describe("unquote", () => {
+	const run = (str: string, expected: string, strict = true) => {
+		expect(unquote(str, { strict })).toBe(expected);
+	};
+
 	test("no quotes", () => {
-		expect(unquote("xx")).toBe("xx");
+		run("xx", "xx");
 	});
 
 	test("single", () => {
-		expect(unquote("'xx'")).toBe("xx");
-		expect(unquote("'x'x'")).toBe("x'x");
+		run("'xx'", "xx");
+		run("'x'x'", "x'x");
 	});
 
 	test("double", () => {
-		expect(unquote("\"xx\"")).toBe("xx");
-		expect(unquote("\"x\"x\"")).toBe("x\"x");
+		run("\"xx\"", "xx");
+		run("\"x\"x\"", "x\"x");
 	});
 
 	test("mixed", () => {
-		expect(unquote("'xx\"")).toBe("'xx\"");
-		expect(unquote("\"xx'")).toBe("\"xx'");
-		expect(unquote("\"x'x\"")).toBe("x'x");
-		expect(unquote("'x\"x'")).toBe("x\"x");
+		run("'xx\"", "'xx\"");
+		run("\"xx'", "\"xx'");
+		run("\"x'x\"", "x'x");
+		run("'x\"x'", "x\"x");
+	});
+
+	test("no strict", () => {
+		run("'xx", "xx", false);
+		run("\"xx", "xx", false);
+		run("xx'", "xx", false);
+		run("xx\"", "xx", false);
 	});
 });
 
@@ -784,8 +796,8 @@ describe("getValue", () => {
 });
 
 describe("renderTemplate", () => {
-	const shallowKey = getPattern({ key: KEY_PATTERNS.SHALLOW });
-	const deepKey = getPattern({ key: KEY_PATTERNS.DEEP });
+	const shallowKey = getPattern(normalizeOptions({ key: KEY_PATTERNS.SHALLOW }));
+	const deepKey = getPattern(normalizeOptions({ key: KEY_PATTERNS.DEEP }));
 
 	const run = (
 		template: string,
