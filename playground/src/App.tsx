@@ -1,8 +1,9 @@
-import { lazy, Suspense, useTransition } from "react";
+import { lazy, Suspense, useRef, useTransition } from "react";
 
 import { cn } from "@/lib/utils";
 import { useVersion } from "@/hooks/use-version";
 
+import { Toaster } from "@/components/ui/toast";
 import { Loading } from "@/components/loading";
 import { Header } from "@/components/header";
 import { VersionSelect } from "@/components/version-select";
@@ -21,6 +22,12 @@ const RunnerMap = Object.fromEntries(
 
 
 
+export interface RunnerProps {
+	isVersionChangeRef: React.RefObject<boolean>;
+}
+
+
+
 export function App() {
 	const [version, setVersion] = useVersion();
 	const [isPending, startTransition] = useTransition();
@@ -28,7 +35,9 @@ export function App() {
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const Runner = RunnerMap[version.value]!;
 
+	const isVersionChangeRef = useRef(false);
 	const handleVersionChange = (version: config.VersionInfo) => {
+		isVersionChangeRef.current = true;
 		startTransition(() => {
 			setVersion(version);
 		});
@@ -36,6 +45,7 @@ export function App() {
 
 	return (
 		<>
+			<Toaster/>
 			<Header heading="Templify Playground" className="border-b">
 				<VersionSelect
 					value={version}
@@ -48,7 +58,7 @@ export function App() {
 				isPending && "opacity-50 pointer-events-none",
 			)}>
 				<Suspense fallback={<Loading/>}>
-					<Runner/>
+					<Runner isVersionChangeRef={isVersionChangeRef}/>
 				</Suspense>
 			</div>
 		</>

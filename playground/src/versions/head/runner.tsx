@@ -1,7 +1,14 @@
-export default function HEAD() {
+import * as tply from "@kimzuni/templify";
+import type { RunnerProps } from "@/App";
+import { Controller } from "@/versions/v3/controller";
+
+
+
+export default function HEAD(props: RunnerProps) {
 	return (
-		<div>
-			HEAD
-		</div>
+		<Controller
+			{...props}
+			module={tply}
+		/>
 	);
 }

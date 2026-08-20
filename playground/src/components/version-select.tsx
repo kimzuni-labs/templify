@@ -7,7 +7,7 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@/components/ui/select";
+} from "@/components/select";
 
 import type * as config from "@/versions/config";
 
@@ -40,7 +40,7 @@ export function VersionSelect({
 	return (
 		<Select onValueChange={handleValueChange} {...props}>
 			<SelectTrigger
-				className="border-0 bg-transparent! gap-1 cursor-pointer not-disabled:hover:text-primary **:[svg]:text-inherit"
+				className="border-0 bg-transparent! gap-1 not-disabled:hover:text-primary **:[svg]:text-inherit"
 				disabled={items.length === 1}
 			>
 				<SelectValue/>
@@ -52,7 +52,7 @@ export function VersionSelect({
 			>
 				<SelectGroup>
 					{items.map(item => (
-						<SelectItem key={item.value} value={item} className="cursor-pointer">
+						<SelectItem key={item.value} value={item}>
 							{item.label}
 						</SelectItem>
 					))}
