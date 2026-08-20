@@ -54,8 +54,8 @@ describe("browser bundle", () => {
 		expect(browserTemplify.KEY_PATTERNS.DEFAULT).toBeInstanceOf(RegExp);
 		expect(browserTemplify.KEY_PATTERNS.SHALLOW).toBeInstanceOf(RegExp);
 		expect(browserTemplify.KEY_PATTERNS.DEEP).toBeInstanceOf(RegExp);
-		expect(browserTemplify.render).toBeFunction();
 		expect(browserTemplify.compile).toBeFunction();
+		expect(browserTemplify.render).toBeFunction();
 	});
 
 	test("compile also works in iife output", () => {
