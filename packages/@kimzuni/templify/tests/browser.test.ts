@@ -3,17 +3,14 @@ import { beforeAll, describe, expect, test } from "bun:test";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 
-import type { compile, render } from "../src";
+import type { KEY_PATTERNS, compile, render } from "../src";
 
 
 
 interface BrowserTemplify {
-	KEY_PATTERNS: {
-		DEFAULT: RegExp;
-		DEEP   : RegExp;
-	};
-	compile: typeof compile;
-	render : typeof render;
+	KEY_PATTERNS: typeof KEY_PATTERNS;
+	compile     : typeof compile;
+	render      : typeof render;
 }
 
 const packageDir = resolve(import.meta.dir, "..");
@@ -55,6 +52,7 @@ describe("browser bundle", () => {
 	test("exposes expected api", () => {
 		expect(browserTemplify).toBeObject();
 		expect(browserTemplify.KEY_PATTERNS.DEFAULT).toBeInstanceOf(RegExp);
+		expect(browserTemplify.KEY_PATTERNS.SHALLOW).toBeInstanceOf(RegExp);
 		expect(browserTemplify.KEY_PATTERNS.DEEP).toBeInstanceOf(RegExp);
 		expect(browserTemplify.render).toBeFunction();
 		expect(browserTemplify.compile).toBeFunction();

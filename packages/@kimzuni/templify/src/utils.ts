@@ -189,7 +189,7 @@ export function renderTemplate(
 	template: string,
 	context: Context,
 	pattern: RegExp,
-	depth = 1,
+	depth = -1,
 	fallback?: Primitive,
 ) {
 	return template.replace(pattern, (target, ...args) => {

@@ -153,7 +153,7 @@ export interface RenderOptions extends CommonOptions {
 	 * - `0`: Do not resolve any keys from `context`
 	 * - `1+`: Allow key resolution up to the specified depth
 	 *
-	 * @default 1
+	 * @default -1
 	 */
 	depth?: number;
 }

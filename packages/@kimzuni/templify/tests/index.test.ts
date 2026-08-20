@@ -275,7 +275,7 @@ describe("compile.render and direct render", () => {
 
 		run(
 			"json",
-			{ key: KEY_PATTERNS.DEFAULT },
+			{ key: KEY_PATTERNS.SHALLOW },
 			"{ key } / { key1 } / { key2 } / { key1 }",
 			{ key1: "value1" },
 			"{ key } / value1 / { key2 } / value1",
@@ -283,7 +283,7 @@ describe("compile.render and direct render", () => {
 
 		run(
 			"array",
-			{ key: KEY_PATTERNS.DEFAULT },
+			{ key: KEY_PATTERNS.SHALLOW },
 			"{0}/{1}/{2}/{1}",
 			["item1", "item2"],
 			"item1/item2/{2}/item2",
@@ -302,7 +302,7 @@ describe("compile.render and direct render", () => {
 
 		run(
 			"depth",
-			{ key: KEY_PATTERNS.DEFAULT },
+			{ key: KEY_PATTERNS.SHALLOW },
 			"{ x }/{ a.b }/{a.c[0]}/{a.c.1.d}",
 			context,
 			"xxx/{ a.b }/{a.c[0]}/{a.c.1.d}",
