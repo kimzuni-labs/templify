@@ -1,5 +1,6 @@
 import type { Context, CompileOptions, OverrideOptions } from "./types";
 import { getPattern, parseData, renderTemplate } from "./utils";
+import { normalizeOptions, normalizeDepth, normalizeFallback } from "./normalize";
 
 
 
@@ -13,11 +14,12 @@ import { getPattern, parseData, renderTemplate } from "./utils";
  * ```
  */
 export function compile(template: string, options: CompileOptions = {}) {
-	const { fallback, depth } = options;
+	const normalizedOpts = normalizeOptions(options);
+	const { fallback, depth } = normalizedOpts;
 
 	let keyPattern: RegExp | undefined;
 	const getKeyPattern = () => {
-		keyPattern ??= getPattern(options);
+		keyPattern ??= getPattern(normalizedOpts);
 		return keyPattern;
 	};
 
@@ -90,8 +92,8 @@ export function compile(template: string, options: CompileOptions = {}) {
 				template,
 				context,
 				getKeyPattern(),
-				"depth" in options ? options.depth : depth,
-				"fallback" in options ? options.fallback : fallback,
+				"depth" in options ? normalizeDepth(options.depth) : depth,
+				"fallback" in options ? normalizeFallback(options.fallback) : fallback,
 			);
 		},
 	};

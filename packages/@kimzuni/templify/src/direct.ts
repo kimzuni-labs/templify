@@ -1,4 +1,5 @@
 import { getPattern, renderTemplate } from "./utils";
+import { normalizeOptions } from "./normalize";
 import type { Context, RenderOptions } from "./types";
 
 
@@ -17,11 +18,12 @@ import type { Context, RenderOptions } from "./types";
  * ```
  */
 export function render(template: string, context: Context, options?: RenderOptions) {
+	const opts = normalizeOptions(options);
 	return renderTemplate(
 		template,
 		context,
-		getPattern(options),
-		options?.depth,
-		options?.fallback,
+		getPattern(opts),
+		opts.depth,
+		opts.fallback,
 	);
 }

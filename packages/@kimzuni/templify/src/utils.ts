@@ -1,35 +1,21 @@
-import type { Primitive, ContextValue, Context, CommonOptions, Keys, Placeholders, Groups } from "./types";
-import { KEY_INDEX, KEY_PATTERNS } from "./constants";
+import type { Primitive, ContextValue, Context, NormalizedOptions, Keys, Placeholders, Groups } from "./types";
+import { KEY_INDEX } from "./constants";
 
 
 
-export function getPattern(options: CommonOptions = {}) {
+export function getPattern({
+	key,
+	open,
+	close,
+	spacing,
+}: Pick<NormalizedOptions, "key" | "open" | "close" | "spacing">) {
 	const {
-		key = KEY_PATTERNS.DEFAULT,
-		open = "{",
-		close = "}",
-		spacing = {},
-	} = options;
-
-	const keyPattern = typeof key === "string" ? key : key.source;
-
-	const {
-		size: spacingSize = -1,
-		strict: spacingStrict = false,
-	} = typeof spacing === "number" || Array.isArray(spacing)
-		? { size: spacing }
-		: typeof spacing === "boolean"
-			? { strict: spacing }
-			: spacing;
+		size: [innerSpaceMin, innerSpaceMax],
+		strict: spacingStrict,
+	} = spacing;
 
 	let leftSpace = "";
-	const [innerSpaceMin, innerSpaceMax] = !Array.isArray(spacingSize)
-		? [spacingSize, spacingSize]
-		: spacingSize.length === 2
-			? spacingSize
-			: [spacingSize[0], spacingSize[0]];
-
-	if (innerSpaceMin < 0 && innerSpaceMax < 0) {
+	if (innerSpaceMin <= 0 && innerSpaceMax < 0) {
 		leftSpace = "\\s*";
 	} else {
 		const min = innerSpaceMin < 0 ? 0 : innerSpaceMin;
@@ -38,7 +24,7 @@ export function getPattern(options: CommonOptions = {}) {
 	}
 
 	const rightSpace = spacingStrict ? "\\1" : leftSpace;
-	return new RegExp(`${open}(${leftSpace})(${keyPattern})${rightSpace}${close}`, "g");
+	return new RegExp(`${open}(${leftSpace})(${key})${rightSpace}${close}`, "g");
 }
 
 
@@ -73,10 +59,10 @@ export function isQuote(char: string): char is "'" | "\"" {
 export function unquote(
 	str: string,
 	{
-		strict = true,
+		strict,
 	}: {
-		strict?: boolean;
-	} = {},
+		strict: boolean;
+	},
 ) {
 	const first = str[0];
 	const last = str[str.length - 1];
@@ -119,7 +105,7 @@ export function getPaths(key: string) {
 		const isClose = (depth === 1 && char === "]");
 		if (isClose || (isOpen && prev !== "]")) {
 			if (idx > 0) {
-				paths.push(unquote(key.slice(startIdx, idx).trim()));
+				paths.push(unquote(key.slice(startIdx, idx).trim(), { strict: true }));
 			}
 			lastPushIdx = idx;
 		}
@@ -189,8 +175,8 @@ export function renderTemplate(
 	template: string,
 	context: Context,
 	pattern: RegExp,
-	depth = -1,
-	fallback?: Primitive,
+	depth: number,
+	fallback: Primitive,
 ) {
 	return template.replace(pattern, (target, ...args) => {
 		const key = args[KEY_INDEX - 1] as string;

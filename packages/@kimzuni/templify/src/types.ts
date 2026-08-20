@@ -14,6 +14,11 @@ export type ContextValue = Primitive | ContextValue[] | { [K: string ]: ContextV
 export type Context = ContextValue[] | Record<string, ContextValue>;
 
 /**
+ * Range of spaces inside template placeholders.
+ */
+export type SpacingSizeRange = [min: number, max: number];
+
+/**
  * Options for controlling the number of spaces inside template placeholders.
  */
 export interface SpacingOptions {
@@ -37,7 +42,7 @@ export interface SpacingOptions {
 	 *
 	 * @default -1
 	 */
-	size?: number | [number] | [min: number, max: number];
+	size?: number | Partial<SpacingSizeRange>;
 }
 
 /**
@@ -164,6 +169,24 @@ export interface CompileOptions extends RenderOptions {}
  * Picks from {@link CompileOptions}
  */
 export interface OverrideOptions extends Pick<CompileOptions, "fallback" | "depth"> {}
+
+
+
+/**
+ * Spacing options after normalization.
+ */
+export interface NormalizedSpacingOptions extends Required<SpacingOptions> {
+	size: SpacingSizeRange;
+}
+
+/**
+ * Options after normalization.
+ */
+export interface NormalizedOptions extends Required<Omit<CompileOptions, "fallback">> {
+	key     : string;
+	spacing : NormalizedSpacingOptions;
+	fallback: Primitive;
+}
 
 
 
