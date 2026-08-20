@@ -52,16 +52,16 @@ export function parseData(template: string, pattern: RegExp) {
 		extract[key].add(target);
 	}
 
-	const groups: Groups = {};
 	const keys: Keys = [];
 	const placeholders: Placeholders = [];
+	const groups: Groups = {};
 	for (const key in extract) {
 		const value = [...extract[key]];
-		groups[key] = value;
 		keys.push(key);
 		placeholders.push(...value);
+		groups[key] = value;
 	}
-	return { groups, keys, placeholders };
+	return { keys, placeholders, groups };
 }
 
 
