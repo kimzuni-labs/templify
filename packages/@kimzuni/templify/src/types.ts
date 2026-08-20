@@ -1,8 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { KEY_PATTERNS } from "./constants";
-
-
-
 /**
  * Primitive values that can be used as placeholders.
  */
@@ -53,8 +48,6 @@ export interface CommonOptions {
 	 * Regex pattern defining valid characters for placeholder keys.
 	 * Controls which characters are allowed inside the delimiters.
 	 * Any regex flags (e.g., `i`, `g`) are ignored if provided.
-	 *
-	 * By default, {@link KEY_PATTERNS.DEFAULT} allows only letters (A-Z, a-z), digits (0-9), and underscores (_).
 	 *
 	 * @default KEY_PATTERNS.DEFAULT
 	 *

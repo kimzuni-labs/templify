@@ -11,9 +11,9 @@ import type { Context, RenderOptions } from "./types";
  * @example
  *
  * ```typescript
- * const result = render("{key1} { key1 } { key2}", { key1: "value1", key3: "value3" }, { open: "{", close: "}", spacing: -1, fallback: "x" });
+ * const result = render("{key1} {key1 } { key2}", { key1: "value1", key3: "value3" });
  * console.log(result);
- * // value1 value1 x
+ * // value1 value1 { key2}
  * ```
  */
 export function render(template: string, context: Context, options?: RenderOptions) {
