@@ -1,8 +1,19 @@
 export const KEY_INDEX = 2;
 
 export const KEY_PATTERNS = {
+	/**
+	 * ```
+	 * /\w+/ // [a-zA-Z0-9_]
+	 * ```
+	 */
 	SHALLOW: /\w+/,
-	DEEP   : /[\w.[\]]+/,
+
+	/**
+	 * ```
+	 * /[\w.[\]]+/
+	 * ```
+	 */
+	DEEP: /[\w.[\]]+/,
 
 	/**
 	 * ```
