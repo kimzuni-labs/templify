@@ -1,37 +1,56 @@
-import { cn } from "@/lib/utils";
+import { lazy, Suspense, useTransition } from "react";
 
+import { cn } from "@/lib/utils";
+import { useVersion } from "@/hooks/use-version";
+
+import { Loading } from "@/components/loading";
 import { Header } from "@/components/header";
-import { Section } from "@/components/section";
+import { VersionSelect } from "@/components/version-select";
+
+import * as config from "@/versions/config";
+
+
+
+const versions = config.VERSIONS;
+const RunnerMap = Object.fromEntries(
+	versions.map(v => [
+		v.value,
+		lazy(() => import(`./versions/${v.dirname ?? v.value}/runner.tsx`)),
+	]),
+);
 
 
 
 export function App() {
+	const [version, setVersion] = useVersion();
+	const [isPending, startTransition] = useTransition();
+
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const Runner = RunnerMap[version.value]!;
+
+	const handleVersionChange = (version: config.VersionInfo) => {
+		startTransition(() => {
+			setVersion(version);
+		});
+	};
+
 	return (
 		<>
-			<Header heading="Templify Playground"/>
-			<main
-				className={cn(
-					"flex-1",
-					"grid grid-cols-1 lg:grid-rows-2",
-					"lg:grid-cols-[minmax(20%,1fr)_minmax(30%,40%)_minmax(30%,40%)]",
-				)}
-			>
-				<Section heading="Template" className="lg:col-start-2 lg:row-start-1">
-					template section
-				</Section>
-				<Section heading="Options" className="lg:row-span-2 lg:col-start-1">
-					options section
-				</Section>
-				<Section heading="Data" className="lg:col-start-2 lg:row-start-2">
-					data section
-				</Section>
-				<Section heading="Render" className="lg:col-start-3 lg:row-start-1">
-					render result section
-				</Section>
-				<Section heading="Tabs" className="lg:col-start-3 lg:row-start-2">
-					code, keys, placeholders, groups
-				</Section>
-			</main>
+			<Header heading="Templify Playground" className="border-b">
+				<VersionSelect
+					value={version}
+					items={versions}
+					onValueChange={handleVersionChange}
+				/>
+			</Header>
+			<div className={cn(
+				"transition-opacity",
+				isPending && "opacity-50 pointer-events-none",
+			)}>
+				<Suspense fallback={<Loading/>}>
+					<Runner/>
+				</Suspense>
+			</div>
 		</>
 	);
 }

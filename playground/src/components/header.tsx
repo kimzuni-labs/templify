@@ -32,6 +32,7 @@ export interface HeaderProps extends React.ComponentProps<"header"> {
 export function Header({
 	heading,
 	className,
+	children,
 	...props
 }: HeaderProps) {
 	return (
@@ -46,6 +47,7 @@ export function Header({
 				{heading}
 			</h1>
 			<div className="flex items-center gap-4">
+				{children}
 				<Link
 					href="https://www.npmjs.com/package/@kimzuni/templify"
 				>
