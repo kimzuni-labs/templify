@@ -223,9 +223,9 @@ describe("Options", () => {
 
 			test("should infer deep key pattern from depth when no key option is explicitly provided", async () => {
 				const customKey = "[\\w.]+";
-				const defaultKeys = tply.keys(template);
-				const deepKeys = tply.keys(template, { key: tply.KEY_PATTERNS.DEEP });
-				const customKeys = tply.keys(template, { key: customKey });
+				const defaultKeys = tply.compile(template).keys;
+				const deepKeys = tply.compile(template, { key: tply.KEY_PATTERNS.DEEP }).keys;
+				const customKeys = tply.compile(template, { key: customKey }).keys;
 
 				const noDepth = await run(["keys", template]);
 				expect(noDepth.log[0][0]).toStrictEqual(defaultKeys);
@@ -351,7 +351,7 @@ describe("Options", () => {
 
 	describe("non render", () => {
 		test("--compact", async () => {
-			const groups = tply.groups(template);
+			const groups = tply.compile(template).groups;
 
 			const nonCompact = await run(["groups", template]);
 			expect(nonCompact.log[0][0]).toStrictEqual(groups);
@@ -402,14 +402,14 @@ describe("Sub command", () => {
 			const key = subCommand;
 			const { frame } = await capture(() => cli.run([subCommand, template]));
 			expect(frame.exitCode).toBe(0);
-			expect(frame.log).toStrictEqual([[tply[key](template)]]);
+			expect(frame.log).toStrictEqual([[tply.compile(template)[key]]]);
 		});
 	}
 
 	test("non first argument", async () => {
 		const groups = await run(["groups", "--compact", "--no-validate"], { stream: template });
 		expect(groups.exitCode).toBe(0);
-		expect(stdoutToString(groups.log)).toBe(JSON.stringify(tply.groups(template)));
+		expect(stdoutToString(groups.log)).toBe(JSON.stringify(tply.compile(template).groups));
 
 		const noGroups = await run(["--compact", "groups", "--no-validate"], { stream: template });
 		expect(noGroups.exitCode).toBe(0);

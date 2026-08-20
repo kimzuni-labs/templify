@@ -72,7 +72,7 @@ export function getCommand(argv: string[], name = "templify", description = pkg.
 				const result = tply.render(template, context, compileOptions);
 				process.stdout.write(result);
 			} else {
-				const result = tply[subCommand](template, compileOptions);
+				const result = tply.compile(template, compileOptions)[subCommand];
 
 				if (opts.compact === true) {
 					console.log(JSON.stringify(result));

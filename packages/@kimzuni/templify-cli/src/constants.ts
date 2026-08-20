@@ -8,7 +8,6 @@ export type SubCommand = typeof SUB_COMMANDS[number];
 export const SUB_COMMANDS = [
 	"keys",
 	"placeholders",
-	"fields",
 	"groups",
 	"render",
 ] as const;
