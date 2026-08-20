@@ -1,4 +1,4 @@
-import { Command, Option, CommanderError } from "@commander-js/extra-typings";
+import { Command, CommanderError, type Option } from "@commander-js/extra-typings";
 import * as tply from "@kimzuni/templify";
 import tplyPkg from "@kimzuni/templify/package.json" with { type: "json" };
 
@@ -46,7 +46,7 @@ export function getCommand(argv: string[], name = "templify", description = pkg.
 		.configureHelp({
 			optionTerm(option: Option) {
 				const hintClose = option.flags.at(-1) ?? "";
-				const hintOpen = hintClose === ">" ? "<" : hintClose == "]" ? "[" : "";
+				const hintOpen = hintClose === ">" ? "<" : hintClose === "]" ? "[" : "";
 				const hasHint = [">", "]"].includes(hintClose);
 				const hint = hasHint ? option.flags.slice(option.flags.lastIndexOf(hintOpen)) : "";
 				const short = option.short ?? "";
