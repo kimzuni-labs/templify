@@ -1,5 +1,4 @@
 import type { Primitive, ContextValue, Context, NormalizedOptions, Keys, Placeholders, Groups } from "./types";
-import { KEY_INDEX } from "./constants";
 
 
 
@@ -32,8 +31,9 @@ export function getPattern({
 export function parseData(template: string, pattern: RegExp) {
 	const extract: Record<string, Set<string>> = {};
 	const matchAll = template.matchAll(pattern);
-	for (const [target, ...item] of matchAll) {
-		const key = item[KEY_INDEX - 1];
+	for (const match of matchAll) {
+		const target = match[0];
+		const key = match[2];
 		extract[key] ??= new Set();
 		extract[key].add(target);
 	}
@@ -178,8 +178,7 @@ export function renderTemplate(
 	depth: number,
 	fallback: Primitive,
 ) {
-	return template.replace(pattern, (target, ...args) => {
-		const key = args[KEY_INDEX - 1] as string;
+	return template.replace(pattern, (target, _, key: string) => {
 		const value = getValue(context, key, depth);
 		return `${value !== undefined ? value : fallback !== undefined ? `${fallback}` : target}`;
 	});
