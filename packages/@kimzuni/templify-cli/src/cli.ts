@@ -60,7 +60,7 @@ export function getCommand(argv: string[], name = "templify", description = pkg.
 		.exitOverride()
 
 		.action(async (_C, _T, _K, opts, cmd) => {
-			const subCommand = (isSubCommand(argv[0]) ? cmd.args.shift() as SubCommand : undefined) ?? "render";
+			const subCommand = (argv[0] && isSubCommand(argv[0]) ? cmd.args.shift() as SubCommand : undefined) ?? "render";
 			if (opts.validate) userInputs(process.stdin, subCommand, cmd.args, opts);
 
 			const TEMPLATE = cmd.args.shift();

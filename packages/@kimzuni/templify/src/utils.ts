@@ -33,7 +33,9 @@ export function parseData(template: string, pattern: RegExp) {
 	const matchAll = template.matchAll(pattern);
 	for (const match of matchAll) {
 		const target = match[0];
-		const key = match[2];
+
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const key = match[2]!;
 		extract[key] ??= new Set();
 		extract[key].add(target);
 	}
@@ -42,7 +44,8 @@ export function parseData(template: string, pattern: RegExp) {
 	const placeholders: Placeholders = [];
 	const groups: Groups = {};
 	for (const key in extract) {
-		const value = [...extract[key]];
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const value = [...extract[key]!];
 		keys.push(key);
 		placeholders.push(...value);
 		groups[key] = value;
@@ -52,7 +55,7 @@ export function parseData(template: string, pattern: RegExp) {
 
 
 
-export function isQuote(char: string): char is "'" | "\"" {
+export function isQuote(char: unknown): char is "'" | "\"" {
 	return char === "'" || char === "\"";
 }
 

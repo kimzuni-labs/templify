@@ -7,7 +7,7 @@ import type { Options } from "./types";
 
 
 export function capitalize(string: string) {
-	return `${string[0].toUpperCase()}${string.slice(1)}`;
+	return `${string[0]?.toUpperCase() ?? ""}${string.slice(1)}`;
 }
 
 export function isNonInteractiveStdin(stream: NodeJS.ReadStream) {
@@ -81,7 +81,7 @@ export async function loadContext(KEY_VALUE: string[], opts: Options): Promise<t
 	let json: tply.Context = {};
 	if (dataFile !== undefined) {
 		const text = await fs.readFile(dataFile, "utf-8").then(x => x.trim());
-		if (["{", "["].includes(text[0])) {
+		if (text[0] === "{" || text[0] === "[") {
 			json = JSON.parse(text) as tply.Context;
 		} else {
 			KEY_VALUE = text.split("\n").concat(KEY_VALUE);

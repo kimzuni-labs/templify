@@ -237,7 +237,8 @@ describe("parseData", () => {
 		})));
 
 		for (const key in data.groups) {
-			expect(data.groups[key].sort()).toStrictEqual(groups[key].sort());
+			expect(data.groups[key]).toBeDefined();
+			expect(data.groups[key]?.sort()).toStrictEqual(groups[key]?.sort());
 
 			// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 			delete groups[key];
@@ -281,6 +282,7 @@ describe("parseData", () => {
 });
 
 test("isQuote", () => {
+	expect(isQuote(1)).toBe(false);
 	expect(isQuote("'")).toBe(true);
 	expect(isQuote("\"")).toBe(true);
 	expect(isQuote("\\'")).toBe(false);
