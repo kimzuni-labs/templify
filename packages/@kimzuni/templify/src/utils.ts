@@ -29,26 +29,26 @@ export function getPattern({
 
 
 export function parseData(template: string, pattern: RegExp) {
-	const extract: Record<string, Set<string>> = {};
+	const keys: Keys = [];
+	const placeholders: Placeholders = [];
+	const groups: Groups = {};
 	const matchAll = template.matchAll(pattern);
 	for (const match of matchAll) {
 		const target = match[0];
 
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const key = match[2]!;
-		extract[key] ??= new Set();
-		extract[key].add(target);
-	}
 
-	const keys: Keys = [];
-	const placeholders: Placeholders = [];
-	const groups: Groups = {};
-	for (const key in extract) {
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const value = [...extract[key]!];
-		keys.push(key);
-		placeholders.push(...value);
-		groups[key] = value;
+		let group = groups[key];
+		if (!group) {
+			group = groups[key] = [];
+			keys.push(key);
+		}
+
+		if (!group.includes(target)) {
+			group.push(target);
+			placeholders.push(target);
+		}
 	}
 	return { keys, placeholders, groups };
 }
