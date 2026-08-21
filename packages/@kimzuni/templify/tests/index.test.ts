@@ -66,7 +66,8 @@ describe("compile", () => {
 				const keys = Object.keys(groups);
 				const placeholders = Object.values(groups).flat();
 				for (const key in c.groups) {
-					expect(c.groups[key].sort()).toStrictEqual(groups[key].sort());
+					expect(c.groups[key]).toBeDefined();
+					expect(c.groups[key]?.sort()).toStrictEqual(groups[key]?.sort());
 
 					// eslint-disable-next-line @typescript-eslint/no-dynamic-delete
 					delete groups[key];

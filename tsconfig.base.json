@@ -12,7 +12,8 @@
 		"noFallthroughCasesInSwitch": true,
 		"isolatedModules": true,
 		"noUnusedLocals": true,
-		"noUnusedParameters": true
+		"noUnusedParameters": true,
+		"noUncheckedIndexedAccess": true
 	},
 	"exclude": [
 		"**/node_modules/**",

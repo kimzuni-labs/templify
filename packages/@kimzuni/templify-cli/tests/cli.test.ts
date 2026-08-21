@@ -228,16 +228,16 @@ describe("Options", () => {
 				const customKeys = tply.compile(template, { key: customKey }).keys;
 
 				const noDepth = await run(["keys", template]);
-				expect(noDepth.log[0][0]).toStrictEqual(defaultKeys);
+				expect(noDepth.log[0]?.[0]).toStrictEqual(defaultKeys);
 
 				const result = await run(["keys", template, "--depth", "2"]);
-				expect(result.log[0][0]).toStrictEqual(deepKeys);
+				expect(result.log[0]?.[0]).toStrictEqual(deepKeys);
 
 				const withKey = await run(["keys", template, "--depth", "2", "--key", customKey]);
-				expect(withKey.log[0][0]).toStrictEqual(customKeys);
+				expect(withKey.log[0]?.[0]).toStrictEqual(customKeys);
 
 				const withPattern = await run(["keys", template, "--depth", "2", "--key-pattern", "default"]);
-				expect(withPattern.log[0][0]).toStrictEqual(defaultKeys);
+				expect(withPattern.log[0]?.[0]).toStrictEqual(defaultKeys);
 			});
 		});
 
@@ -354,13 +354,13 @@ describe("Options", () => {
 			const groups = tply.compile(template).groups;
 
 			const nonCompact = await run(["groups", template]);
-			expect(nonCompact.log[0][0]).toStrictEqual(groups);
+			expect(nonCompact.log[0]?.[0]).toStrictEqual(groups);
 
 			const nonCompactNoTTY = await run(["groups", template], { stream: "", isTTY: false, readable: false });
-			expect(nonCompactNoTTY.log[0][0]).toStrictEqual(groups);
+			expect(nonCompactNoTTY.log[0]?.[0]).toStrictEqual(groups);
 
 			const compact = await run(["groups", template, "--compact"]);
-			expect(compact.log[0][0]).toStrictEqual(JSON.stringify(groups));
+			expect(compact.log[0]?.[0]).toStrictEqual(JSON.stringify(groups));
 		});
 	});
 });
@@ -413,6 +413,6 @@ describe("Sub command", () => {
 
 		const noGroups = await run(["--compact", "groups", "--no-validate"], { stream: template });
 		expect(noGroups.exitCode).toBe(0);
-		expect(noGroups.log[0][0]).toBe(template);
+		expect(noGroups.log[0]?.[0]).toBe(template);
 	});
 });
