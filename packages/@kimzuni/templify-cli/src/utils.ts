@@ -1,5 +1,6 @@
 import assert from "node:assert";
 import fs from "node:fs/promises";
+import dotenv from "dotenv";
 import * as tply from "@kimzuni/templify";
 
 import type { Options } from "./types";
@@ -76,31 +77,21 @@ export async function loadTemplate(
  */
 export async function loadContext(KEY_VALUE: string[], opts: Options): Promise<tply.Context> {
 	const { dataFile, fromEnv } = opts;
-	const env = fromEnv ? { ...process.env } : {};
+	const processEnv = fromEnv ? { ...process.env } : {};
 
 	let json: tply.Context = {};
+	let envFileLines: string[] = [];
 	if (dataFile !== undefined) {
 		const text = await fs.readFile(dataFile, "utf-8").then(x => x.trim());
 		if (text[0] === "{" || text[0] === "[") {
 			json = JSON.parse(text) as tply.Context;
 		} else {
-			KEY_VALUE = text.split("\n").concat(KEY_VALUE);
+			envFileLines = text.split("\n");
 		}
 	}
 
-	const keyValues: Record<string, string> = {};
-	for (let curr of KEY_VALUE) {
-		const idx = curr.indexOf("#");
-		if (idx !== -1) curr = curr.slice(0, idx).trimEnd();
-		const split = curr.split("=");
-		const key = split.shift()?.trim();
-		let value = split.join("=").trim();
-		const hasQuote = ["\"", "'", "`"].includes(value[0]);
-		if (hasQuote) value = value.slice(1, -1);
-		if (key) keyValues[key] = value;
-	}
-
-	return Object.assign(env, json, keyValues);
+	const keyValues = dotenv.parse([...KEY_VALUE, ...envFileLines].join("\n"));
+	return Object.assign(processEnv, json, keyValues);
 }
 
 /**
