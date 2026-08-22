@@ -1,38 +1,33 @@
 import { defineConfig } from "tsdown";
 
-import tsconfig from "./tsconfig.json" with { type: "json" };
-
 
 
 /** @type {import("tsdown").UserConfig} */
 
 const options = {
-	clean   : false,
-	entry   : "./src/index.ts",
-	outDir  : "./dist",
-	platform: "neutral",
-	target  : tsconfig.compilerOptions.target,
-	unbundle: true,
+	entry: "./src/index.ts",
 };
 
 export default defineConfig([
 	{
 		...options,
-		format: ["cjs"],
-		dts   : false,
-	},
-	{
-		...options,
-		format: ["esm"],
-		dts   : true,
+		format  : ["cjs", "esm"],
+		platform: "neutral",
+		outDir  : "./dist",
+		dts     : true,
+		clean   : true,
+		unbundle: true,
+		target  : "node22",
 	},
 	{
 		...options,
 		format    : ["iife"],
-		unbundle  : false,
 		platform  : "browser",
-		minify    : true,
 		globalName: "Templify",
 		outDir    : "./dist/browser",
+		dts       : false,
+		minify    : true,
+		clean     : false,
+		target    : "es2020",
 	},
 ]);
