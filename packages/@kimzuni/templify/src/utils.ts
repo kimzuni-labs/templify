@@ -13,7 +13,7 @@ export function getPattern({
 		strict: spacingStrict,
 	} = spacing;
 
-	let leftSpace = "";
+	let leftSpace: string;
 	if (innerSpaceMin <= 0 && innerSpaceMax < 0) {
 		leftSpace = "\\s*";
 	} else {
