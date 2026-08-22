@@ -8,11 +8,13 @@
   ],
   "scripts": {
     "test": "bun test",
-    "lint": "markdownlint-cli2 && yamllint . && eslint .",
-    "lint:eslint": "eslint .",
+    "lint": "run-s lint:*",
     "lint:markdown": "markdownlint-cli2",
     "lint:yaml": "yamllint .",
-    "build": "bun run --parallel --filter '!*/templify-playground' build"
+    "lint:eslint": "eslint .",
+    "build": "run-s build:*",
+    "build:packages": "bun run --parallel --filter '!*/templify-playground' build",
+    "build:playground": "bun run --filter '*/templify-playground' build"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.2",
@@ -25,6 +27,7 @@
     "eslint-plugin-react-refresh": "^0.5.4",
     "globals": "^17.11.0",
     "markdownlint-cli2": "^0.23.2",
+    "npm-run-all": "^4.1.5",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.67.0",
     "yamllint-js": "^0.2.4"
