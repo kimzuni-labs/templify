@@ -1,21 +1,18 @@
 import { defineConfig } from "tsdown";
 
-import tsconfig from "./tsconfig.json" with { type: "json" };
-
 
 
 export default defineConfig([
 	{
-		clean: true,
 		entry: [
 			"./src/index.ts",
 		],
-		unbundle: true,
-		outDir  : "./dist",
+		format  : ["cjs"],
 		platform: "node",
-		format  : "cjs",
-		target  : tsconfig.compilerOptions.target,
-		hash    : false,
+		outDir  : "./dist",
 		dts     : false,
+		clean   : true,
+		unbundle: true,
+		target  : "node22",
 	},
 ]);
