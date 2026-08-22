@@ -98,16 +98,16 @@ export function getCommand(argv: string[], name = "templify", description = pkg.
 
 
 export async function run(argv = process.argv.slice(2)) {
-	const command = getCommand(argv);
-
+	let command;
 	let exitCode = 0;
 	try {
+		command = getCommand(argv);
 		await command.parseAsync(argv, { from: "user" });
 	} catch (e) {
 		exitCode = e instanceof CommanderError ? e.exitCode : -1;
 		if (exitCode !== 0) {
 			let msg = e instanceof Error ? e.message : String(e);
-			msg = msg === "(outputHelp)" ? command.helpInformation() : capitalize(msg).trimEnd();
+			msg = command && msg === "(outputHelp)" ? command.helpInformation() : capitalize(msg).trimEnd();
 			console.error(msg);
 		}
 	}
