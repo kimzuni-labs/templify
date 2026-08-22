@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.0.1](https://github.com/kimzuni-labs/templify/compare/cli-v3.0.0...cli-v3.0.1) (2026-08-22)
+
+
+### 🐛 Bug Fixes
+
+* **cli:** wrap command initialization in try-catch to prevent unhandled errors ([8afc96f](https://github.com/kimzuni-labs/templify/commit/8afc96f43bf35610a3aaf3a6363e32d413b02d99))
+
+
+### ♻️ Code Refactoring
+
+* **cli:** migrate to pure ESM and simplify entry with top-level await ([8440f51](https://github.com/kimzuni-labs/templify/commit/8440f514200f330e2dd292b1f874f7033e762c9d))
+
+
+### 🏗️ Build System
+
+* **cli:** modernize tsdown target to node22 and clean up local tsconfig ([4596e85](https://github.com/kimzuni-labs/templify/commit/4596e85c0439c205ba945368a53642088b291c04))
+
 ## [3.0.0](https://github.com/kimzuni-labs/templify/compare/cli-v2.0.0...cli-v3.0.0) (2026-08-21)
 
 
