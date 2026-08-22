@@ -13,7 +13,10 @@
 		"isolatedModules": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"noUncheckedIndexedAccess": true
+		"noUncheckedIndexedAccess": true,
+		"types": [
+			"bun"
+		]
 	},
 	"exclude": [
 		"**/node_modules/**",

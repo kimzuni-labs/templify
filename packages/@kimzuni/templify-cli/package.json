@@ -44,13 +44,13 @@
     "typescript"
   ],
   "dependencies": {
-    "@commander-js/extra-typings": "^14.0.0",
+    "@commander-js/extra-typings": "^15.0.0",
     "@kimzuni/templify": "workspace:^",
-    "commander": "^14.0.2",
+    "commander": "^15.0.0",
     "dotenv": "^17.4.2"
   },
   "devDependencies": {
-    "tsdown": "0.18.3"
+    "tsdown": "0.22.14"
   },
   "engines": {
     "node": ">=20"
