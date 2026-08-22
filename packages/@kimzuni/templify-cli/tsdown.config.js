@@ -7,7 +7,7 @@ export default defineConfig([
 		entry: [
 			"./src/index.ts",
 		],
-		format  : ["cjs"],
+		format  : ["esm"],
 		platform: "node",
 		outDir  : "./dist",
 		dts     : false,
