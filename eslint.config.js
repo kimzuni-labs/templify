@@ -52,6 +52,12 @@ export default defineConfig(
 					ignoreRestSiblings            : true,
 				},
 			],
+			"@typescript-eslint/no-confusing-void-expression": [
+				"error",
+				{
+					ignoreArrowShorthand: true,
+				},
+			],
 			"@typescript-eslint/prefer-string-starts-ends-with": [
 				"error",
 				{
