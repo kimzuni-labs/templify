@@ -15,7 +15,7 @@ The CLI is available as
 
 ## Overview
 
-![example screenshot](images/example.png)
+![example.mjs screenshot](images/example.png)
 
 
 

@@ -33,7 +33,7 @@ Packages:
 
 ### [templify](packages/@kimzuni/templify/README.md)
 
-![templify example screenshot](packages/@kimzuni/templify/images/example.png)
+![templify example.mjs screenshot](packages/@kimzuni/templify/images/example.png)
 
 ### [templify-cli](packages/@kimzuni/templify-cli/README.md)
 
