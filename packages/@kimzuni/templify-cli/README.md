@@ -17,7 +17,7 @@ and etc.
 
 ## Overview
 
-![example screenshot](images/example.png)
+![example commands](images/example.gif)
 
 
 

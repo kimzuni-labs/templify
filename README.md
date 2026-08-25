@@ -37,7 +37,7 @@ Packages:
 
 ### [templify-cli](packages/@kimzuni/templify-cli/README.md)
 
-![templify-cli example screenshot](packages/@kimzuni/templify-cli/images/example.png)
+![templify-cli example commands](packages/@kimzuni/templify-cli/images/example.gif)
 
 
 
