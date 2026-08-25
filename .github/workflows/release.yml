@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "packages/**"
+      - ".release-please/**"
+      - ".github/workflows/release.yml"
 
 jobs:
   release-please:
