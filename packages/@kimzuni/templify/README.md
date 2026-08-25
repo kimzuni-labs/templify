@@ -19,6 +19,15 @@ The CLI is available as
 
 
 
+## Playground
+
+> [!NOTE]
+> The playground provides only the latest release of each supported major version (v3.x or higher).
+
+<https://labs.kimzuni.com/templify/>
+
+
+
 ## Installation
 
 ```shell
@@ -31,14 +40,6 @@ yarn add @kimzuni/templify
 # bun
 bun add @kimzuni/templify
 ```
-
-
-
-## Playground
-
-<https://labs.kimzuni.com/templify/>
-
-The playground provides only the latest release of each supported major version (v3.x or higher).
 
 
 
