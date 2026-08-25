@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/kimzuni-labs/templify/graph/badge.svg?token=932ALHWG7H&component=templify-cli)](https://codecov.io/gh/kimzuni-labs/templify/tree/main/packages/@kimzuni/templify-cli)
 
 CLI for the
-[@kimzuni/templify](../templify//README.md)
+[@kimzuni/templify](../templify/README.md)
 a flexible template string processor.
 
 It supports customizable

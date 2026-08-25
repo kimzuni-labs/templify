@@ -22,20 +22,20 @@ This repository contains packages for **templify**.
 
 Packages:
 
-- [@kimzuni/templify](packages/@kimzuni/templify)
+- [@kimzuni/templify](packages/@kimzuni/templify/README.md)
   : Core templating library
-- [@kimzuni/templify-cli](packages/@kimzuni/templify-cli)
+- [@kimzuni/templify-cli](packages/@kimzuni/templify-cli/README.md)
   : CLI Tool
 
 
 
 ## Overview
 
-### [templify](packages/@kimzuni/templify)
+### [templify](packages/@kimzuni/templify/README.md)
 
 ![templify example screenshot](packages/@kimzuni/templify/images/example.png)
 
-### [templify-cli](packages/@kimzuni/templify-cli)
+### [templify-cli](packages/@kimzuni/templify-cli/README.md)
 
 ![templify-cli example screenshot](packages/@kimzuni/templify-cli/images/example.png)
 

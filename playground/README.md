@@ -1,7 +1,7 @@
 # Playground
 
 Playground for
-[@kimzuni/templify](../packages/@kimzuni/templify)
+[@kimzuni/templify](../packages/@kimzuni/templify/README.md)
 
 
 
