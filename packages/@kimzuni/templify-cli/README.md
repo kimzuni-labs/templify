@@ -15,7 +15,7 @@ and etc.
 
 
 
-## Screenshot
+## Overview
 
 ![example screenshot](images/example.png)
 

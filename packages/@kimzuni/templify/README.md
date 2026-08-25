@@ -13,7 +13,7 @@ The CLI is available as
 
 
 
-## Screenshot
+## Overview
 
 ![example screenshot](images/example.png)
 
