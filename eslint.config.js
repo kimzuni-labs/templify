@@ -1,6 +1,9 @@
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import stylistic from "@stylistic/eslint-plugin";
+import globals from "globals";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
 import { defineConfig } from "eslint/config";
 
 import tsconfig from "./tsconfig.base.json" with { type: "json" };
@@ -9,7 +12,10 @@ import tsconfig from "./tsconfig.base.json" with { type: "json" };
 
 export default defineConfig(
 	{
-		ignores: tsconfig.exclude,
+		ignores: [
+			...tsconfig.exclude,
+			"**/components/ui/**",
+		],
 	},
 	{
 		extends: [
@@ -50,6 +56,12 @@ export default defineConfig(
 					destructuredArrayIgnorePattern: "^_",
 					varsIgnorePattern             : "^_",
 					ignoreRestSiblings            : true,
+				},
+			],
+			"@typescript-eslint/no-confusing-void-expression": [
+				"error",
+				{
+					ignoreArrowShorthand: true,
 				},
 			],
 			"@typescript-eslint/prefer-string-starts-ends-with": [
@@ -279,6 +291,21 @@ export default defineConfig(
 			"@stylistic/wrap-iife"               : ["error", "inside"],
 			"@stylistic/wrap-regex"              : ["error"],
 			"@stylistic/yield-star-spacing"      : ["error", { before: false, after: true }],
+		},
+	},
+	{
+		files: [
+			"playground/**/*.{ts,tsx}",
+		],
+		extends: [
+			reactHooks.configs.flat.recommended,
+			reactRefresh.configs.vite,
+		],
+		languageOptions: {
+			globals: globals.browser,
+		},
+		rules: {
+			"@typescript-eslint/no-misused-promises": ["off"],
 		},
 	},
 );

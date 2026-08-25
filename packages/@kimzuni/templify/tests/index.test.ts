@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-confusing-void-expression, @stylistic/key-spacing */
+/* eslint-disable @stylistic/key-spacing */
 
 import { describe, test, expect, beforeEach, afterEach, spyOn, type Mock } from "bun:test";
 
