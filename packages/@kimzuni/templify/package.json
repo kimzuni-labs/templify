@@ -15,7 +15,7 @@
     "url": "git+https://github.com/kimzuni-labs/templify.git",
     "directory": "packages/@kimzuni/templify"
   },
-  "homepage": "https://github.com/kimzuni-labs/templify/tree/main/packages/@kimzuni/templify",
+  "homepage": "https://labs.kimzuni.com/templify/",
   "bugs": "https://github.com/kimzuni-labs/templify/issues",
   "scripts": {
     "test": "bun test",

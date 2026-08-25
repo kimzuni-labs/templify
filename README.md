@@ -11,7 +11,7 @@ This repository contains packages for **templify**.
 
 ## Playground
 
-<https://kimzuni.github.io/templify/>
+<https://labs.kimzuni.com/templify/>
 
 The playground provides only the latest release of each supported major version (v3.x or higher).
 
