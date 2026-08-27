@@ -191,11 +191,11 @@ templify groups "{ key } / {key1} / { key} / {key1}" --compact
 
 Select a predefined key pattern for placeholders.
 
-`<name>` must be one of the values defined in
-[KEY_PATTERNS](https://github.com/kimzuni-labs/templify/blob/main/packages/%40kimzuni/templify/src/constants.ts#L3).
+Value must be one of the values defined in
+[KEY_PATTERNS](https://github.com/kimzuni-labs/templify/blob/main/packages/%40kimzuni/templify/src/constants/key-patterns.ts).
 
 ```shell
-echo "{ key1 } / { key2[0].key3 }" | templify keys --key-pattern default
+echo "{ key1 } / { key2[0].key3 }" | templify keys --key-pattern shallow
 # [ "key1" ]
 
 echo "{ key1 } / { key2[0].key3 }" | templify keys --key-pattern deep
@@ -213,18 +213,15 @@ and is also used by the CLI to infer key patterns for nested placeholders.
 
 ```shell
 echo "{ key1 } / { key2[0].key3 }" | templify keys
-# [ "key1" ]
+# [ "key1", "key2[0].key3" ]
 
 echo "{ key1 } / { key2[0].key3 }" | templify keys --depth 1
-# [ "key1" ]
+# [ "key1", "key2[0].key3" ]
 
 echo "{ key1 } / { key2[0].key3 }" | templify keys --depth 1 --key-pattern deep
 # [ "key1", "key2[0].key3" ]
 
-echo "{ key1 } / { key2[0].key3 }" | templify keys --depth -1 # --key-pattern deep
-# [ "key1", "key2[0].key3" ]
-
-echo "{ key1 } / { key2[0].key3 }" | templify keys --depth -1 --key-pattern default
+echo "{ key1 } / { key2[0].key3 }" | templify keys --depth -1 --key-pattern shallow
 # [ "key1" ]
 
 echo "{ key1 } / { key2[0].key3 }" | templify keys --depth -1 --key "\\w+"

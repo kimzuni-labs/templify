@@ -114,9 +114,6 @@ export function toTemplifyOptions(opts: Options): tply.CompileOptions {
 	} else if (opts.keyPattern !== undefined) {
 		key = tply.KEY_PATTERNS[opts.keyPattern.toUpperCase() as keyof typeof tply.KEY_PATTERNS];
 	}
-	if (key === undefined && depth !== undefined && (depth <= -1 || depth > 1)) {
-		key = tply.KEY_PATTERNS.DEEP;
-	}
 
 	const spacing: tply.CompileOptions["spacing"] = { strict, size };
 	return { key, open, close, spacing, fallback, depth };

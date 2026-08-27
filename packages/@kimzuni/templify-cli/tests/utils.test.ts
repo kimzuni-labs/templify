@@ -172,27 +172,4 @@ describe("toTemplifyOptions", () => {
 		expect(toTemplifyOptions({ key: "key", keyPattern: "x" }).key).toBe("key");
 		expect(toTemplifyOptions({ key: "key", keyPattern: "deep" }).key).toBe("key");
 	});
-
-	test("should infer deep key pattern based on depth option", () => {
-		expect(toTemplifyOptions({}).key).toBe(undefined);
-		expect(toTemplifyOptions({ depth: -1 }).key).toBe(tply.KEY_PATTERNS.DEEP);
-		expect(toTemplifyOptions({ depth: 0 }).key).toBe(undefined);
-		expect(toTemplifyOptions({ depth: 1 }).key).toBe(undefined);
-		expect(toTemplifyOptions({ depth: 2 }).key).toBe(tply.KEY_PATTERNS.DEEP);
-
-		expect(toTemplifyOptions({ depth: -1, key: "xxx" }).key).toBe("xxx");
-		expect(toTemplifyOptions({ depth: 0, key: "xxx" }).key).toBe("xxx");
-		expect(toTemplifyOptions({ depth: 1, key: "xxx" }).key).toBe("xxx");
-		expect(toTemplifyOptions({ depth: 2, key: "xxx" }).key).toBe("xxx");
-
-		expect(toTemplifyOptions({ depth: -1, keyPattern: "yyy" }).key).toBe(tply.KEY_PATTERNS.DEEP);
-		expect(toTemplifyOptions({ depth: 0, keyPattern: "yyy" }).key).toBe(undefined);
-		expect(toTemplifyOptions({ depth: 1, keyPattern: "yyy" }).key).toBe(undefined);
-		expect(toTemplifyOptions({ depth: 2, keyPattern: "yyy" }).key).toBe(tply.KEY_PATTERNS.DEEP);
-
-		expect(toTemplifyOptions({ depth: -1, keyPattern: "default" }).key).toBe(tply.KEY_PATTERNS.DEFAULT);
-		expect(toTemplifyOptions({ depth: 0, keyPattern: "deep" }).key).toBe(tply.KEY_PATTERNS.DEEP);
-		expect(toTemplifyOptions({ depth: 1, keyPattern: "deep" }).key).toBe(tply.KEY_PATTERNS.DEEP);
-		expect(toTemplifyOptions({ depth: 2, keyPattern: "default" }).key).toBe(tply.KEY_PATTERNS.DEFAULT);
-	});
 });
