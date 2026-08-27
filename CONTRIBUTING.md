@@ -33,12 +33,6 @@ Clone the repository and install dependencies.
 
 ## 🎨 Linting
 
-This project uses the following tools to maintain code quality:
-
-- [ESLint](http://eslint.org/) (with [typescript-eslint](https://typescript-eslint.io/) and [ESLint Stylistic](https://eslint.style/))
-- [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2)
-- [yamllint-js](https://github.com/kimzuni-labs/yamllint-js)
-
 You can run all lint checks with:
 
 ```shell
