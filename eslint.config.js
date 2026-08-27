@@ -15,6 +15,7 @@ export default defineConfig(
 		ignores: [
 			...tsconfig.exclude,
 			"**/components/ui/**",
+			"**/images/**",
 		],
 	},
 	{

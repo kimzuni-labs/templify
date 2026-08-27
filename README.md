@@ -11,9 +11,10 @@ This repository contains packages for **templify**.
 
 ## Playground
 
-<https://labs.kimzuni.com/templify/>
+> [!NOTE]
+> The playground provides only the latest release of each supported major version (v3.x or higher).
 
-The playground provides only the latest release of each supported major version (v3.x or higher).
+<https://labs.kimzuni.com/templify/>
 
 
 
@@ -21,22 +22,22 @@ The playground provides only the latest release of each supported major version 
 
 Packages:
 
-- [@kimzuni/templify](packages/@kimzuni/templify)
+- [@kimzuni/templify](packages/@kimzuni/templify/README.md)
   : Core templating library
-- [@kimzuni/templify-cli](packages/@kimzuni/templify-cli)
+- [@kimzuni/templify-cli](packages/@kimzuni/templify-cli/README.md)
   : CLI Tool
 
 
 
-## Screenshots
+## Overview
 
-### [templify](packages/@kimzuni/templify)
+### [templify](packages/@kimzuni/templify/README.md)
 
-![templify example screenshot](packages/@kimzuni/templify/images/example.png)
+![templify example.mjs screenshot](packages/@kimzuni/templify/images/example.png)
 
-### [templify-cli](packages/@kimzuni/templify-cli)
+### [templify-cli](packages/@kimzuni/templify-cli/README.md)
 
-![templify-cli example screenshot](packages/@kimzuni/templify-cli/images/example.png)
+![templify-cli example commands](packages/@kimzuni/templify-cli/images/example.gif)
 
 
 

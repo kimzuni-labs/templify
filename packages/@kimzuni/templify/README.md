@@ -9,13 +9,22 @@ Supports customizable template delimiters, spacing rules, and fallback values.
 Supports both ESM and CommonJS.
 
 The CLI is available as
-[@kimzuni/templify-cli](../templify-cli).
+[@kimzuni/templify-cli](../templify-cli/README.md).
 
 
 
-## Screenshot
+## Overview
 
-![example screenshot](images/example.png)
+![example.mjs screenshot](images/example.png)
+
+
+
+## Playground
+
+> [!NOTE]
+> The playground provides only the latest release of each supported major version (v3.x or higher).
+
+<https://labs.kimzuni.com/templify/>
 
 
 
@@ -31,14 +40,6 @@ yarn add @kimzuni/templify
 # bun
 bun add @kimzuni/templify
 ```
-
-
-
-## Playground
-
-<https://labs.kimzuni.com/templify/>
-
-The playground provides only the latest release of each supported major version (v3.x or higher).
 
 
 
