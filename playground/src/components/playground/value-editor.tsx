@@ -49,13 +49,20 @@ export function ValueSelect({
 		if (savedVal !== undefined) {
 			nextValue = savedVal;
 		} else {
-			// 기본 초기값
-			if (val === "boolean") {
-				nextValue = "false";
-			} else if (val === "null" || val === "undefined" || val === "array" || val === "object") {
-				nextValue = undefined;
-			} else {
-				nextValue = "";
+			// initial default value for the new type
+			switch (val) {
+				case "boolean":
+					nextValue = "false";
+					break;
+				case "null":
+				case "undefined":
+				case "array":
+				case "object":
+					nextValue = undefined;
+					break;
+				default:
+					nextValue = "";
+					break;
 			}
 		}
 		onValueChange?.(val, nextValue, nextValues);

@@ -70,7 +70,7 @@ export function DataItemRow({
 
 					<ValueSelect
 						type={item.type}
-						items={["string", "number", "boolean", "null", "array", "object", "undefined"]}
+						items={["undefined", "null", "string", "number", "boolean", "array", "object"]}
 						value={item.value}
 						values={item.values}
 						onValueChange={handleSelectChange}
