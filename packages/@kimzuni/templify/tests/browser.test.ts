@@ -1,6 +1,5 @@
 import { beforeAll, describe, expect, test } from "bun:test";
 
-import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 
 import type { KEY_PATTERNS, compile, render } from "../src";
@@ -16,23 +15,6 @@ interface BrowserTemplify {
 const packageDir = resolve(import.meta.dir, "..");
 const browserBundlePath = resolve(packageDir, "dist/browser/index.iife.js");
 
-const buildBrowserBundle = () => {
-	if (existsSync(browserBundlePath)) {
-		return;
-	}
-
-	const result = Bun.spawnSync({
-		cmd   : ["bun", "run", "build"],
-		cwd   : packageDir,
-		stdout: "pipe",
-		stderr: "pipe",
-	});
-
-	if (result.exitCode !== 0) {
-		throw new Error(`Failed to build browser bundle:\n${result.stderr.toString() || result.stdout.toString()}`);
-	}
-};
-
 const loadBrowserBundle = async () => {
 	const source = await Bun.file(browserBundlePath).text();
 
@@ -45,7 +27,6 @@ describe("browser bundle", () => {
 	let browserTemplify: BrowserTemplify;
 
 	beforeAll(async () => {
-		buildBrowserBundle();
 		browserTemplify = await loadBrowserBundle();
 	});
 

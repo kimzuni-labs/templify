@@ -23,6 +23,8 @@ jobs:
       contents: read
     uses: kimzuni-labs/workflows/.github/workflows/bun-ci.yml@main
     with:
+      build: true
+      build-script: build:packages
       test: true
       codecov-upload: true
       lint: true
