@@ -218,29 +218,6 @@ describe("Options", () => {
 			});
 		});
 
-		describe("--depth", () => {
-			const template = "{ x }/{ a.b }/{ a.c[0] }/{ a.c.1.d }";
-
-			test("should infer deep key pattern from depth when no key option is explicitly provided", async () => {
-				const customKey = "[\\w.]+";
-				const defaultKeys = tply.compile(template).keys;
-				const deepKeys = tply.compile(template, { key: tply.KEY_PATTERNS.DEEP }).keys;
-				const customKeys = tply.compile(template, { key: customKey }).keys;
-
-				const noDepth = await run(["keys", template]);
-				expect(noDepth.log[0]?.[0]).toStrictEqual(defaultKeys);
-
-				const result = await run(["keys", template, "--depth", "2"]);
-				expect(result.log[0]?.[0]).toStrictEqual(deepKeys);
-
-				const withKey = await run(["keys", template, "--depth", "2", "--key", customKey]);
-				expect(withKey.log[0]?.[0]).toStrictEqual(customKeys);
-
-				const withPattern = await run(["keys", template, "--depth", "2", "--key-pattern", "default"]);
-				expect(withPattern.log[0]?.[0]).toStrictEqual(defaultKeys);
-			});
-		});
-
 		test("--no-validate", async () => {
 			const conflicts = await run(["-t", "str", "-T", "path"]);
 			expect(conflicts.exitCode).toBe(1);

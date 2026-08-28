@@ -62,7 +62,7 @@ export function userInputs(
 		if (keyValueLength) {
 			throw new CommanderError(2, "unsupported", `Error: positional argument '[${ARGUMENTS.KEY_VALUE.name()}]' is only supported by subcommand 'render'`);
 		}
-		for (const key of ["dataFile", "fromEnv", "fallback"] as const) {
+		for (const key of ["dataFile", "fromEnv", "depth", "fallback"] as const) {
 			if (opts[key] !== undefined) {
 				throw new CommanderError(2, "unsupported", `Error: option '${OPTIONS[key].flags}' is only supported by subcommand 'render'`);
 			}

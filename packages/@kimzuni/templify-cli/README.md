@@ -202,32 +202,6 @@ echo "{ key1 } / { key2[0].key3 }" | templify keys --key-pattern deep
 # [ "key1", "key2[0].key3" ]
 ```
 
-### `--depth`
-
-> [!NOTE]
-> While `--depth` is a render-only option in the `@kimzuni/templify`,
-> the CLI treats it as a common option.
-
-Controls how deeply nested values are resolved,
-and is also used by the CLI to infer key patterns for nested placeholders.
-
-```shell
-echo "{ key1 } / { key2[0].key3 }" | templify keys
-# [ "key1", "key2[0].key3" ]
-
-echo "{ key1 } / { key2[0].key3 }" | templify keys --depth 1
-# [ "key1", "key2[0].key3" ]
-
-echo "{ key1 } / { key2[0].key3 }" | templify keys --depth 1 --key-pattern deep
-# [ "key1", "key2[0].key3" ]
-
-echo "{ key1 } / { key2[0].key3 }" | templify keys --depth -1 --key-pattern shallow
-# [ "key1" ]
-
-echo "{ key1 } / { key2[0].key3 }" | templify keys --depth -1 --key "\\w+"
-# [ "key1" ]
-```
-
 ### templify Options
 
 The following options are forwarded to the
