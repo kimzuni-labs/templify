@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.2](https://github.com/kimzuni-labs/templify/compare/cli-v3.0.1...cli-v3.0.2) (2026-08-28)
+
+
+### 🐛 Bug Fixes
+
+* **cli:** restrict --depth option to render command only ([#80](https://github.com/kimzuni-labs/templify/issues/80)) ([7b16446](https://github.com/kimzuni-labs/templify/commit/7b1644698cb3688a9af245e5c2e7241c71a2706c))
+
 ## [3.0.1](https://github.com/kimzuni-labs/templify/compare/cli-v3.0.0...cli-v3.0.1) (2026-08-22)
 
 
