@@ -36,14 +36,14 @@ Sleep 500ms
 Enter
 Sleep 500ms
 
-# with custom open/close and 
+# with custom open/close
 Enter
 Type 'echo "{{ key1 }}, { key2 }!" | templify key1=hello key2=world --open "{{" --close "}}"'
 Sleep 500ms
 Enter
 Sleep 500ms
 
-# with custom open/close (with no match)
+# with env var and json file
 Enter
 Type 'cat .data.json'
 Sleep 500ms

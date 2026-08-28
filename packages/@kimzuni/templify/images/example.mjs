@@ -1,13 +1,25 @@
-import { KEY_PATTERNS, compile, render } from "@kimzuni/templify";
+import { render, compile } from "@kimzuni/templify";
 
-const template = "{ key1 }, { key2 }!";
-const options = { open: "{", close: "}", key: KEY_PATTERNS.DEFAULT };
-const data = { key1: "Hello", key2: "World" };
+// 1. Instant Rendering (Tree-shaking friendly)
+console.log( render("Hello, {name}!", { name: "World" }) );
+"Hello, World!";
 
-const c = compile(template, options);         // lazy evaluation
-console.log("keys        :", c.keys);         // parsed and cached
-console.log("placeholders:", c.placeholders); // from cache
-console.log("groups      :", c.groups);       // from cache
+// 2. Core Engine: Parsing & Metadata Extraction
+const template = compile("[{level}] {message} (code: {id})");  // lazy evaluation
+console.log( template.keys );                                  // parsed and cached
+console.log( template.placeholders );                          // from cache
+console.log( template.groups );                                // from cache
+[ 'level', 'message', 'id' ];
+[ '{level}', '{message}', '{id}' ];
+({ level: [ '{level}' ], message: [ '{message}' ], id: [ '{id}' ] });
 
-console.log("render      :", c.render(data));
-console.log("direct      :", render(template, data, options));
+// 3. High Flexibility: Custom Rules & Fallback
+const customTply = compile('echo "Running ${{ job }} (by ${{ user }})"', {
+	open: "${{",
+	close: "}}",
+	fallback: "unknown",
+});
+
+// Fallback values in case of missing values in context
+console.log( customTply.render({ job: "build-core" }) );
+'echo "Running build-core (by unknown)"';

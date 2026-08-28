@@ -3,13 +3,14 @@
 [![NPM version](https://img.shields.io/npm/v/@kimzuni/templify.svg)](https://www.npmjs.com/package/@kimzuni/templify)
 [![codecov](https://codecov.io/gh/kimzuni-labs/templify/graph/badge.svg?token=932ALHWG7H&component=templify)](https://codecov.io/gh/kimzuni-labs/templify/tree/main/packages/@kimzuni/templify)
 
-A flexible template string processor for JavaScript and TypeScript.
+A lightweight, flexible template string processor for JavaScript and TypeScript.
 
-Supports customizable template delimiters, spacing rules, and fallback values.
+It provides a modular API (`compile`, `render`) optimized for tree-shaking.
+You can process template strings with custom rules
+for delimiters, whitespace, missing data, and etc.
+
 Supports both ESM and CommonJS.
-
-The CLI is available as
-[@kimzuni/templify-cli](../templify-cli/README.md).
+The CLI is available as [@kimzuni/templify-cli](../templify-cli/README.md).
 
 
 
@@ -37,98 +38,116 @@ npm install @kimzuni/templify
 # yarn
 yarn add @kimzuni/templify
 
+# pnpm
+pnpm add @kimzuni/templify
+
 # bun
 bun add @kimzuni/templify
 ```
 
 
 
-## Example
+## Quick Start
+
+Templify provides `compile` for parsing and metadata extraction, and a tree-shaking friendly `render` for instant usage.
 
 ```javascript
-const { compile } = require("@kimzuni/templify");
+import { render, compile } from "@kimzuni/templify";
 
-const template = "{key1} {key1 } { key2} {key1}";
-const context = { key1: "value1", key3: "value3" };
-const c = compile(template);
+// 1. Instant Rendering (Tree-shaking friendly)
+console.log( render("Hello, {name}!", { name: "World" }) );
+// Hello, World!
 
-console.log(c.keys);
-// ["key1", "key2"]
+// 2. Core Engine: Parsing & Metadata Extraction
+const template = compile("[{level}] {message} (code: {id})");  // lazy evaluation
+console.log( template.keys );                                  // parsed and cached
+console.log( template.placeholders );                          // from cache
+console.log( template.groups );                                // from cache
+// [ 'level', 'message', 'id' ]
+// [ '{level}', '{message}', '{id}' ]
+// { level: [ '{level}' ], message: [ '{message}' ], id: [ '{id}' ] }
 
-console.log(c.placeholders);
-// ["{key1}", "{key1 }", "{ key2}"]
+// 3. High Flexibility: Custom Rules & Fallback
+const customTpl = compile('echo "Running ${{ job }} (by ${{ user }})"', {
+	open: "${{",
+	close: "}}",
+	fallback: "unknown",
+});
 
-console.log(c.groups);
-/*
-{
-	key1: ["{key1}", "{key1 }"],
-	key2: ["{ key2}"],
-}
-*/
-
-console.log(c.render(context));
-// "value1 value1 { key2} value1"
-
-// can use direct render function also
-const { render } = require("@kimzuni/templify");
-console.log(render(template, context));
-// "value1 value1 { key2} value1"
+// Fallback values in case of missing values in context
+console.log( customTpl.render({ job: "build-core" }) );
+// echo "Running build-core (by unknown)"
 ```
 
-### with array
+### With Array
 
 ```javascript
-const { render } = require("@kimzuni/templify");
+import { render } from "@kimzuni/templify";
 
-const template = "{0} {1} {2} {1}";
 const context = ["item1", "item2"];
+const template = "{0} {1} {2} {1}";
 
 console.log( render(template, context) );
-// "item1 item2 {2} item2"
+// item1 item2 {2} item2
 ```
 
-### with deep access
+### With Deep Access
 
 ```javascript
-const { KEY_PATTERNS, render } = require("@kimzuni/templify");
+import { render } from "@kimzuni/templify";
 
-const template = "{ a } { b.c } { [b.c] } { d['e]f'] } { d['e]f'][0] } { d['e]f'].1 }";
-const context = { a: 1, "b.c": 2 d: { "e]f": [3, 4] } };
-const options = { key: KEY_PATTERNS.DEEP };
+const context = { id: 42, "user.age": 30, config: { theme: ["dark", "light"] } };
+const template = "{ id } { user.age } { [user.age] } { config.theme } { config.theme[0] } { config.theme.1 }";
 
-console.log( render(template, options, context) );
-// "1 { b.c } 2 { d['e]f'] } 3 4"
+console.log( render(template, context) );
+// 42 { user.age } 30 { config.theme } dark light
 ```
 
-### without deep access
+### Without Deep Access
+
+with `key` option
 
 ```javascript
-const { KEY_PATTERNS, render } = require("@kimzuni/templify");
+import { KEY_PATTERNS, render } from "@kimzuni/templify";
 
-const template = "{ a } { b.c } { [b.c] } { d['e]f'] } { d['e]f'][0] } { d['e]f'].1 }";
-const context = { a: 1, "b.c": 2 d: { "e]f": [3, 4] } };
+const context = { id: 42, "user.age": 30, config: { theme: ["dark", "light"] } };
+const template = "{ id } { user.age } { [user.age] } { config.theme } { config.theme[0] } { config.theme.1 }";
 const options = { key: KEY_PATTERNS.SHALLOW };
 
-console.log( render(template, options, context) );
-// "1 { b.c } { [b.c] } { d['e]f'] } { d['e]f'][0] } { d['e]f'].1 }"
+console.log(render(template, context, options));
+// 42 { user.age } { [user.age] } { config.theme } { config.theme[0] } { config.theme.1 }
 ```
 
-### in browser
+with `depth` option
+
+```javascript
+import { render } from "@kimzuni/templify";
+
+const context = { id: 42, "user.age": 30, config: { theme: ["dark", "light"] } };
+const template = "{ id } { user.age } { [user.age] } { config.theme } { config.theme[0] } { config.theme.1 }";
+const options = { depth: 1 };
+
+console.log(render(template, context, options));
+// 42 { user.age } 30 { config.theme } { config.theme[0] } { config.theme.1 }
+```
+
+### In Browser
 
 You can use the browser bundle directly via script tag.
 
 ```html
 <script src="https://unpkg.com/@kimzuni/templify/dist/browser/index.iife.js"></script>
 <script>
-	const template = "{ user.name } / { users[0].name }";
 	const context = {
-		user: { name: "John" },
-		users: [{ name: "Doe" }],
+		admin: { name: "John Doe" },
+		users: [{ name: "Jane Smith" }],
 	};
+	const template = "{ admin.name } / { users[0].name }";
 
 	const result = Templify.render(template, context);
 
-	console.log(result); // "John / Doe"
+	console.log(result);
+	// John Doe / Jane Smith
 </script>
 ```
 
@@ -152,14 +171,14 @@ Any regex flags (e.g., `i`, `g`) are ignored if provided.
 | `string`, `RegExp` | `/[\w.[\]]+/` (`KEY_PATTERNS.DEEP`) |
 
 ```javascript
-const { KEY_PATTERNS, render } = require("@kimzuni/templify");
+import { render } from "@kimzuni/templify";
 
-const template = "{ key } { key1 }";
-const context = { key: "value", key1: "value1" };
+const context = { author: "John Doe", author2: "Jane Smith" };
+const template = "Author: { author } (Co-author: { author2 })";
 const options = { key: /[a-z]+/ };
 
-const result = render(template, context, options);
-console.log(result); // "value { key1 }"
+console.log( render(template, context, options) );
+// Author: John Doe (Co-author: { author2 })
 ```
 
 ### open/close
@@ -173,12 +192,14 @@ The `open` string marks the start, and `close` marks the end of a placeholder in
 | close | `string` | `"}"`         |
 
 ```javascript
-const template = "{{ key1 }} { key1 }";
-const context = { key1: "value1" };
+import { render } from "@kimzuni/templify";
+
+const context = { title: "Templify" };
+const template = "{{ title }} { title }";
 const options = { open: "{{", close: "}}" };
 
-const result = render(template, context, options);
-console.log(result); // "value1 { key1 }"
+console.log(render(template, context, options));
+// Templify { title }
 ```
 
 ### spacing
@@ -192,61 +213,28 @@ Can be provided as a simple value or as a full object.
 | size   | `number` or `[number]`, `[min: number, max: number]` | `-1`          | Allowed range or number of spaces inside placeholder delimiters. Negative value disables space checking               |
 
 ```javascript
-const template = "{key1} { key1 } {  key1  } {   key1   } {    key1    } {   key1 }";
-const context = { key1: "value1" };
+import { render } from "@kimzuni/templify";
 
-console.log(render(template, context, {
-	spacing: -1, // alias for `spacing: { size: -1 }`
-}));
-// "value1 value1 value1 value1 value1 value1"
+const context = { word: "hello" };
+const template = "{word} { word } {  word  } {   word   } {    word    } {   word }";
 
-console.log(render(template, context, {
-	spacing: true, // alias for `spacing: { strict: true }`
-}));
-// "value1 value1 value1 value1 value1 {   key1 }"
+console.log( render(template, context, { spacing: -1 }) );    // alias for `{ size: -1 }`
+// hello hello hello hello hello hello
 
-console.log(render(template, context, {
-	spacing: {
-		size: -1,
-	},
-}));
-// "value1 value1 value1 value1 value1 value1"
+console.log( render(template, context, { spacing: true }) );  // alias for `{ strict: true }`
+// hello hello hello hello hello {   word }
 
-console.log(render(template, context, {
-	spacing: {
-		size: 1,
-	},
-}));
-// "{key1} value1 {  key1  } {   key1   } {    key1    } {   key1 }"
+console.log( render(template, context, { spacing: { size: 1 } }) );
+// {word} hello {  word  } {   word   } {    word    } {   word }
 
-console.log(render(template, context, {
-	spacing: {
-		size: [1, 3],
-	},
-}));
-// "{key1} value1 value1 value1 {    key1    } value1"
+console.log( render(template, context, { spacing: { size: [1, 3] } }) );
+// {word} hello hello hello {    word    } hello
 
-console.log(render(template, context, {
-	spacing: {
-		strict: true,
-		size: [1, 3],
-	},
-}));
-// "{key1} value1 value1 value1 {    key1    } {   key1 }"
+console.log( render(template, context, { spacing: { strict: true, size: [1, 3] } }) );
+// {word} hello hello hello {    word    } {   word }
 
-console.log(render(template, context, {
-	spacing: {
-		size: [-1, 1],  // Same as [0, 1]
-	},
-}));
-// "value1 value1 {  key1  } {   key1   } {    key1    } {   key1 }"
-
-console.log(render(template, context, {
-	spacing: {
-		size: [1, -1],
-	},
-}));
-// "{key1} value1 value1 value1 value1 value1"
+console.log( render(template, context, { spacing: { size: [-1, 1] } }) );  // Same as [0, 1]
+// hello hello {  word  } {   word   } {    word    } {   word }
 ```
 
 ### fallback
@@ -261,27 +249,20 @@ Fallback value to use when a template key is missing.
 | `string`, `number`, `boolean`, `null`, `undefined` | `undefined`   |
 
 ```javascript
-const template = "{ key } / { key1 } / { key_2 }";
-const options = { key: /[a-z0-9]+/ };
-const context = { key1: "value1", key_2: "value2" };
+import { render } from "@kimzuni/templify";
 
-console.log(render(template, context, {
-	...options,
-	fallback: undefined,
-}));
-// "{ key } / value1 / { key_2 }"
+const context = { author: "John Doe", draft_status: "pending" };
+const template = "{ title } / { author } / { draft_status }";
+const options = { key: /[a-z0-9]+/ }; // draft_status will be ignored by this regex
 
-console.log(render(template, context, {
-	...options,
-	fallback: "x",
-}));
-// "x / value1 / { key_2 }"
+console.log( render(template, context, { ...options, fallback: undefined }) );
+// { title } / John Doe / { draft_status }
 
-console.log(render(template, context, {
-	...options,
-	fallback: null,
-}));
-// "null / value1 / { key_2 }"
+console.log( render(template, context, { ...options, fallback: "N/A" }) );
+// N/A / John Doe / { draft_status }
+
+console.log( render(template, context, { ...options, fallback: null }) );
+// null / John Doe / { draft_status }
 ```
 
 ### depth
@@ -291,7 +272,6 @@ console.log(render(template, context, {
 > not the path length of the **key**.
 
 Maximum depth for resolving nested keys.
-
 Keys deeper than the specified depth are ignored.
 
 | Type     | Default value |
@@ -299,18 +279,20 @@ Keys deeper than the specified depth are ignored.
 | `number` | `1`           |
 
 ```javascript
-const template = "{ key1 } { key2[0] } { key2[0].key3 }";
-const context = { key1: "value1", key2: ["item0", { key3: "value3" }] };
-const options = { key: KEY_PATTERNS.DEEP, fallback: "x" };
+import { render } from "@kimzuni/templify";
 
-console.log( render(template, { ...options, depth: -1 }, context) );
-// "value1 item0 value3"
+const context = { version: "v1.0.0", tags: ["latest", { name: "stable" }] };
+const template = "{ version } { tags[0] } { tags[1].name }";
+const options = { fallback: "N/A" };
 
-console.log( render(template, { ...options, depth: 0 }, context) );
-// "x x x
+console.log( render(template, context, { ...options, depth: -1 }) );
+// v1.0.0 latest stable
 
-console.log( render(template, { ...options, depth: 2 }, context) );
-// "value1 item0 x"
+console.log( render(template, context, { ...options, depth: 0 }) );
+// N/A N/A N/A
+
+console.log( render(template, context, { ...options, depth: 2 }) );
+// v1.0.0 latest N/A
 ```
 
 
@@ -319,27 +301,29 @@ console.log( render(template, { ...options, depth: 2 }, context) );
 
 Options used to override compile options during rendering.
 
-Support Options:
+Supported Options:
 
 - [fallback](#fallback)
 - [depth](#depth)
 
 ```javascript
-const template = "{ key } / { key1 } / { key_2 }";
-const options = { key: /[a-z0-9]+/, fallback: "fallback" };
-const context = { key1: "value1", key_2: "value2" };
+import { compile } from "@kimzuni/templify";
+
+const context = { author: "John Doe", draft_status: "pending" };
+const template = "{ title } / { author } / { draft_status }";
+const options = { key: /[a-z0-9]+/, fallback: "Unknown" };
 
 const c = compile(template, options);
 
 console.log( c.render(context) );
-// "fallback / value1 / { key_2 }"
+// Unknown / John Doe / { draft_status }
 
 console.log( c.render(context, { fallback: undefined }) );
-// "{ key } / value1 / { key_2 }"
+// { title } / John Doe / { draft_status }
 
-console.log( c.render(context, { fallback: "x" }) );
-// "x / value1 / { key_2 }"
+console.log( c.render(context, { fallback: "N/A" }) );
+// N/A / John Doe / { draft_status }
 
 console.log( c.render(context, { fallback: null }) );
-// "null / value1 / { key_2 }"
+// null / John Doe / { draft_status }
 ```
