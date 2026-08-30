@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/kimzuni-labs/templify/compare/v3.0.1...v3.1.0) (2026-08-30)
+
+
+### ✨ Features
+
+* **playground:** implement playground ([#77](https://github.com/kimzuni-labs/templify/issues/77)) ([9df05c1](https://github.com/kimzuni-labs/templify/commit/9df05c1f1106a2bf11b215e9e6f7dc4940c799a4))
+
 ## [3.0.1](https://github.com/kimzuni-labs/templify/compare/v3.0.0...v3.0.1) (2026-08-22)
 
 
