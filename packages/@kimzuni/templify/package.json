@@ -19,7 +19,8 @@
   "bugs": "https://github.com/kimzuni-labs/templify/issues",
   "scripts": {
     "test": "bun test",
-    "build": "tsdown"
+    "build": "tsdown",
+    "bench": "node benchmark.ts"
   },
   "files": [
     "dist",
@@ -50,6 +51,10 @@
     "typescript"
   ],
   "devDependencies": {
+    "@types/mustache": "^4.2.6",
+    "handlebars": "^4.7.9",
+    "mustache": "^4.2.0",
+    "tinybench": "^6.1.6",
     "tsdown": "^0.22.14"
   }
 }
