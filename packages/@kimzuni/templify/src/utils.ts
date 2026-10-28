@@ -185,6 +185,6 @@ export function renderTemplate(
 ) {
 	return template.replace(pattern, (target, _, key: string) => {
 		const value = getValue(context, key, depth);
-		return `${value !== undefined ? value : fallback !== undefined ? `${fallback}` : target}`;
+		return `${value !== undefined ? value : fallback !== undefined ? fallback : target}`;
 	});
 }
