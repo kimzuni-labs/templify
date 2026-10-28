@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.2](https://github.com/kimzuni-labs/templify/compare/v3.0.1...v3.0.2) (2026-10-28)
+
+
+### ⚡️ Performance Improvements
+
+* optimize getValue loop and add early returns ([82a5660](https://github.com/kimzuni-labs/templify/commit/82a56600e51d0331fa60d573dcd75a537da45e4a))
+
 ## [3.0.1](https://github.com/kimzuni-labs/templify/compare/v3.0.0...v3.0.1) (2026-08-22)
 
 
