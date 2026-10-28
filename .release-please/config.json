@@ -4,7 +4,7 @@
 	"bump-patch-for-minor-pre-major": true,
 	"pull-request-title-pattern": "chore: release${component} ${version}",
 	"separate-pull-requests": true,
-	"bootstrap-sha": "9df05c1f1106a2bf11b215e9e6f7dc4940c799a4",
+	"last-release-sha": "9df05c1f1106a2bf11b215e9e6f7dc4940c799a4",
 	"packages": {
 		"packages/@kimzuni/templify": {
 			"package-name": ""
