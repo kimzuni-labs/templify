@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { DownloadIcon, UploadIcon } from "lucide-react";
+import { DownloadIcon, UploadIcon, Code2Icon, TerminalSquareIcon } from "lucide-react";
 
 import type * as tply from "@kimzuni/templify";
 import type { RunnerProps } from "@/App";
@@ -51,6 +51,7 @@ import {
 import { ValueSelect, ValueInput } from "@/components/playground/value-editor";
 import { DataItemRow } from "@/components/playground/data-item-row";
 import { PlaygroundLayout } from "@/components/playground/layout";
+import { CodeBlock } from "@/components/code-block";
 import { TextArea } from "@/components/textarea";
 import { Section } from "@/components/section";
 
@@ -991,16 +992,12 @@ export function Controller({
 
 						{/* JavaScript */}
 						<BaseTabsContent value="JavaScript" className="flex flex-col gap-3 -m-1 p-1 overflow-hidden" tabIndex={-1}>
-							<TextArea
-								value={generatedCode}
+							<CodeBlock
 								id="generated-javascript"
-								readOnly
-								copyButton
-								onCopyError={err => toast.add({
-									type       : "error",
-									title      : "JavaScript copy failed",
-									description: err.message,
-								})}
+								icon={Code2Icon}
+								language="javascript"
+								source={generatedCode}
+								download={`templify-example.${jsFormat === "CommonJS" ? "cjs" : "mjs"}`}
 								label={
 									<Select
 										value={jsFormat}
@@ -1008,7 +1005,7 @@ export function Controller({
 											if (val) setJSFormat(val);
 										}}
 									>
-										<SelectTrigger>
+										<SelectTrigger className="inline-flex">
 											<SelectValue/>
 										</SelectTrigger>
 										<SelectContent className="font-mono">
@@ -1024,17 +1021,12 @@ export function Controller({
 
 						{/* CLI */}
 						<BaseTabsContent value="CLI" className="flex flex-col gap-3 -m-1 p-1 overflow-hidden" tabIndex={-1}>
-							<TextArea
-								value={generatedCommand}
+							<CodeBlock
 								id="generated-cli-command"
-								readOnly
-								copyButton
-								onCopyError={err => toast.add({
-									type       : "error",
-									title      : "Command copy failed",
-									description: err.message,
-								})}
+								icon={TerminalSquareIcon}
 								label="Command"
+								language="bash"
+								source={generatedCommand}
 							/>
 						</BaseTabsContent>
 
