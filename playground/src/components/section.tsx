@@ -79,6 +79,7 @@ export function Section({
 						<CollapsibleContent className="flex-1 flex flex-col gap-2 min-h-0">
 							<ScrollArea
 								className={cn(
+									"flex-1",
 									"min-h-0 rounded-xl",
 									"px-[calc(var(--card-spacing)/2)] *:data-[slot=scroll-area-viewport]:px-[calc(var(--card-spacing)/2)]",
 									"*:data-[slot=scroll-area-viewport]:pt-2 *:data-[slot=scroll-area-viewport]:pb-1",

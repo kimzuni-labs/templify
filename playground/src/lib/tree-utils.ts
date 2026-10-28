@@ -1,5 +1,6 @@
 import type { Primitive, Context, ContextValue } from "@kimzuni/templify";
 import type { PrimitiveDataType, DataItem } from "@/types/playground";
+import { generateUUID } from "./random";
 
 
 
@@ -136,4 +137,64 @@ export const sanitizeDataItem = (item: DataItem): DataItem => {
 
 export const sanitizeDataItems = (items: DataItem[]): DataItem[] => {
 	return items.map(sanitizeDataItem);
+};
+
+
+
+const valueToDataItem = (key: string, val: unknown): DataItem => {
+	const id = generateUUID();
+
+	if (val === null) {
+		return { id, key, type: "null" };
+	}
+	if (val === undefined) {
+		return { id, key, type: "undefined" };
+	}
+	if (typeof val === "boolean") {
+		return { id, key, type: "boolean", value: val ? "true" : "false" };
+	}
+	if (typeof val === "number") {
+		return { id, key, type: "number", value: String(val) };
+	}
+	if (typeof val === "string") {
+		return { id, key, type: "string", value: val };
+	}
+	if (Array.isArray(val)) {
+		return {
+			id,
+			key,
+			type    : "array",
+			children: val.map((item, idx) => valueToDataItem(String(idx), item)),
+		};
+	}
+	if (typeof val === "object") {
+		return {
+			id,
+			key,
+			type    : "object",
+			children: Object.entries(val).map(([k, v]) => valueToDataItem(k, v)),
+		};
+	}
+	return { id, key, type: "undefined" };
+};
+
+export const parseContextToDataItems = (data: unknown): {
+	rootType: "object" | "array";
+	items   : DataItem[];
+} => {
+	if (typeof data !== "object" || data === null) {
+		throw new Error("Root JSON value must be an object or an array.");
+	}
+
+	if (Array.isArray(data)) {
+		return {
+			rootType: "array",
+			items   : data.map((item, idx) => valueToDataItem(String(idx), item)),
+		};
+	}
+
+	return {
+		rootType: "object",
+		items   : Object.entries(data).map(([k, v]) => valueToDataItem(k, v)),
+	};
 };

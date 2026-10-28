@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { DownloadIcon, UploadIcon } from "lucide-react";
 
 import type * as tply from "@kimzuni/templify";
 import type { RunnerProps } from "@/App";
@@ -14,9 +15,11 @@ import {
 	addChildToItemInTree,
 	buildContext,
 	sanitizeDataItems,
+	parseContextToDataItems,
 } from "@/lib/tree-utils";
 
 import { toast } from "@/components/ui/toast";
+import { Button } from "@/components/ui/button";
 import {
 	Tabs,
 	TabsList,
@@ -24,7 +27,7 @@ import {
 	TabsContent as BaseTabsContent,
 } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { FieldDescription, FieldGroup } from "@/components/ui/field";
+import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -38,6 +41,7 @@ import {
 import {
 	FieldSet,
 	FieldLegend,
+	FieldLabel,
 	OptionInput,
 	OptionSelect,
 	OptionCheckbox,
@@ -330,6 +334,41 @@ export function Controller({
 		};
 		setDataItems(prev => addChildToItemInTree(prev, parentId, newItem));
 		markAsCustom();
+	};
+
+	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	const exportDataJson = () => {
+		const context = buildContext(dataItems, rootType);
+		const jsonStr = JSON.stringify(context, null, 2);
+		const blob = new Blob([jsonStr], { type: "application/json" });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement("a");
+		link.href = url;
+		link.download = "data.json";
+		link.click();
+		URL.revokeObjectURL(url);
+	};
+
+	const importDataJson = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		e.target.value = "";
+		if (!file) return;
+
+		try {
+			const text = await file.text();
+			const parsed: unknown = JSON.parse(text);
+			const { rootType: nextRootType, items: nextItems } = parseContextToDataItems(parsed);
+			setRootType(nextRootType);
+			setDataItems(nextItems);
+			markAsCustom();
+		} catch (err: unknown) {
+			toast.add({
+				type       : "error",
+				title      : "Data import failed",
+				description: err instanceof Error ? err.message : String(err),
+			});
+		}
 	};
 
 	const handleOptionChange = <
@@ -684,20 +723,52 @@ export function Controller({
 			dataSection={
 				<Section
 					heading={
-						<div className="flex items-center gap-3 mb-1">
-							<span>Data with</span>
-							<ValueSelect
-								type={rootType}
-								items={["array", "object"]}
-								className="flex-1"
-								onValueChange={(val) => {
-									if (val === "array" || val === "object") {
-										setRootType(val);
-										markAsCustom();
-									}
-								}}
-							/>
-							<div className="flex justify-end-safe *:w-fit">
+						<div className="mb-1 space-y-2.5">
+							<div className="flex items-center justify-between gap-2">
+								<span>Data</span>
+								<div className="flex items-center gap-1.5 text-foreground">
+									<Button
+										size="sm"
+										variant="outline"
+										className="cursor-pointer"
+										onClick={() => fileInputRef.current?.click()}
+									>
+										<UploadIcon/>
+										Import
+									</Button>
+									<Button
+										size="sm"
+										variant="outline"
+										className="cursor-pointer"
+										onClick={exportDataJson}
+									>
+										<DownloadIcon/>
+										Export
+									</Button>
+									<input
+										ref={fileInputRef}
+										type="file"
+										accept=".json,application/json"
+										className="hidden"
+										onChange={importDataJson}
+									/>
+								</div>
+							</div>
+							<div className="flex items-center gap-3 text-foreground">
+								<Field orientation="horizontal" className="flex-1 *:data-[slot=field-label]:flex-initial">
+									<FieldLabel>Type</FieldLabel>
+									<ValueSelect
+										type={rootType}
+										items={["array", "object"]}
+										className="flex-1"
+										onValueChange={(val) => {
+											if (val === "array" || val === "object") {
+												setRootType(val);
+												markAsCustom();
+											}
+										}}
+									/>
+								</Field>
 								<OptionInput
 									label="Depth"
 									id="opt-depth"
@@ -705,6 +776,7 @@ export function Controller({
 									min={-1}
 									value={depth}
 									orientation="horizontal"
+									fieldClassName="w-fit"
 									className="w-16"
 									onChange={e => handleOptionChange(setDepth, Number(e.target.value), "depth")}
 									invalid={invalidFields.depth}
