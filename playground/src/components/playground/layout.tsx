@@ -38,6 +38,17 @@ export function PlaygroundLayout({
 				"grid-cols-1",
 
 				// options and data editor horizontal
+				// |---------------------|----------|
+				// |       presets       |          |
+				// |---------------------|          |
+				// |                     |   data   |
+				// |       options       |          |
+				// |                     |          |
+				// |---------------------|----------|
+				// |            template            |
+				// |             render             |
+				// |              tabs              |
+				// |---------------------|----------|
 				"md:grid-rows-[var(--ph)_var(--oh)_repeat(3,minmax(0,auto))]",
 				"md:grid-cols-[minmax(0,9fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,9fr)]",
 				"md:*:nth-1:row-start-1 md:*:nth-1:col-start-1 md:*:nth-1:row-span-1 md:*:nth-1:col-span-1",
@@ -51,15 +62,15 @@ export function PlaygroundLayout({
 				// 24px: main padding top/bottom
 				"xl:grid-rows-[var(--ph)_var(--thd)_var(--th)_minmax(300px,calc(100svh-64px-24px*2-var(--ph)-var(--thd)-var(--th)-var(--gap)*3))]",
 
-				// |---------------------|----------|
-				// |       presets       |          |
-				// |---------------------| template |
-				// |          |          |----------|
-				// |          |          |  render  |
-				// | options  |   data   |----------|
-				// |          |          |   tabs   |
-				// |          |          |          |
-				// |---------------------|----------|
+				// |-----------|----------|----------|
+				// |  presets  |          | template |
+				// |-----------|          |----------|
+				// |           |          |  render  |
+				// |           |   data   |----------|
+				// |  options  |          |          |
+				// |           |          |   tabs   |
+				// |           |          |          |
+				// |----------------------|----------|
 				"xl:grid-cols-[minmax(0,9fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,9fr)_minmax(0,12fr)_minmax(0,12fr)]",
 				"xl:*:nth-1:row-start-1 xl:*:nth-1:col-start-1 xl:*:nth-1:row-span-1 xl:*:nth-1:col-span-1",
 				"xl:*:nth-2:row-start-2 xl:*:nth-2:col-start-1 xl:*:nth-2:row-span-full xl:*:nth-2:col-span-1",
