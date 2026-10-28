@@ -59,7 +59,8 @@ import { PRESETS, DEFAULT_PRESET, KEY_PRESETS } from "./presets";
 
 
 const TABS = [
-	"code",
+	"JavaScript",
+	"CLI",
 	"keys",
 	"placeholders",
 	"groups",
@@ -180,11 +181,29 @@ export function Controller({
 		return getInitialVal(isCustom, savedOptionsObj, "depth", activePreset.options.depth, v => typeof v === "number", () => recordInvalid("depth"));
 	});
 
-	const [codeFormat, setCodeFormat] = useState<"CommonJS" | "ES Modules">("ES Modules");
+	const [jsFormat, setJSFormat] = useState<"CommonJS" | "ES Modules">("ES Modules");
 
 	const [rootType, setRootType] = useState<"object" | "array">(() => {
 		const saved = isCustom ? storage.get("root-type") : null;
 		return saved === "array" ? "array" : "object";
+	});
+
+	// CLI Options
+
+	const [noStdin, setNoStdin] = useState(() => {
+		return getInitialVal(isCustom, savedOptionsObj, "noStdin", activePreset.options.noStdin, v => typeof v === "boolean", () => recordInvalid("noStdin"));
+	});
+
+	const [noValidate, setNoValidate] = useState(() => {
+		return getInitialVal(isCustom, savedOptionsObj, "noValidate", activePreset.options.noValidate, v => typeof v === "boolean", () => recordInvalid("noValidate"));
+	});
+
+	const [fromEnv, setFromEnv] = useState(() => {
+		return getInitialVal(isCustom, savedOptionsObj, "fromEnv", activePreset.options.fromEnv, v => typeof v === "boolean", () => recordInvalid("fromEnv"));
+	});
+
+	const [compact, setCompact] = useState(() => {
+		return getInitialVal(isCustom, savedOptionsObj, "compact", activePreset.options.compact, v => typeof v === "boolean", () => recordInvalid("compact"));
 	});
 
 	// validation
@@ -444,11 +463,14 @@ export function Controller({
 		};
 	})();
 
-	// generated js code
-	const generatedCode = (() => {
+	// generated code
+	const [
+		generatedCode,
+		generatedCommand,
+	] = (() => {
 		const hasKeyPattern = keyPreset?.value === "shallow";
 
-		const importStmt = codeFormat === "CommonJS"
+		const importStmt = jsFormat === "CommonJS"
 			? `const { compile${hasKeyPattern ? ", KEY_PATTERNS" : ""} } = require("@kimzuni/templify");`
 			: `import { compile${hasKeyPattern ? ", KEY_PATTERNS" : ""} } from "@kimzuni/templify";`;
 
@@ -459,47 +481,72 @@ export function Controller({
 		const contextStr = JSON.stringify(buildContext(dataItems, rootType), null, 2);
 
 		// options text
-		const optionLines: string[] = [];
-
-		if (keyPreset?.value === "shallow") {
-			optionLines.push("  key: KEY_PATTERNS.SHALLOW");
-		} else if (keyPreset?.value === "custom" && keyPattern.trim() && keyPattern.trim() !== KEY_PATTERNS.DEEP.source) {
-			optionLines.push(`  key: /${keyPattern.trim()}/`);
-		}
+		const jsOptionLines: string[] = [];
+		const commandOptionLines: string[] = [];
 
 		if (openDelim && openDelim !== "{") {
-			optionLines.push(`  open: ${JSON.stringify(openDelim)}`);
+			jsOptionLines.push(`  open: ${JSON.stringify(openDelim)}`);
+			commandOptionLines.push(`	--open ${JSON.stringify(openDelim)} \\`);
 		}
 		if (closeDelim && closeDelim !== "}") {
-			optionLines.push(`  close: ${JSON.stringify(closeDelim)}`);
+			jsOptionLines.push(`  close: ${JSON.stringify(closeDelim)}`);
+			commandOptionLines.push(`	--close ${JSON.stringify(closeDelim)} \\`);
+		}
+
+		if (keyPreset?.value === "shallow") {
+			jsOptionLines.push("  key: KEY_PATTERNS.SHALLOW");
+			commandOptionLines.push("	--key-pattern shallow \\");
+		} else if (keyPreset?.value === "custom" && keyPattern.trim() && keyPattern.trim() !== KEY_PATTERNS.DEEP.source) {
+			jsOptionLines.push(`  key: /${keyPattern.trim()}/`);
+			commandOptionLines.push(`	--key shallow ${JSON.stringify(keyPattern.trim())} \\`);
 		}
 
 		if (enableSpacing) {
 			const sizeStr = Array.isArray(spacingSize) ? `[${spacingSize.join(", ")}]` : spacingSize;
-			optionLines.push(`  spacing: {\n    strict: ${spacingStrict},\n    size: ${sizeStr}\n  }`);
+			jsOptionLines.push(`  spacing: {\n    strict: ${spacingStrict},\n    size: ${sizeStr}\n  }`);
+			if (spacingStrict) commandOptionLines.push("	--spacing-strict \\");
+			commandOptionLines.push(`	--spacing ${spacingSize[0]}:${spacingSize[1]} \\`);
 		}
 
 		const resolvedFallbackVal = resolveDataValue(fallbackType, fallback);
 		if (resolvedFallbackVal !== undefined) {
-			optionLines.push(`  fallback: ${JSON.stringify(resolvedFallbackVal)}`);
+			jsOptionLines.push(`  fallback: ${JSON.stringify(resolvedFallbackVal)}`);
+			if (typeof resolvedFallbackVal === "string") commandOptionLines.push(`	--fallback "${resolvedFallbackVal}" \\`);
 		}
 
 		if (depth !== -1) {
-			optionLines.push(`  depth: ${depth}`);
+			jsOptionLines.push(`  depth: ${depth}`);
+			commandOptionLines.push(`	--depth ${depth} \\`);
 		}
 
-		const optionsStr = optionLines.length > 0
-			? `{\n${optionLines.join(",\n")}\n}`
+		if (noStdin) {
+			commandOptionLines.push("	--no-stdin \\");
+		}
+
+		if (noValidate) {
+			commandOptionLines.push("	--no-validate \\");
+		}
+
+		if (fromEnv) {
+			commandOptionLines.push("	--from-env \\");
+		}
+
+		if (compact) {
+			commandOptionLines.push("	--compact \\");
+		}
+
+		const jsOptionsStr = jsOptionLines.length > 0
+			? `{\n${jsOptionLines.join(",\n")}\n}`
 			: "{}";
 
-		const lines = [
+		const jsLines = [
 			importStmt,
 			"",
 			`const template = \`${escapedTemplate}\`;`,
 			"",
 			`const context = ${contextStr};`,
 			"",
-			`const options = ${optionsStr};`,
+			`const options = ${jsOptionsStr};`,
 			"",
 			"const c = compile(template, options);",
 			"const keys = c.keys;",
@@ -508,7 +555,19 @@ export function Controller({
 			"const result = c.render(context);",
 		];
 
-		return lines.join("\n");
+		const commandLines = [
+			"templify render \\",
+			"	--template-file template.txt \\",
+			"	--data-file data.json \\",
+			...commandOptionLines,
+		];
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		commandLines[commandLines.length - 1] = commandLines.at(-1)!.slice(0, -2);
+
+		return [
+			jsLines.join("\n"),
+			commandLines.join("\n"),
+		];
 	})();
 
 	return (
@@ -715,6 +774,45 @@ export function Controller({
 							/>
 						</FieldGroup>
 					</FieldSet>
+
+					<Separator/>
+
+					{/* CLI Options */}
+					<FieldSet>
+						<FieldLegend>
+							CLI Options
+						</FieldLegend>
+						<FieldGroup className="flex-row flex-wrap items-center gap-3">
+							<OptionCheckbox
+								label="Disable Standard Input"
+								description="Disable reading from standard input."
+								id="cli-opt-disable-stdin"
+								checked={noStdin}
+								onCheckedChange={checked => handleOptionChange(setNoStdin, checked, "noStdin")}
+							/>
+							<OptionCheckbox
+								label="Disable Validation"
+								description="Disable validation of option usage and conflict checks."
+								id="cli-opt-disable-validation"
+								checked={noValidate}
+								onCheckedChange={checked => handleOptionChange(setNoValidate, checked, "noValidate")}
+							/>
+							<OptionCheckbox
+								label="Data with Environment Variables"
+								description="Use environment variables as render data."
+								id="cli-opt-from-env"
+								checked={fromEnv}
+								onCheckedChange={checked => handleOptionChange(setFromEnv, checked, "fromEnv")}
+							/>
+							<OptionCheckbox
+								label="Compact Output"
+								description="Output compact JSON without indentation or newlines."
+								id="cli-opt-compact-output"
+								checked={compact}
+								onCheckedChange={checked => handleOptionChange(setCompact, checked, "compact")}
+							/>
+						</FieldGroup>
+					</FieldSet>
 				</Section>
 			}
 
@@ -891,23 +989,23 @@ export function Controller({
 							))}
 						</TabsList>
 
-						{/* Code */}
-						<BaseTabsContent value="code" className="flex flex-col gap-3 -m-1 p-1 overflow-hidden" tabIndex={-1}>
+						{/* JavaScript */}
+						<BaseTabsContent value="JavaScript" className="flex flex-col gap-3 -m-1 p-1 overflow-hidden" tabIndex={-1}>
 							<TextArea
 								value={generatedCode}
-								id="generated-code"
+								id="generated-javascript"
 								readOnly
 								copyButton
 								onCopyError={err => toast.add({
 									type       : "error",
-									title      : "Code copy failed",
+									title      : "JavaScript copy failed",
 									description: err.message,
 								})}
 								label={
 									<Select
-										value={codeFormat}
-										onValueChange={(val: typeof codeFormat | null) => {
-											if (val) setCodeFormat(val);
+										value={jsFormat}
+										onValueChange={(val: typeof jsFormat | null) => {
+											if (val) setJSFormat(val);
 										}}
 									>
 										<SelectTrigger>
@@ -921,6 +1019,22 @@ export function Controller({
 										</SelectContent>
 									</Select>
 								}
+							/>
+						</BaseTabsContent>
+
+						{/* CLI */}
+						<BaseTabsContent value="CLI" className="flex flex-col gap-3 -m-1 p-1 overflow-hidden" tabIndex={-1}>
+							<TextArea
+								value={generatedCommand}
+								id="generated-cli-command"
+								readOnly
+								copyButton
+								onCopyError={err => toast.add({
+									type       : "error",
+									title      : "Command copy failed",
+									description: err.message,
+								})}
+								label="Command"
 							/>
 						</BaseTabsContent>
 

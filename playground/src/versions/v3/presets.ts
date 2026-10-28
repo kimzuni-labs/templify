@@ -13,6 +13,12 @@ export interface PresetOptions extends Omit<Required<CompileOptions>, "spacing">
 	spacingSize  : [number, number];
 	fallbackType : PrimitiveDataType;
 	fallback     : string;
+
+	// CLI options
+	noStdin   : boolean;
+	noValidate: boolean;
+	fromEnv   : boolean;
+	compact   : boolean;
 }
 
 export interface Preset extends LabeledValue {
@@ -52,6 +58,10 @@ export const PRESETS: Preset[] = [
 			fallbackType : "undefined",
 			fallback     : "",
 			depth        : -1,
+			noStdin      : false,
+			noValidate   : false,
+			fromEnv      : false,
+			compact      : false,
 		},
 		data: [
 			{ id: "name", key: "name", type: "string", value: "John Doe" },
@@ -73,6 +83,10 @@ export const PRESETS: Preset[] = [
 			fallbackType : "null",
 			fallback     : "",
 			depth        : -1,
+			noStdin      : false,
+			noValidate   : false,
+			fromEnv      : false,
+			compact      : false,
 		},
 		data: [
 			{ id: "1", key: "fields", type: "string", value: "id, name, email" },
@@ -96,6 +110,10 @@ export const PRESETS: Preset[] = [
 			fallbackType : "undefined",
 			fallback     : "",
 			depth        : -1,
+			noStdin      : false,
+			noValidate   : false,
+			fromEnv      : false,
+			compact      : false,
 		},
 		data: [
 			{
@@ -141,6 +159,10 @@ export const PRESETS: Preset[] = [
 			fallbackType : "undefined",
 			fallback     : "",
 			depth        : -1,
+			noStdin      : false,
+			noValidate   : false,
+			fromEnv      : false,
+			compact      : false,
 		},
 		data: [
 			{ id: "1", key: "placeholder", value: "template", type: "string" },
