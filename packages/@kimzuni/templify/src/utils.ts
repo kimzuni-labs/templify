@@ -138,25 +138,27 @@ export function getPaths(key: string) {
 
 const KEY_PATHS_CACHE = new Map<string, string[]>();
 export function getValue(context: Context, key: string, depth: number): Primitive {
+	if (depth === 0) return undefined;
+
 	let paths = KEY_PATHS_CACHE.get(key);
 	if (!paths) {
 		paths = getPaths(key);
 		KEY_PATHS_CACHE.set(key, paths);
 	}
 
-	let remainingDepth = depth;
+	if (depth > 0 && paths.length > depth) return undefined;
+
 	let value: Context | ContextValue = context;
-	for (const currKey of paths) {
+	for (let i = 0; i < paths.length; i++) {
 		if (!value || typeof value !== "object") {
 			return undefined;
-		} else if (remainingDepth === 0) {
-			return undefined;
 		}
+
+		const currKey = paths[i];
 
 		/* Arrays and Objects safely accept string keys in JS */
 		// @ts-expect-error: ts(7053)
 		value = value[currKey] as ContextValue;
-		remainingDepth--;
 	}
 
 	switch (typeof value) {
