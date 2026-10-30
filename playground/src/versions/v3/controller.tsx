@@ -29,7 +29,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import {
 	Select,
 	SelectContent,
@@ -46,7 +45,6 @@ import {
 	OptionSelect,
 	OptionCheckbox,
 	AddButton,
-	TabsContent,
 } from "@/components/playground/fields";
 import { ValueSelect, ValueInput } from "@/components/playground/value-editor";
 import { DataItemRow } from "@/components/playground/data-item-row";
@@ -468,6 +466,9 @@ export function Controller({
 	const [
 		generatedCode,
 		generatedCommand,
+		genetatedKeys,
+		genetatedPlaceholders,
+		genetatedGroups,
 	] = (() => {
 		const hasKeyPattern = keyPreset?.value === "shallow";
 
@@ -565,9 +566,13 @@ export function Controller({
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		commandLines[commandLines.length - 1] = commandLines.at(-1)!.slice(0, -2);
 
+		const indent = compact ? 0 : 4;
 		return [
 			jsLines.join("\n"),
 			commandLines.join("\n"),
+			JSON.stringify(extractedKeys, null, indent),
+			JSON.stringify(extractedPlaceholders, null, indent),
+			JSON.stringify(extractedGroups, null, indent),
 		];
 	})();
 
@@ -1024,60 +1029,38 @@ export function Controller({
 							<CodeBlock
 								id="generated-cli-command"
 								icon={TerminalSquareIcon}
-								label="Command"
+								label="Bash"
 								language="bash"
 								source={generatedCommand}
 							/>
 						</BaseTabsContent>
 
 						{/* Keys */}
-						<TabsContent value="keys" className="flex flex-wrap gap-2.5 overflow-y-auto">
-							{extractedKeys.map(key => (
-								<Badge key={key} variant="secondary">
-									{key}
-								</Badge>
-							))}
-							{extractedKeys.length === 0 && (
-								<Alert className="border-0 p-0 italic">
-									<AlertDescription>No keys detected.</AlertDescription>
-								</Alert>
-							)}
-						</TabsContent>
+						<BaseTabsContent value="keys" className="flex flex-col gap-3 -m-1 p-1 overflow-hidden" tabIndex={-1}>
+							<CodeBlock
+								id="generated-keys"
+								language="json"
+								source={genetatedKeys}
+							/>
+						</BaseTabsContent>
 
 						{/* Placeholders */}
-						<TabsContent value="placeholders" className="flex flex-wrap gap-2.5 overflow-y-auto">
-							{extractedPlaceholders.map((placeholder, idx) => (
-								<Badge key={idx} variant="secondary">
-									{placeholder}
-								</Badge>
-							))}
-							{extractedPlaceholders.length === 0 && (
-								<Alert className="border-0 p-0 italic">
-									<AlertDescription>No placeholders detected.</AlertDescription>
-								</Alert>
-							)}
-						</TabsContent>
+						<BaseTabsContent value="placeholders" className="flex flex-col gap-3 -m-1 p-1 overflow-hidden" tabIndex={-1}>
+							<CodeBlock
+								id="generated-placeholders"
+								language="json"
+								source={genetatedPlaceholders}
+							/>
+						</BaseTabsContent>
 
 						{/* Placeholder Groups */}
-						<TabsContent value="groups" className="flex flex-col gap-2.5 overflow-y-auto">
-							{Object.entries(extractedGroups).map(([key, value]) => (
-								<div key={key} className="flex flex-col gap-2.5 not-first:border-t not-first:pt-3">
-									<span className="text-xs font-bold text-muted-foreground">Key: {key}</span>
-									<div className="flex flex-wrap gap-2.5">
-										{value.map((placeholder, idx) => (
-											<Badge key={idx} variant="secondary">
-												{placeholder}
-											</Badge>
-										))}
-									</div>
-								</div>
-							))}
-							{Object.keys(extractedGroups).length === 0 && (
-								<Alert className="border-0 p-0 italic">
-									<AlertDescription>No grouped items.</AlertDescription>
-								</Alert>
-							)}
-						</TabsContent>
+						<BaseTabsContent value="groups" className="flex flex-col gap-3 -m-1 p-1 overflow-hidden" tabIndex={-1}>
+							<CodeBlock
+								id="generated-groups"
+								language="json"
+								source={genetatedGroups}
+							/>
+						</BaseTabsContent>
 					</Tabs>
 				</section>
 			}

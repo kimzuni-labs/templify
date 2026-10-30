@@ -1,6 +1,6 @@
+import { Fragment } from "react";
 import {
 	DownloadIcon,
-	FileCodeIcon,
 	type LucideIcon,
 } from "lucide-react";
 
@@ -41,7 +41,7 @@ export interface CodeBlockProps extends React.ComponentProps<typeof Base> {
 }
 
 export function CodeBlock({
-	icon: Icon = FileCodeIcon,
+	icon: Icon,
 	label,
 	source,
 	language = "ansi",
@@ -54,6 +54,8 @@ export function CodeBlock({
 
 	const lines = useHighlightedCode(code, language);
 
+	const Header = (Icon ?? label) ? CodeBlockHeader : Fragment;
+
 	return (
 		<Base
 			tabIndex={0}
@@ -63,11 +65,13 @@ export function CodeBlock({
 			)}
 			{...props}
 		>
-			<CodeBlockHeader>
-				<CodeBlockTitle>
-					<Icon/>
-					{label}
-				</CodeBlockTitle>
+			<Header>
+				{(Icon ?? label) && (
+					<CodeBlockTitle>
+						{Icon && <Icon/>}
+						{label && label}
+					</CodeBlockTitle>
+				)}
 				<CodeBlockActions>
 					{downloadFilename && (
 						<Button
@@ -81,7 +85,7 @@ export function CodeBlock({
 					)}
 					<CodeBlockCopyButton value={code}/>
 				</CodeBlockActions>
-			</CodeBlockHeader>
+			</Header>
 			<ScrollArea
 				className="flex flex-col min-h-0"
 				viewportProps={{
