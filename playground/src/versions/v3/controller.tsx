@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { DownloadIcon, UploadIcon, Code2Icon, TerminalSquareIcon } from "lucide-react";
+import { DownloadIcon, FolderOpenIcon, Code2Icon, TerminalSquareIcon } from "lucide-react";
 
 import type * as tply from "@kimzuni/templify";
 import type { RunnerProps } from "@/App";
@@ -832,7 +832,7 @@ export function Controller({
 										className="cursor-pointer"
 										onClick={() => fileInputRef.current?.click()}
 									>
-										<UploadIcon/>
+										<FolderOpenIcon/>
 										Import
 									</Button>
 									<Button
